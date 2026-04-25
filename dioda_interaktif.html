@@ -1698,6 +1698,86 @@
           <strong>Cara Kerja:</strong> Dalam kondisi normal tegangan rendah, dioda TVS seolah "tidak ada" (hambatan sangat tinggi / cut-off). Namun ketika terjadi lonjakan tegangan tajam (misal ribuan volt listrik statis), dioda TVS akan langsung "tembus" (breakdown) dalam hitungan <i>picoseconds</i> dan membuang lonjakan tersebut langsung ke Ground, sehingga IC tetap aman.<br><br>
           <strong>Aplikasi:</strong> Hampir selalu ditemukan dirangkai secara paralel terhadap Ground pada sekitar port USB, HDMI, konektor antena, soket charger, dan jalur data lainnya pada motherboard handphone / laptop.
         </div>
+      <div class="card">
+        <div class="card-title">6. Rangkaian Boost Converter / Pump (Aplikasi Dioda Schottky)</div>
+        <div style="background: #0d0f14; border-radius: 8px; padding: 20px; margin-bottom: 16px; text-align: center;">
+          <svg viewBox="0 0 400 120" style="max-width: 100%; height: auto; display: inline-block;">
+            <defs>
+              <!-- Schottky Diode symbol (adds the 'S' shaped lines on the cathode) -->
+              <g id="schottky">
+                <polygon points="-8,8 8,0 -8,-8" fill="#f5c842" />
+                <line x1="8" y1="-8" x2="8" y2="8" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Schottky specific "S" wings -->
+                <path d="M 8 -8 L 12 -8 L 12 -4 M 8 8 L 4 8 L 4 4" fill="none" stroke="#f5c842" stroke-width="2"/>
+              </g>
+            </defs>
+            
+            <!-- Vin Source -->
+            <line x1="30" y1="40" x2="30" y2="80" stroke="#e8eaf0" stroke-width="2"/>
+            <!-- + terminal -->
+            <line x1="20" y1="50" x2="40" y2="50" stroke="#ef4444" stroke-width="2"/>
+            <text x="10" y="53" font-family="Space Mono" font-size="10" fill="#ef4444">+</text>
+            <!-- - terminal -->
+            <line x1="25" y1="70" x2="35" y2="70" stroke="#3b82f6" stroke-width="2"/>
+            <text x="10" y="73" font-family="Space Mono" font-size="10" fill="#3b82f6">-</text>
+            
+            <text x="30" y="30" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#7a7f8e">V-IN</text>
+            
+            <!-- Top Wire to Coil -->
+            <path d="M 30 50 H 70" fill="none" stroke="#ef4444" stroke-width="2"/>
+            
+            <!-- Coil (Inductor) -->
+            <path d="M 70 50 Q 80 40 90 50 Q 100 40 110 50 Q 120 40 130 50" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <text x="100" y="30" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#e8eaf0">Coil (L)</text>
+            
+            <!-- Wire from Coil to Switch Node -->
+            <path d="M 130 50 H 160" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <circle cx="160" cy="50" r="2" fill="#e8eaf0"/>
+            
+            <!-- Switch (Transistor/MOSFET representation) -->
+            <path d="M 160 50 V 65" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <!-- switch open -->
+            <path d="M 160 65 L 175 75" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <circle cx="160" cy="65" r="2" fill="#fff"/>
+            <circle cx="160" cy="80" r="2" fill="#fff"/>
+            <text x="180" y="75" font-family="Space Mono" font-size="10" fill="#7a7f8e">Switch (Pump)</text>
+            
+            <!-- Wire from Switch Node to Diode -->
+            <path d="M 160 50 H 190" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            
+            <!-- Schottky Diode -->
+            <use href="#schottky" x="200" y="50" />
+            <text x="200" y="30" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#f5c842">Dioda Schottky</text>
+            
+            <!-- Wire from Diode to Output Node -->
+            <path d="M 210 50 H 260" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <circle cx="260" cy="50" r="2" fill="#e8eaf0"/>
+            
+            <!-- Capacitor -->
+            <path d="M 260 50 V 60" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <line x1="250" y1="60" x2="270" y2="60" stroke="#3b82f6" stroke-width="3"/>
+            <line x1="250" y1="68" x2="270" y2="68" stroke="#3b82f6" stroke-width="3"/>
+            <path d="M 260 68 V 80" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <text x="280" y="68" font-family="Space Mono" font-size="10" fill="#3b82f6">Kapasitor (C)</text>
+            <circle cx="260" cy="80" r="2" fill="#e8eaf0"/>
+            
+            <!-- Wire to V-OUT -->
+            <path d="M 260 50 H 320" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <text x="320" y="45" font-family="Space Mono" font-size="12" fill="#ef4444" font-weight="bold">V-OUT (Step-Up)</text>
+            
+            <!-- Ground Wire (Bottom) -->
+            <path d="M 30 70 V 80 H 320" fill="none" stroke="#3b82f6" stroke-width="2"/>
+            <!-- Load indicator output -->
+            <path d="M 320 80 H 340" fill="none" stroke="#3b82f6" stroke-width="2"/>
+            <path d="M 320 50 H 340" fill="none" stroke="#ef4444" stroke-width="2"/>
+          </svg>
+        </div>
+        <p style="font-size: 14px; color: var(--text); margin-bottom: 12px;"><strong>Fungsi:</strong> Mengangkat (Step-Up / Pump) tegangan DC input yang rendah menjadi tegangan DC output yang jauh lebih tinggi.</p>
+        <div class="infobox" style="border-left-color: #f5c842;">
+          <strong>Cara Kerja:</strong> Switch (biasanya IC/Transistor) membuka dan menutup dengan sangat cepat. Saat tertutup, <b>Koil (L)</b> mengisi daya magnet. Saat terbuka, koil melepaskan tegangan induksi tinggi secara tiba-tiba. Tegangan ini disearahkan oleh <b>Dioda Schottky</b> dan disimpan di <b>Kapasitor (C)</b>.<br><br>
+          <strong>Kenapa Pakai Schottky?</strong> Karena proses <i>switching/pump</i> ini sangat cepat (ratusan kilohertz), dioda silikon biasa terlalu lambat dan akan panas. Dioda Schottky memiliki fitur <i>fast recovery</i> (pemulihan cepat) dan <i>low forward voltage drop</i> yang sangat efisien untuk tugas kecepatan tinggi.<br><br>
+          <strong>Aplikasi:</strong> Sirkuit lampu Backlight HP/TV (mengubah 3.7V menjadi 20V+), Power Supply SMPS, dan rangkaian DC-DC Converter Step-Up.
+        </div>
       </div>
     </div>
 
