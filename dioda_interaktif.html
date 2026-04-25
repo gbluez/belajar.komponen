@@ -1647,6 +1647,53 @@
           <strong>Aplikasi:</strong> Dioda dipasang paralel (secara reverse bias) pada komponen induktif seperti koil relay, motor DC, dan pada sirkuit Buck/Boost step-up/step-down converter.
         </div>
       </div>
+      <div class="card">
+        <div class="card-title">5. Dioda TVS (Transient Voltage Suppressor) / Pengaman ESD</div>
+        <div style="background: #0d0f14; border-radius: 8px; padding: 20px; margin-bottom: 16px; text-align: center;">
+          <svg viewBox="0 0 400 120" style="max-width: 100%; height: auto; display: inline-block;">
+            <!-- External Port -->
+            <rect x="20" y="40" width="40" height="40" rx="4" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <text x="40" y="64" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#7a7f8e">USB</text>
+            
+            <!-- Data Line -->
+            <path d="M60 60 H 300" fill="none" stroke="#3b82f6" stroke-width="2"/>
+            <text x="240" y="52" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#3b82f6">Jalur Data (D+ / D-)</text>
+            
+            <!-- Internal IC -->
+            <rect x="300" y="30" width="80" height="60" rx="4" fill="#1e2330" stroke="#e8eaf0" stroke-width="2"/>
+            <text x="340" y="64" text-anchor="middle" font-family="Space Mono" font-size="12" fill="#e8eaf0">Main IC</text>
+            
+            <!-- TVS Diode to Ground -->
+            <path d="M180 60 V 80" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            <!-- TVS Symbol (Back to back zener) -->
+            <polygon points="172,90 188,90 180,80" fill="#f5c842" />
+            <polygon points="172,90 188,90 180,100" fill="#f5c842" />
+            <!-- Zener lines -->
+            <path d="M168,87 L172,90 L188,90 L192,93" fill="none" stroke="#f5c842" stroke-width="2"/>
+            
+            <path d="M180 100 V 110" fill="none" stroke="#e8eaf0" stroke-width="2"/>
+            
+            <!-- Ground Symbol -->
+            <path d="M170 110 H 190 M 175 114 H 185 M 178 118 H 182" fill="none" stroke="#7a7f8e" stroke-width="2"/>
+            
+            <text x="210" y="93" font-family="Space Mono" font-size="10" fill="#f5c842">TVS Diode</text>
+            
+            <!-- ESD Strike -->
+            <path d="M120 10 L 110 30 H 125 L 115 50" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <text x="100" y="20" font-family="Space Mono" font-size="10" fill="#ef4444" font-weight="bold">ESD Spike!</text>
+            
+            <!-- Discharge Path -->
+            <path d="M125 50 Q 170 40 175 75" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <polygon points="175,75 171,68 179,68" fill="#ef4444"/>
+            <text x="110" y="100" font-family="Space Mono" font-size="9" fill="#ef4444">Dibuang ke GND</text>
+          </svg>
+        </div>
+        <p style="font-size: 14px; color: var(--text); margin-bottom: 12px;"><strong>Fungsi:</strong> Melindungi komponen sensitif (seperti IC utama) dari lonjakan tegangan sesaat yang ekstrim, terutama akibat listrik statis (ESD - Electrostatic Discharge) dari sentuhan tangan manusia atau konektor kabel.</p>
+        <div class="infobox" style="border-left-color: #f5c842;">
+          <strong>Cara Kerja:</strong> Dalam kondisi normal tegangan rendah, dioda TVS seolah "tidak ada" (hambatan sangat tinggi / cut-off). Namun ketika terjadi lonjakan tegangan tajam (misal ribuan volt listrik statis), dioda TVS akan langsung "tembus" (breakdown) dalam hitungan <i>picoseconds</i> dan membuang lonjakan tersebut langsung ke Ground, sehingga IC tetap aman.<br><br>
+          <strong>Aplikasi:</strong> Hampir selalu ditemukan dirangkai secara paralel terhadap Ground pada sekitar port USB, HDMI, konektor antena, soket charger, dan jalur data lainnya pada motherboard handphone / laptop.
+        </div>
+      </div>
     </div>
 
   <script>
