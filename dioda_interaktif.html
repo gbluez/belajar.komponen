@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Praktik Pengukuran Dioda</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    :root {
+      --bg: #0d0f14;
+      --surface: #161920;
+      --surface2: #1e2330;
+      --border: rgba(255, 255, 255, 0.07);
+      --accent: #f5c842;
+      --accent2: #e8562a;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #e8eaf0;
+      --muted: #7a7f8e;
+      --mono: 'Space Mono', monospace;
+      --sans: 'DM Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 36px;
+    }
+
+    .header-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .header h1 span {
+      color: var(--accent);
+    }
+
+    .header p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 560px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 28px;
+      background: var(--surface);
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+
+    .tab {
+      padding: 8px 18px;
+      border-radius: 7px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: #0d0f14;
+      font-weight: 600;
+    }
+
+    .tab:hover:not(.active) {
+      color: var(--text);
+    }
+
+    /* Panel */
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    /* Section */
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .section-value {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    /* Info box */
+    .infobox {
+      background: var(--surface2);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: 14px;
+    }
+
+    .infobox strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .infobox.blue {
+      border-left-color: var(--blue);
+    }
+
+    .infobox.green {
+      border-left-color: var(--green);
+    }
+
+    .infobox.red {
+      border-left-color: var(--red);
+    }
+
+    /* Grid */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media(max-width:600px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Spec row */
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .spec-row:last-child {
+      border-bottom: none;
+    }
+
+    .spec-key {
+      color: var(--muted);
+    }
+
+    .spec-val {
+      font-family: var(--mono);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .spec-val.ok {
+      color: var(--green);
+    }
+
+    .spec-val.warn {
+      color: var(--accent);
+    }
+
+    .spec-val.bad {
+      color: var(--red);
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .badge-y {
+      background: rgba(245, 200, 66, .15);
+      color: var(--accent);
+      border: 1px solid rgba(245, 200, 66, .3);
+    }
+
+    .badge-g {
+      background: rgba(34, 197, 94, .12);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, .25);
+    }
+
+    .badge-r {
+      background: rgba(239, 68, 68, .12);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, .25);
+    }
+
+    .badge-b {
+      background: rgba(59, 130, 246, .12);
+      color: var(--blue);
+      border: 1px solid rgba(59, 130, 246, .25);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 9px 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn.active-btn {
+      background: var(--accent);
+      color: #0d0f14;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    /* Slider */
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .slider-label {
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 90px;
+    }
+
+    .slider-val {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      min-width: 60px;
+      text-align: right;
+    }
+
+    input[type=range] {
+      flex: 1;
+      accent-color: var(--accent);
+    }
+
+    /* SVG circuit */
+    .circuit-svg {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* Voltmeter display */
+    .voltmeter {
+      background: #0a1a0a;
+      border: 2px solid #22c55e;
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .vm-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: #22c55e;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .vm-value {
+      font-family: var(--mono);
+      font-size: 38px;
+      font-weight: 700;
+      color: #22c55e;
+      letter-spacing: 2px;
+    }
+
+    .vm-unit {
+      font-size: 16px;
+    }
+
+    .vm-mode {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(34, 197, 94, .5);
+      margin-top: 2px;
+    }
+
+    /* Probe indicator */
+    .probe-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .probe {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 7px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .probe-red {
+      background: rgba(239, 68, 68, .15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, .3);
+    }
+
+    .probe-black {
+      background: rgba(255, 255, 255, .05);
+      color: #aaa;
+      border: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    /* Diode symbol */
+    .diode-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .anode-l {
+      color: var(--red);
+    }
+
+    .cathode-l {
+      color: #888;
+    }
+
+    /* Step box */
+    .step {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step:last-child {
+      border-bottom: none;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #0d0f14;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-content h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .step-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .step-content code {
+      font-family: var(--mono);
+      background: var(--surface2);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    /* Comparison table */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .compare-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      text-transform: uppercase;
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .compare-table tr:hover td {
+      background: var(--surface2);
+    }
+
+    /* Animation: current flow */
+    @keyframes flowRight {
+      0% {
+        stroke-dashoffset: 30
+      }
+
+      100% {
+        stroke-dashoffset: 0
+      }
+    }
+
+    @keyframes flowLeft {
+      0% {
+        stroke-dashoffset: 0
+      }
+
+      100% {
+        stroke-dashoffset: 30
+      }
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        opacity: .7
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    .flow-on {
+      stroke-dasharray: 6 4;
+      animation: flowRight .8s linear infinite;
+    }
+
+    .flow-off {
+      stroke-dasharray: 6 4;
+      opacity: .25;
+    }
+
+    .glow-on {
+      animation: glow 1.2s ease-in-out infinite;
+    }
+
+    /* IV curve area */
+    #iv-canvas {
+      border-radius: 8px;
+      background: #0a0c10;
+      display: block;
+      width: 100%;
+    }
+
+    /* Reading result */
+    .result-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .result-strip .r-label {
+      color: var(--muted);
+    }
+
+    .result-strip .r-val {
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- ===== TOP BANNER ===== -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 16px 24px; background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+      <h1 style="display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 24px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+        <svg width="32" height="18" viewBox="0 0 32 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+          <!-- Wire L -->
+          <path d="M2 9H12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Triangle (Anode) -->
+          <path d="M12 2L22 9L12 16V2Z" fill="currentColor" />
+          <!-- Line (Cathode) -->
+          <path d="M22 2V16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- Wire R -->
+          <path d="M22 9H30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        <div><span style="color: var(--text);">Tentang</span>Dioda</div>
+      </h1>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="width: 40px; height: 1px; background: var(--accent); opacity: 0.5; display: inline-block;"></span>
+        <span style="font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--muted); letter-spacing: 1px;">Arie Shanto</span>
+      </div>
+    </div>
+    <div
+      style="margin-bottom: 24px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;">
+      <p style="margin-bottom: 12px;">Dioda adalah komponen elektronika aktif dengan dua elektroda (anoda dan katoda)
+        yang berfungsi menyearahkan arus listrik—mengalirkan arus ke satu arah dan menghambat arah sebaliknya. Ditemukan
+        akhir abad ke-19 (Braun 1874) dan dikembangkan awal abad ke-20 (Fleming 1904), dioda modern umumnya berbasis
+        semikonduktor (silikon/germanium).</p>
+      <p style="margin-bottom: 12px; font-size: 13px; color: var(--muted);">
+      </p>
+      <h3 style="margin-bottom: 8px; font-size: 16px; color: var(--accent);">Apa itu Dioda?</h3>
+      <ul style="margin-left: 20px; line-height: 1.6;">
+        <li><strong>Fungsi Utama:</strong> Penyearah arus listrik (mengubah AC ke DC).</li>
+        <li><strong>Struktur:</strong> Memiliki dua elektroda: Anoda (+) dan Katoda (-).</li>
+        <li><strong>Prinsip Kerja:</strong>
+          <ul style="margin-left: 20px; margin-top: 4px;">
+            <li><strong>Forward Bias (Panjar Maju):</strong> Arus mengalir dari anoda ke katoda.</li>
+            <li><strong>Reverse Bias (Panjar Mundur):</strong> Arus terhambat.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center;">
+        <h4 style="font-size: 14px; margin-bottom: 12px; color: var(--text);">Bentuk Fisik Dioda SMD</h4>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <img src="images/real_smd.png" alt="Dioda SMD pada Motherboard Handphone 1"
+            style="max-width: 100%; max-height: 250px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <img src="images/real_smd_2.jpg" alt="Dioda SMD pada Motherboard Handphone 2"
+            style="max-width: 100%; max-height: 250px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+        </div>
+        <p style="font-size: 12px; color: var(--muted); margin-top: 12px;">Contoh nyata komponen dioda jenis SMD
+          (Surface
+          Mount Device) pada PCB (Motherboard). (Perhatikan garis/tanda pada salah satu sisi komponen yang menunjukkan
+          letak Katoda).</p>
+      </div>
+    </div>
+
+    <div class="header">
+      <div class="header-tag">Elektronika Dasar · Komponen Pasif Aktif</div>
+      <h1>Dioda: <span>Cara Kerja Tegangan</span><br>& Praktik Pengukuran</h1>
+      <p>Visualisasi interaktif aliran tegangan, forward voltage test, dan cara mengukur polaritas dioda dengan
+        multimeter.</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('tegangan')">Aliran Tegangan</button>
+      <button class="tab" onclick="switchTab('forward')">Forward Voltage Test</button>
+      <button class="tab" onclick="switchTab('polaritas')">Cek Polaritas</button>
+      <button class="tab" onclick="switchTab('iv')">Kurva I-V</button>
+    </div>
+
+    <!-- ===== PANEL 1: ALIRAN TEGANGAN ===== -->
+    <div class="panel active" id="panel-tegangan">
+
+      <div class="card">
+        <div class="card-title">Struktur Dasar Dioda</div>
+        <!-- Diode anatomy SVG -->
+        <svg class="circuit-svg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background -->
+          <rect width="700" height="200" fill="#0d0f14" rx="10" />
+
+          <!-- P-N junction body -->
+          <!-- P region -->
+          <rect x="200" y="60" width="130" height="80" rx="6" fill="#3b1a1a" stroke="#ef4444" stroke-width="1.2" />
+          <text x="265" y="94" text-anchor="middle" font-family="Space Mono" font-size="18" font-weight="700"
+            fill="#ef4444">P</text>
+          <text x="265" y="114" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#ef4444"
+            fill-opacity=".7">banyak hole (+)</text>
+
+          <!-- N region -->
+          <rect x="370" y="60" width="130" height="80" rx="6" fill="#0d1a2a" stroke="#3b82f6" stroke-width="1.2" />
+          <text x="435" y="94" text-anchor="middle" font-family="Space Mono" font-size="18" font-weight="700"
+            fill="#3b82f6">N</text>
+          <text x="435" y="114" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#3b82f6"
+            fill-opacity=".7">banyak elektron (−)</text>
+
+          <!-- Junction line -->
+          <line x1="330" y1="55" x2="330" y2="145" stroke="#f5c842" stroke-width="1.5" stroke-dasharray="4,3" />
+          <text x="330" y="48" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#f5c842"
+            letter-spacing="0.5">JUNCTION</text>
+
+          <!-- Depletion zone label -->
+          <rect x="308" y="60" width="44" height="80" fill="#f5c842" fill-opacity=".06" rx="0" />
+
+          <!-- Anode terminal (left) -->
+          <line x1="100" y1="100" x2="200" y2="100" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" />
+          <text x="90" y="95" font-family="Space Mono" font-size="11" fill="#ef4444" text-anchor="middle">ANODA</text>
+          <text x="90" y="108" font-family="Space Mono" font-size="9" fill="#ef4444" fill-opacity=".6"
+            text-anchor="middle">(+)</text>
+          <!-- Probe red dot -->
+          <circle cx="108" cy="100" r="6" fill="#ef4444" fill-opacity=".3" stroke="#ef4444" stroke-width="1.5" />
+
+          <!-- Cathode terminal (right) -->
+          <line x1="500" y1="100" x2="600" y2="100" stroke="#888" stroke-width="2.5" stroke-linecap="round" />
+          <text x="610" y="95" font-family="Space Mono" font-size="11" fill="#aaa" text-anchor="start">KATODA</text>
+          <text x="610" y="108" font-family="Space Mono" font-size="9" fill="#aaa" fill-opacity=".6"
+            text-anchor="start">(−)</text>
+          <!-- Cathode bar -->
+          <line x1="500" y1="58" x2="500" y2="142" stroke="#aaa" stroke-width="3" stroke-linecap="round" />
+
+          <!-- Stripe marker on physical diode body -->
+          <rect x="180" y="56" width="340" height="88" rx="20" fill="none" stroke="rgba(255,255,255,0.08)"
+            stroke-width="1" />
+          <text x="350" y="172" text-anchor="middle" font-family="DM Sans" font-size="11"
+            fill="rgba(255,255,255,0.25)">badan dioda (misal: 1N4007)</text>
+
+          <!-- Stripe (cathode mark) on body -->
+          <rect x="488" y="60" width="8" height="80" rx="2" fill="rgba(200,200,200,0.15)" stroke="rgba(200,200,200,0.3)"
+            stroke-width="0.5" />
+
+          <!-- Particle: holes (red circles) moving right in P -->
+          <circle cx="215" cy="82" r="4" fill="#ef4444" fill-opacity=".7" />
+          <circle cx="240" cy="108" r="4" fill="#ef4444" fill-opacity=".6" />
+          <circle cx="265" cy="78" r="4" fill="#ef4444" fill-opacity=".8" />
+          <circle cx="290" cy="102" r="4" fill="#ef4444" fill-opacity=".5" />
+
+          <!-- Particle: electrons (blue circles) in N -->
+          <circle cx="390" cy="88" r="4" fill="#3b82f6" fill-opacity=".7" />
+          <circle cx="415" cy="112" r="4" fill="#3b82f6" fill-opacity=".6" />
+          <circle cx="445" cy="80" r="4" fill="#3b82f6" fill-opacity=".8" />
+          <circle cx="470" cy="104" r="4" fill="#3b82f6" fill-opacity=".5" />
+
+          <!-- electron symbols -->
+          <text x="390" y="92" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">−</text>
+          <text x="415" y="116" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">−</text>
+          <text x="445" y="84" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">−</text>
+          <text x="470" y="108" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">−</text>
+
+          <text x="215" y="86" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">+</text>
+          <text x="240" y="112" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">+</text>
+          <text x="265" y="82" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">+</text>
+          <text x="290" y="106" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#fff"
+            fill-opacity=".8">+</text>
+        </svg>
+
+        <div class="infobox" style="margin-top:12px">
+          <strong>Inti prinsip dioda:</strong> dioda adalah sambungan semikonduktor tipe-P dan tipe-N. Arus bisa
+          mengalir <strong>satu arah saja</strong> — dari Anoda (+) ke Katoda (−). Ciri fisik katoda adalah
+          <strong>garis/stripe putih</strong> di badan dioda.
+        </div>
+      </div>
+
+      <!-- Forward vs Reverse -->
+      <div class="card">
+        <div class="card-title">Simulasi: Forward Bias vs Reverse Bias</div>
+        <div class="btn-group">
+          <button class="btn active-btn" id="btn-fwd" onclick="setBias('forward')">▶ Forward Bias (ON)</button>
+          <button class="btn" id="btn-rev" onclick="setBias('reverse')">◀ Reverse Bias (OFF)</button>
+        </div>
+
+        <!-- Circuit simulation SVG -->
+        <svg class="circuit-svg" viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" id="bias-svg">
+          <rect width="700" height="260" fill="#0d0f14" rx="10" />
+
+          <!-- Circuit loop -->
+          <!-- Top wire -->
+          <line x1="80" y1="60" x2="620" y2="60" stroke="#444" stroke-width="2" />
+          <!-- Bottom wire -->
+          <line x1="80" y1="200" x2="620" y2="200" stroke="#444" stroke-width="2" />
+          <!-- Left wire -->
+          <line x1="80" y1="60" x2="80" y2="200" stroke="#444" stroke-width="2" />
+          <!-- Right wire -->
+          <line x1="620" y1="60" x2="620" y2="200" stroke="#444" stroke-width="2" />
+
+          <!-- Battery (left side) -->
+          <!-- + terminal top -->
+          <line x1="60" y1="125" x2="100" y2="125" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" />
+          <line x1="60" y1="135" x2="100" y2="135" stroke="#3b82f6" stroke-width="1.2" stroke-linecap="round" />
+          <text x="80" y="120" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#ef4444">+</text>
+          <text x="80" y="152" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#3b82f6">−</text>
+          <text x="80" y="170" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#666">Battery</text>
+          <text x="80" y="182" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#f5c842">9V</text>
+
+          <!-- Resistor (top wire, middle) -->
+          <rect x="240" y="48" width="80" height="24" rx="4" fill="#1e2330" stroke="#666" stroke-width="1" />
+          <text x="280" y="63" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#aaa">R 220Ω</text>
+
+          <!-- Diode symbol (right side of top wire) -->
+          <!-- Triangle -->
+          <polygon id="diode-tri" points="420,50 420,70 445,60" fill="#f5c842" fill-opacity=".7" stroke="#f5c842"
+            stroke-width="1" />
+          <!-- Bar -->
+          <line x1="445" y1="50" x2="445" y2="70" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"
+            id="diode-bar" />
+          <!-- Wires to diode -->
+          <line x1="400" y1="60" x2="420" y2="60" stroke="#444" stroke-width="2" />
+          <line x1="445" y1="60" x2="480" y2="60" stroke="#444" stroke-width="2" />
+
+          <!-- LED / indicator circle -->
+          <circle cx="570" cy="130" r="22" fill="#1e2330" stroke="#444" stroke-width="1" id="led-glow" />
+          <text x="570" y="134" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#666"
+            id="led-text">LED</text>
+
+          <!-- Current flow lines (animated) -->
+          <!-- Top wire left segment -->
+          <line id="f1" x1="100" y1="60" x2="240" y2="60" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"
+            class="flow-on" />
+          <!-- Top wire right segment (after diode) -->
+          <line id="f2" x1="480" y1="60" x2="540" y2="60" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"
+            class="flow-on" />
+          <!-- Right wire down -->
+          <line id="f3" x1="620" y1="70" x2="620" y2="190" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"
+            class="flow-on" />
+          <!-- Bottom wire -->
+          <line id="f4" x1="100" y1="200" x2="620" y2="200" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"
+            class="flow-on" />
+          <!-- Left wire up -->
+          <line id="f5" x1="80" y1="70" x2="80" y2="185" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"
+            class="flow-on" />
+
+          <!-- Voltage labels -->
+          <text x="432" y="46" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#f5c842"
+            id="vd-label">Vf = 0.7V</text>
+          <text x="432" y="80" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#666"
+            id="diode-state">KONDUKSI ✓</text>
+
+          <!-- Polarity labels at diode -->
+          <text x="415" y="47" font-family="Space Mono" font-size="9" fill="#ef4444" id="anode-sign">A(+)</text>
+          <text x="445" y="47" font-family="Space Mono" font-size="9" fill="#888" id="cathode-sign">K(−)</text>
+
+          <!-- Status box bottom -->
+          <rect x="180" y="210" width="340" height="38" rx="8" fill="#1e2330" stroke="rgba(255,255,255,0.06)"
+            stroke-width="1" />
+          <text x="350" y="228" text-anchor="middle" font-family="DM Sans" font-size="12" font-weight="600"
+            fill="#e8eaf0" id="status-text">Forward Bias: Tegangan (+) ke Anoda — Arus MENGALIR</text>
+          <text x="350" y="242" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#7a7f8e"
+            id="status-sub">Dioda dalam kondisi ON · Vf ≈ 0.7V (silicon)</text>
+        </svg>
+
+        <div class="grid2" style="margin-top:14px">
+          <div>
+            <div class="spec-row"><span class="spec-key">Status dioda</span><span class="spec-val ok"
+                id="diode-status-txt">ON (konduksi)</span></div>
+            <div class="spec-row"><span class="spec-key">Tegangan forward (Vf)</span><span class="spec-val ok"
+                id="vf-txt">~0.7 V</span></div>
+            <div class="spec-row"><span class="spec-key">Arus (I)</span><span class="spec-val ok"
+                id="i-txt">mengalir</span></div>
+            <div class="spec-row"><span class="spec-key">Hambatan internal</span><span class="spec-val ok"
+                id="r-txt">rendah (~0 Ω)</span></div>
+          </div>
+          <div>
+            <div class="spec-row"><span class="spec-key">Anoda</span><span class="spec-val" id="anode-txt">terhubung ke
+                (+)</span></div>
+            <div class="spec-row"><span class="spec-key">Katoda</span><span class="spec-val" id="cathode-txt">terhubung
+                ke (−)</span></div>
+            <div class="spec-row"><span class="spec-key">LED indikator</span><span class="spec-val ok"
+                id="led-txt">MENYALA</span></div>
+            <div class="spec-row"><span class="spec-key">Depletion zone</span><span class="spec-val ok">menyempit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== PANEL 2: FORWARD VOLTAGE TEST ===== -->
+    <div class="panel" id="panel-forward">
+
+      <div class="card">
+        <div class="card-title">Apa itu Forward Voltage (Vf)?</div>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px">
+          <strong style="color:var(--text)">Forward Voltage (Vf)</strong> adalah tegangan minimum yang harus diberikan
+          ke dioda agar arus bisa mengalir. Di bawah Vf, dioda tidak konduksi. Di atas Vf, dioda konduksi dan "menjaga"
+          tegangan di kaki-kakinya tetap ≈ Vf.
+        </p>
+
+        <!-- Diode type selector -->
+        <div class="card-title" style="margin-top:4px">Pilih Tipe Dioda</div>
+        <div class="btn-group">
+          <button class="btn active-btn" onclick="setDiode('silicon',this)">Silicon (1N4007)</button>
+          <button class="btn" onclick="setDiode('germanium',this)">Germanium (1N60)</button>
+          <button class="btn" onclick="setDiode('led-red',this)">LED Merah</button>
+          <button class="btn" onclick="setDiode('led-blue',this)">LED Biru</button>
+          <button class="btn" onclick="setDiode('schottky',this)">Schottky (1N5819)</button>
+        </div>
+
+        <!-- Voltmeter mockup -->
+        <div class="voltmeter">
+          <div class="vm-label">FORWARD VOLTAGE MEASUREMENT</div>
+          <div class="vm-value" id="vm-display">0.700 <span class="vm-unit">V</span></div>
+          <div class="vm-mode">DC · diode test mode · probes: RED→Anoda, BLACK→Katoda</div>
+        </div>
+
+        <div class="probe-row">
+          <div class="probe probe-red">🔴 PROBE MERAH (+) → ANODA</div>
+          <div class="probe probe-black">⚫ PROBE HITAM (−) → KATODA</div>
+        </div>
+
+        <!-- Circuit diagram forward test -->
+        <svg class="circuit-svg" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" style="margin-top:14px">
+          <rect width="700" height="220" fill="#0d0f14" rx="10" />
+
+          <!-- Multimeter box -->
+          <rect x="260" y="120" width="180" height="80" rx="10" fill="#0a1a0a" stroke="#22c55e" stroke-width="1.5" />
+          <text x="350" y="148" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#22c55e"
+            letter-spacing="1">MULTIMETER</text>
+          <text x="350" y="170" text-anchor="middle" font-family="Space Mono" font-size="22" font-weight="700"
+            fill="#22c55e" id="svg-vm">0.700V</text>
+          <text x="350" y="188" text-anchor="middle" font-family="DM Sans" font-size="9"
+            fill="rgba(34,197,94,0.5)">DIODE TEST</text>
+
+          <!-- Diode (horizontal) -->
+          <line x1="120" y1="50" x2="160" y2="50" stroke="#ef4444" stroke-width="2" />
+          <polygon points="160,40 160,60 185,50" fill="#f5c842" fill-opacity=".8" stroke="#f5c842" stroke-width="1" />
+          <line x1="185" y1="40" x2="185" y2="60" stroke="#f5c842" stroke-width="2.5" />
+          <line x1="185" y1="50" x2="220" y2="50" stroke="#888" stroke-width="2" />
+
+          <!-- Diode body outline -->
+          <rect x="105" y="36" width="128" height="28" rx="12" fill="none" stroke="rgba(255,255,255,0.1)"
+            stroke-width="1" />
+          <!-- Stripe -->
+          <rect x="226" y="37" width="5" height="26" rx="2" fill="rgba(200,200,200,0.2)" stroke="rgba(200,200,200,0.35)"
+            stroke-width="0.5" />
+
+          <!-- Anode label -->
+          <text x="130" y="35" font-family="Space Mono" font-size="9" fill="#ef4444" text-anchor="middle">ANODA
+            (+)</text>
+          <!-- Cathode label -->
+          <text x="210" y="35" font-family="Space Mono" font-size="9" fill="#888" text-anchor="middle">KATODA (−)</text>
+
+          <!-- Probe cables -->
+          <!-- Red probe: from +com of multimeter to anode -->
+          <path d="M 290 120 C 290 95 170 95 120 70" stroke="#ef4444" stroke-width="2" fill="none"
+            stroke-dasharray="5,3" />
+          <circle cx="120" cy="50" r="5" fill="#ef4444" />
+          <text x="200" y="92" font-family="DM Sans" font-size="10" fill="#ef4444" text-anchor="middle">probe
+            merah</text>
+
+          <!-- Black probe: from com of multimeter to cathode -->
+          <path d="M 410 120 C 410 90 245 90 232 65" stroke="#888" stroke-width="2" fill="none"
+            stroke-dasharray="5,3" />
+          <circle cx="232" cy="50" r="5" fill="#888" />
+          <text x="340" y="86" font-family="DM Sans" font-size="10" fill="#888" text-anchor="middle">probe hitam</text>
+
+          <!-- Arrow showing current direction -->
+          <path d="M 140 50 L 175 50" stroke="#f5c842" stroke-width="2" fill="none" marker-end="url(#arrowY)"
+            class="flow-on" />
+          <defs>
+            <marker id="arrowY" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0 0 L10 5 L0 10 Z" fill="#f5c842" />
+            </marker>
+          </defs>
+          <text x="160" y="75" font-family="DM Sans" font-size="9" fill="#f5c842" text-anchor="middle">arus →</text>
+        </svg>
+
+        <!-- Type detail table -->
+        <table class="compare-table" style="margin-top:16px">
+          <thead>
+            <tr>
+              <th>Tipe Dioda</th>
+              <th>Vf Tipikal</th>
+              <th>Keterangan</th>
+              <th>Diode Test (baik)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Silicon (1N4007)</td>
+              <td><span class="badge badge-y">0.6 – 0.7 V</span></td>
+              <td style="color:var(--muted)">Paling umum, rectifier</td>
+              <td><span class="badge badge-g">0.5–0.8 V</span></td>
+            </tr>
+            <tr>
+              <td>Germanium (1N60)</td>
+              <td><span class="badge badge-b">0.2 – 0.3 V</span></td>
+              <td style="color:var(--muted)">Lawas, sinyal kecil</td>
+              <td><span class="badge badge-g">0.15–0.35 V</span></td>
+            </tr>
+            <tr>
+              <td>LED Merah</td>
+              <td><span class="badge badge-r">1.8 – 2.2 V</span></td>
+              <td style="color:var(--muted)">Menyala saat forward</td>
+              <td><span class="badge badge-g">1.6–2.4 V</span></td>
+            </tr>
+            <tr>
+              <td>LED Biru / Putih</td>
+              <td><span class="badge badge-b">3.0 – 3.5 V</span></td>
+              <td style="color:var(--muted)">Tegangan lebih tinggi</td>
+              <td><span class="badge badge-g">2.8–3.6 V</span></td>
+            </tr>
+            <tr>
+              <td>Schottky (1N5819)</td>
+              <td><span class="badge badge-y">0.2 – 0.45 V</span></td>
+              <td style="color:var(--muted)">Sangat cepat, Vf rendah</td>
+              <td><span class="badge badge-g">0.15–0.5 V</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="infobox green" style="margin-top:14px">
+          <strong>Multimeter mode "Diode Test" (simbol ▷|):</strong> multimeter menginjeksikan arus kecil (~1 mA) dan
+          menampilkan tegangan jatuh di dioda. Jika hasilnya dalam range Vf normal → dioda <strong>baik</strong>. Jika
+          OL/∞ → dioda <strong>putus</strong>. Jika mendekati 0 → dioda <strong>short</strong>.
+        </div>
+      </div>
+
+      <!-- Steps -->
+      <div class="card">
+        <div class="card-title">Langkah Pengukuran Forward Voltage</div>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Set multimeter ke mode Diode Test</h4>
+            <p>Putar selector ke simbol <code>▷|</code> (dioda/buzzer). Bukan ke Voltmeter DC biasa.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Pasang probe dengan benar</h4>
+            <p><strong style="color:#ef4444">Probe MERAH (+)</strong> ke <strong>ANODA</strong> dioda. <strong
+                style="color:#aaa">Probe HITAM (−)</strong> ke <strong>KATODA</strong> (sisi bergaris putih).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Baca nilai di display</h4>
+            <p>Nilai normal silicon: <code>0.5 – 0.8 V</code>. Jika display menunjukkan <code>OL</code> atau
+              <code>1.</code> → dioda putus.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Tes balik (Reverse)</h4>
+            <p>Tukar probe: merah ke katoda, hitam ke anoda. Dioda baik → harusnya tampil <code>OL</code> (tidak
+              konduksi). Jika ada nilai kecil → dioda bocor.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== PANEL 3: POLARITAS ===== -->
+    <div class="panel" id="panel-polaritas">
+
+      <div class="card">
+        <div class="card-title">Cara Membaca Polaritas Dioda Secara Visual</div>
+        <svg class="circuit-svg" viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg">
+          <rect width="700" height="280" fill="#0d0f14" rx="10" />
+
+          <!-- ===== Dioda 1N4007 (glass/plastic) ===== -->
+          <!-- Body -->
+          <rect x="60" y="60" width="200" height="70" rx="28" fill="#2a2a1a" stroke="#aaa" stroke-width="1.5" />
+          <!-- Stripe (cathode) -->
+          <rect x="242" y="62" width="10" height="66" rx="3" fill="rgba(230,230,230,0.8)" stroke="#ccc"
+            stroke-width="0.5" />
+          <!-- Leads -->
+          <line x1="20" y1="95" x2="60" y2="95" stroke="#aaa" stroke-width="2.5" stroke-linecap="round" />
+          <line x1="260" y1="95" x2="300" y2="95" stroke="#aaa" stroke-width="2.5" stroke-linecap="round" />
+          <!-- Label -->
+          <text x="160" y="90" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#f5c842">1N4007</text>
+          <text x="160" y="105" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#888">silicon
+            rectifier</text>
+          <!-- Annotations -->
+          <text x="40" y="55" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#ef4444">ANODA</text>
+          <text x="40" y="67" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ef4444">(+)</text>
+          <line x1="40" y1="70" x2="40" y2="88" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2" />
+          <circle cx="40" cy="95" r="3" fill="#ef4444" fill-opacity=".5" />
+
+          <text x="270" y="55" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#aaa">KATODA</text>
+          <text x="270" y="67" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#aaa">(−)</text>
+          <line x1="270" y1="70" x2="270" y2="88" stroke="#aaa" stroke-width="1" stroke-dasharray="3,2" />
+          <circle cx="270" cy="95" r="3" fill="#aaa" fill-opacity=".5" />
+
+          <!-- Stripe arrow -->
+          <path d="M 247 150 L 247 168 L 200 168" stroke="#f5c842" stroke-width="1.2" fill="none"
+            marker-end="url(#arrowY2)" />
+          <text x="110" y="180" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#f5c842">garis putih =
+            KATODA (−)</text>
+          <defs>
+            <marker id="arrowY2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0 0 L10 5 L0 10 Z" fill="#f5c842" />
+            </marker>
+          </defs>
+
+          <!-- ===== Dioda SMD (SOD-123) ===== -->
+          <rect x="380" y="60" width="100" height="50" rx="6" fill="#1a1a2e" stroke="#3b82f6" stroke-width="1.2" />
+          <!-- Cathode marking (line on one side) -->
+          <rect x="465" y="60" width="8" height="50" rx="3" fill="rgba(100,150,255,0.3)" stroke="#3b82f6"
+            stroke-width="0.8" />
+          <text x="430" y="82" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#3b82f6">SMD</text>
+          <text x="430" y="96" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#888">SOD-123</text>
+          <!-- Pads -->
+          <rect x="350" y="70" width="32" height="30" rx="4" fill="#333" stroke="#555" stroke-width="1" />
+          <rect x="478" y="70" width="32" height="30" rx="4" fill="#333" stroke="#555" stroke-width="1" />
+          <text x="366" y="55" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ef4444">A(+)</text>
+          <text x="494" y="55" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#aaa">K(−)</text>
+          <text x="490" y="150" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#3b82f6">garis biru =
+            K</text>
+
+          <!-- ===== LED ===== -->
+          <circle cx="160" cy="220" r="30" fill="rgba(239,68,68,0.15)" stroke="rgba(239,68,68,0.6)"
+            stroke-width="1.5" />
+          <!-- Flat side (cathode) -->
+          <path d="M 155 190 A 30 30 0 1 0 155 250" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.5)"
+            stroke-width="1.5" />
+          <line x1="155" y1="190" x2="155" y2="250" stroke="#ef4444" stroke-width="2" />
+          <!-- Leads -->
+          <line x1="160" y1="250" x2="160" y2="270" stroke="#aaa" stroke-width="2" />
+          <line x1="145" y1="250" x2="145" y2="270" stroke="#aaa" stroke-width="2" />
+          <!-- Long leg = anode -->
+          <text x="165" y="268" font-family="Space Mono" font-size="9" fill="#ef4444">A(+) panjang</text>
+          <text x="100" y="268" font-family="Space Mono" font-size="9" fill="#888">K(−)</text>
+          <text x="160" y="208" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#888">LED</text>
+          <text x="160" y="222" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ef4444">sisi
+            datar=K</text>
+          <!-- Light rays -->
+          <line x1="196" y1="200" x2="210" y2="190" stroke="#f5c842" stroke-width="1.5" stroke-linecap="round"
+            fill-opacity=".6" />
+          <line x1="200" y1="210" x2="218" y2="205" stroke="#f5c842" stroke-width="1.5" stroke-linecap="round"
+            fill-opacity=".6" />
+          <line x1="196" y1="222" x2="215" y2="222" stroke="#f5c842" stroke-width="1.5" stroke-linecap="round"
+            fill-opacity=".6" />
+
+          <!-- Zener diode symbol -->
+          <line x1="460" y1="195" x2="560" y2="195" stroke="#888" stroke-width="2" />
+          <polygon points="490,180 490,210 515,195" fill="#534AB7" fill-opacity=".7" stroke="#7c70d4"
+            stroke-width="1.2" />
+          <path d="M515 182 L515 210 L520 215" stroke="#7c70d4" stroke-width="2" fill="none" />
+          <path d="M515 182 L510 177" stroke="#7c70d4" stroke-width="2" fill="none" />
+          <text x="505" y="232" text-anchor="middle" font-family="DM Sans" font-size="10" fill="#7c70d4">Zener</text>
+          <text x="470" y="175" font-family="Space Mono" font-size="9" fill="#ef4444">A</text>
+          <text x="518" y="175" font-family="Space Mono" font-size="9" fill="#888">K</text>
+
+          <!-- Section labels -->
+          <text x="160" y="200" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#444">·</text>
+          <text x="160" y="40" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#444">Dioda Silikon
+            (through-hole)</text>
+          <text x="430" y="40" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#444">SMD</text>
+        </svg>
+
+        <div class="infobox" style="margin-top:12px">
+          <strong>Rangkuman penanda polaritas:</strong> (1) Dioda silikon: <strong>garis/stripe putih/abu =
+            Katoda</strong>. (2) LED: <strong>kaki panjang = Anoda, sisi datar badan = Katoda</strong>. (3) SMD:
+          <strong>garis berwarna di salah satu sisi = Katoda</strong>. (4) Jika ragu → pakai multimeter mode diode test.
+        </div>
+      </div>
+
+      <!-- Polaritas measurement steps -->
+      <div class="card">
+        <div class="card-title">Menentukan Polaritas dengan Multimeter</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Dioda tanpa marking yang jelas? Gunakan metode
+          ini untuk menentukan mana anoda dan katoda.</p>
+
+        <!-- Interactive test simulation -->
+        <div class="btn-group">
+          <button class="btn active-btn" id="pol-btn1" onclick="setPolTest('fw')">Test Posisi 1</button>
+          <button class="btn" id="pol-btn2" onclick="setPolTest('rv')">Test Posisi 2 (balik)</button>
+        </div>
+
+        <svg class="circuit-svg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" id="pol-svg">
+          <rect width="700" height="200" fill="#0d0f14" rx="10" />
+
+          <!-- Diode body -->
+          <rect x="260" y="80" width="180" height="50" rx="22" fill="#2a2a2a" stroke="#555" stroke-width="1.2" />
+          <!-- Stripe (right side) -->
+          <rect id="pol-stripe" x="428" y="81" width="7" height="48" rx="2.5" fill="rgba(200,200,200,0.7)" />
+          <!-- Question marks on pins -->
+          <text x="245" y="106" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#f5c842"
+            id="pol-left-label">?</text>
+          <text x="455" y="106" text-anchor="middle" font-family="Space Mono" font-size="14" fill="#f5c842"
+            id="pol-right-label">?</text>
+
+          <!-- Leads -->
+          <line x1="180" y1="105" x2="260" y2="105" stroke="#555" stroke-width="2" id="pol-wire-l" />
+          <line x1="440" y1="105" x2="520" y2="105" stroke="#555" stroke-width="2" id="pol-wire-r" />
+
+          <!-- Probe red -->
+          <circle cx="180" cy="105" r="7" fill="#ef4444" id="pol-red-dot" />
+          <line x1="180" y1="105" x2="140" y2="145" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"
+            id="pol-red-wire" />
+          <rect x="100" y="148" width="50" height="20" rx="5" fill="#1a0a0a" stroke="#ef4444" stroke-width="1" />
+          <text x="125" y="162" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ef4444">RED(+)</text>
+
+          <!-- Probe black -->
+          <circle cx="520" cy="105" r="7" fill="#777" id="pol-black-dot" />
+          <line x1="520" y1="105" x2="560" y2="145" stroke="#777" stroke-width="2" stroke-dasharray="4,2"
+            id="pol-black-wire" />
+          <rect x="548" y="148" width="54" height="20" rx="5" fill="#111" stroke="#666" stroke-width="1" />
+          <text x="575" y="162" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#888">BLACK(−)</text>
+
+          <!-- Multimeter display (center-bottom) -->
+          <rect x="280" y="148" width="140" height="38" rx="8" fill="#0a1a0a" stroke="#22c55e" stroke-width="1.2" />
+          <text x="350" y="162" text-anchor="middle" font-family="Space Mono" font-size="8" fill="#22c55e"
+            letter-spacing="0.5">DIODE TEST</text>
+          <text x="350" y="180" text-anchor="middle" font-family="Space Mono" font-size="16" font-weight="700"
+            fill="#22c55e" id="pol-reading">0.700 V</text>
+
+          <!-- Result text -->
+          <text x="350" y="50" text-anchor="middle" font-family="DM Sans" font-size="12" font-weight="600"
+            fill="#e8eaf0" id="pol-result">Posisi 1: Nilai ada → sisi KIRI = ANODA (+)</text>
+          <text x="350" y="66" text-anchor="middle" font-family="DM Sans" font-size="11" fill="#7a7f8e"
+            id="pol-sub">Nilai 0.700 V = dioda baik, forward bias terdeteksi</text>
+        </svg>
+
+        <div class="infobox blue" style="margin-top:12px" id="pol-info">
+          <strong>Posisi 1:</strong> Probe merah di kiri, hitam di kanan → display menunjukkan nilai (0.7V) → berarti
+          <strong>sisi kiri = ANODA (+)</strong>, sisi kanan = KATODA (−). Garis stripe ada di sisi kanan = konfirmasi.
+        </div>
+      </div>
+
+      <!-- Diagnosis table -->
+      <div class="card">
+        <div class="card-title">Diagnosis Kondisi Dioda dari Bacaan Multimeter</div>
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Bacaan Forward</th>
+              <th>Bacaan Reverse</th>
+              <th>Kondisi Dioda</th>
+              <th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge badge-g">0.5 – 0.8 V</span></td>
+              <td><span class="badge badge-g">OL / ∞</span></td>
+              <td style="color:var(--green);font-weight:500">✓ BAIK (Normal)</td>
+              <td style="color:var(--muted);font-size:12px">Pakai dengan aman</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-r">OL / ∞</span></td>
+              <td><span class="badge badge-g">OL / ∞</span></td>
+              <td style="color:var(--red);font-weight:500">✗ PUTUS (Open)</td>
+              <td style="color:var(--muted);font-size:12px">Ganti dioda</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-r">0.000 V</span></td>
+              <td><span class="badge badge-r">0.000 V</span></td>
+              <td style="color:var(--red);font-weight:500">✗ SHORT</td>
+              <td style="color:var(--muted);font-size:12px">Ganti dioda</td>
+            </tr>
+            <tr>
+              <td><span class="badge badge-y">0.5–0.8 V</span></td>
+              <td><span class="badge badge-r">nilai kecil</span></td>
+              <td style="color:var(--accent);font-weight:500">⚠ BOCOR (Leaky)</td>
+              <td style="color:var(--muted);font-size:12px">Periksa/ganti</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- ===== PANEL 4: IV CURVE ===== -->
+    <div class="panel" id="panel-iv">
+      <div class="card">
+        <div class="card-title">Kurva Karakteristik I-V Dioda</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Geser slider untuk melihat bagaimana arus
+          berubah terhadap tegangan. Perhatikan "knee point" — momen dioda mulai konduksi.</p>
+
+        <div class="slider-wrap">
+          <span class="slider-label">Jenis dioda:</span>
+          <select id="iv-type" onchange="drawIV()"
+            style="flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-family:var(--sans);font-size:13px">
+            <option value="silicon">Silicon (1N4007) — Vf=0.7V</option>
+            <option value="germanium">Germanium — Vf=0.25V</option>
+            <option value="led">LED Merah — Vf=2.0V</option>
+            <option value="schottky">Schottky — Vf=0.3V</option>
+          </select>
+        </div>
+
+        <canvas id="iv-canvas" height="320"></canvas>
+
+        <div class="grid2" style="margin-top:14px">
+          <div>
+            <div class="spec-row"><span class="spec-key">Forward Voltage (Vf)</span><span class="spec-val"
+                id="iv-vf">0.7 V</span></div>
+            <div class="spec-row"><span class="spec-key">Breakover current</span><span class="spec-val">~10 mA</span>
+            </div>
+          </div>
+          <div>
+            <div class="spec-row"><span class="spec-key">Reverse breakdown</span><span class="spec-val" id="iv-br">~−50
+                V</span></div>
+            <div class="spec-row"><span class="spec-key">Daerah konduksi</span><span class="spec-val ok"
+                id="iv-region">V ≥ 0.7 V</span></div>
+          </div>
+        </div>
+
+        <div class="infobox" style="margin-top:12px">
+          <strong>Knee point (titik lutut):</strong> tepat di Vf, arus naik eksponensial mengikuti persamaan Shockley:
+          <strong>I = Is(e^(V/Vt) − 1)</strong>. Di bawah Vf, dioda seperti switch terbuka. Di atas Vf, dioda seperti
+          switch tertutup dengan tegangan jatuh konstan ≈ Vf.
+        </div>
+      </div>
+
+      <!-- Formula card -->
+      <div class="card">
+        <div class="card-title">Persamaan & Nilai Penting</div>
+        <div class="grid2">
+          <div>
+            <div class="section-label">Tegangan threshold (silicon)</div>
+            <div
+              style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:10px;font-family:var(--mono);font-size:13px;color:var(--accent)">
+              Vf = 0.6 – 0.7 V</div>
+            <div class="section-label">Hambatan seri dioda (ideal)</div>
+            <div
+              style="background:var(--surface2);border-radius:8px;padding:12px;font-family:var(--mono);font-size:13px;color:var(--blue)">
+              rd ≈ 26mV / Id</div>
+          </div>
+          <div>
+            <div class="section-label">Menghitung R seri untuk LED</div>
+            <div
+              style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:10px;font-family:var(--mono);font-size:13px;color:var(--green)">
+              R = (Vs − Vf) / If</div>
+            <div class="section-label">Contoh: 9V supply, LED merah 20mA</div>
+            <div
+              style="background:var(--surface2);border-radius:8px;padding:12px;font-family:var(--mono);font-size:13px;color:var(--accent)">
+              (9V − 2V) / 0.02A = 350 Ω</div>
+          </div>
+        </div>
+      </div>
+    <!-- ===== PANEL 5: SCHOTTKY VS SILIKON ===== -->
+    <div style="margin-top: 32px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;">
+      <h3 style="margin-bottom: 16px; font-size: 20px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px;">Menganalisis Perbedaan Teknis Schottky dan Dioda Silikon Biasa</h3>
+      <h4 style="color: var(--text); margin-bottom: 12px; font-size: 16px;">Kenapa Dioda Schottky Tidak Bisa Diganti Dioda Silikon Biasa?</h4>
+      <p style="margin-bottom: 16px; color: var(--muted);">Ada beberapa alasan teknikal mendasar yang membuat keduanya tidak bisa saling menggantikan begitu saja:</p>
+
+      <h4 style="color: var(--accent2); margin-top: 20px; font-size: 14px;">1. Tegangan Maju (Forward Voltage / V<sub>F</sub>) Berbeda</h4>
+      <table class="compare-table" style="margin-bottom: 16px; background: var(--surface2); border-radius: 8px;">
+        <thead>
+          <tr>
+            <th style="padding: 8px 12px;">Jenis Dioda</th>
+            <th style="padding: 8px 12px;">V<sub>F</sub> Khas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px 12px;">Schottky</td>
+            <td style="padding: 8px 12px;"><span class="badge badge-g">0,15 – 0,45 V</span></td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">Silikon biasa (PN junction)</td>
+            <td style="padding: 8px 12px;"><span class="badge badge-y">0,6 – 0,7 V</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-bottom: 8px; color: var(--muted); font-size: 14px;">Perbedaan ini sangat signifikan di rangkaian daya rendah atau baterai. Misalnya di rangkaian 3,3V atau 5V, kehilangan 0,3V tambahan akibat pakai dioda silikon bisa:</p>
+      <ul style="margin-left: 20px; margin-bottom: 16px; color: var(--muted); font-size: 14px; line-height: 1.6;">
+        <li>Menurunkan efisiensi power supply secara drastis</li>
+        <li>Membuat komponen setelah dioda kekurangan tegangan dan tidak bekerja benar</li>
+      </ul>
+
+      <h4 style="color: var(--accent2); margin-top: 20px; font-size: 14px;">2. Kecepatan Switching Jauh Lebih Lambat</h4>
+      <p style="margin-bottom: 8px; color: var(--text); font-weight: 500; font-size: 14px;">Ini alasan paling kritis secara teknikal.</p>
+      <ul style="margin-left: 20px; margin-bottom: 16px; color: var(--muted); font-size: 14px; line-height: 1.6;">
+        <li>Dioda silikon biasa punya minority carrier storage &rarr; saat dibalik polaritasnya, dioda butuh waktu untuk "membuang" muatan yang tersimpan &rarr; disebut <em>reverse recovery time (t<sub>rr</sub>)</em>, bisa mencapai beberapa mikrodetik.</li>
+        <li>Schottky bekerja dengan majority carriers saja (logam-semikonduktor), jadi tidak ada minority carrier storage &rarr; t<sub>rr</sub> hampir nol (picoseconds).</li>
+      </ul>
+      <div class="infobox red" style="margin-bottom: 16px;">
+        Di frekuensi tinggi (switching PSU, inverter, PWM), dioda silikon biasa akan "lambat menutup" &rarr; menyebabkan arus balik sesaat &rarr; rugi daya besar, panas berlebih, bahkan kerusakan komponen.
+      </div>
+
+      <h4 style="color: var(--accent2); margin-top: 20px; font-size: 14px;">3. Struktur Sambungan Berbeda Secara Fundamental</h4>
+      <table class="compare-table" style="margin-bottom: 16px; background: var(--surface2); border-radius: 8px;">
+        <thead>
+          <tr>
+            <th style="padding: 8px 12px;">Parameter</th>
+            <th style="padding: 8px 12px;">Schottky</th>
+            <th style="padding: 8px 12px;">Silikon Biasa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px 12px;">Tipe sambungan</td>
+            <td style="padding: 8px 12px;">Metal – Semikonduktor</td>
+            <td style="padding: 8px 12px;">P – N junction</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">Pembawa muatan</td>
+            <td style="padding: 8px 12px;">Hanya elektron (majority)</td>
+            <td style="padding: 8px 12px;">Elektron + hole (minority)</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">Mekanisme konduksi</td>
+            <td style="padding: 8px 12px;">Efek thermionic emission</td>
+            <td style="padding: 8px 12px;">Difusi carrier</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-bottom: 16px; color: var(--muted); font-size: 14px;">Karena strukturnya berbeda secara fisika, karakteristik keduanya berbeda dari akar, bukan sekadar perbedaan nilai parameter.</p>
+
+      <h4 style="color: var(--accent2); margin-top: 20px; font-size: 14px;">4. Kapasitansi Junction Lebih Rendah</h4>
+      <p style="margin-bottom: 8px; color: var(--muted); font-size: 14px;">Schottky memiliki kapasitansi junction (C<sub>j</sub>) yang jauh lebih kecil. Ini penting di:</p>
+      <ul style="margin-left: 20px; margin-bottom: 8px; color: var(--muted); font-size: 14px; line-height: 1.6;">
+        <li>Rangkaian RF / frekuensi tinggi</li>
+        <li>Detektor sinyal kecil</li>
+        <li>Mixer dan demodulator</li>
+      </ul>
+      <p style="margin-bottom: 16px; color: var(--text); font-size: 14px;">Kalau diganti dioda silikon biasa, kapasitansi lebih besar &rarr; sinyal frekuensi tinggi terdistorsi atau teredam.</p>
+
+      <h4 style="color: var(--accent2); margin-top: 20px; font-size: 14px;">5. Aplikasi Kritis yang Bergantung pada Schottky</h4>
+      <table class="compare-table" style="margin-bottom: 16px; background: var(--surface2); border-radius: 8px;">
+        <thead>
+          <tr>
+            <th style="padding: 8px 12px;">Aplikasi</th>
+            <th style="padding: 8px 12px;">Kenapa Schottky Wajib</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px 12px;">SMPS / Switching Power Supply</td>
+            <td style="padding: 8px 12px;">Frekuensi 100kHz–1MHz, t<sub>rr</sub> harus nol</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">Solar charge controller</td>
+            <td style="padding: 8px 12px;">V<sub>F</sub> rendah = efisiensi tinggi</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">Rangkaian logika TTL lama</td>
+            <td style="padding: 8px 12px;">Mencegah saturasi transistor (Schottky clamp)</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">Detektor RF</td>
+            <td style="padding: 8px 12px;">Kapasitansi rendah, respons cepat</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 12px;">OR-ing power supply</td>
+            <td style="padding: 8px 12px;">Drop tegangan sekecil mungkin</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 style="color: var(--accent); margin-top: 24px; font-size: 16px;">Analogi Sederhananya</h4>
+      <p style="margin-bottom: 8px; color: var(--muted); font-size: 14px;">Dioda silikon biasa ibarat keran air manual — butuh waktu untuk menutup sepenuhnya. Schottky ibarat katup solenoid cepat — menutup hampir instan.</p>
+      <p style="margin-bottom: 24px; color: var(--muted); font-size: 14px;">Di frekuensi rendah dan tegangan tinggi, keran manual masih oke. Tapi di sistem cepat dan presisi, kelambatan itu fatal.</p>
+
+      <div class="infobox green">
+        <strong style="display: block; margin-bottom: 8px; font-size: 15px;">Kesimpulan</strong>
+        <p style="margin-bottom: 8px;">Penggantian Schottky dengan dioda silikon biasa boleh dilakukan hanya jika:</p>
+        <ul style="margin-left: 20px; margin-bottom: 8px; line-height: 1.6;">
+          <li>Frekuensi operasi rendah (&lt; 1kHz)</li>
+          <li>Drop tegangan tambahan tidak masalah</li>
+          <li>Tidak ada tuntutan efisiensi tinggi</li>
+        </ul>
+        <p>Di luar kondisi itu, penggantian akan menyebabkan efisiensi turun, panas berlebih, atau rangkaian tidak bekerja sama sekali.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ===== TAB SWITCHING =====
+    function switchTab(id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('panel-' + id).classList.add('active');
+      if (id === 'iv') setTimeout(drawIV, 100);
+    }
+
+    // ===== BIAS SIMULATION =====
+    function setBias(mode) {
+      const isForward = mode === 'forward';
+      document.getElementById('btn-fwd').classList.toggle('active-btn', isForward);
+      document.getElementById('btn-rev').classList.toggle('active-btn', !isForward);
+
+      const flows = ['f1', 'f2', 'f3', 'f4', 'f5'];
+      flows.forEach(id => {
+        const el = document.getElementById(id);
+        el.className = isForward ? 'flow-on' : 'flow-off';
+      });
+
+      const led = document.getElementById('led-glow');
+      const ledTxt = document.getElementById('led-text');
+      if (isForward) {
+        led.setAttribute('fill', '#1a3a0a');
+        led.setAttribute('stroke', '#22c55e');
+        ledTxt.setAttribute('fill', '#22c55e');
+      } else {
+        led.setAttribute('fill', '#1e2330');
+        led.setAttribute('stroke', '#444');
+        ledTxt.setAttribute('fill', '#666');
+      }
+
+      document.getElementById('diode-status-txt').textContent = isForward ? 'ON (konduksi)' : 'OFF (blocking)';
+      document.getElementById('diode-status-txt').className = 'spec-val ' + (isForward ? 'ok' : 'bad');
+      document.getElementById('vf-txt').textContent = isForward ? '~0.7 V' : '0 V (tidak konduksi)';
+      document.getElementById('vf-txt').className = 'spec-val ' + (isForward ? 'ok' : 'warn');
+      document.getElementById('i-txt').textContent = isForward ? 'mengalir' : 'tidak mengalir';
+      document.getElementById('i-txt').className = 'spec-val ' + (isForward ? 'ok' : 'bad');
+      document.getElementById('r-txt').textContent = isForward ? 'rendah (~0 Ω)' : 'sangat tinggi (MΩ)';
+      document.getElementById('r-txt').className = 'spec-val ' + (isForward ? 'ok' : 'warn');
+      document.getElementById('led-txt').textContent = isForward ? 'MENYALA' : 'PADAM';
+      document.getElementById('led-txt').className = 'spec-val ' + (isForward ? 'ok' : 'bad');
+
+      document.getElementById('vd-label').textContent = isForward ? 'Vf = 0.7V' : 'Vr (blocking)';
+      document.getElementById('diode-state').textContent = isForward ? 'KONDUKSI ✓' : 'BLOCKING ✗';
+      document.getElementById('diode-state').setAttribute('fill', isForward ? '#22c55e' : '#ef4444');
+
+      document.getElementById('status-text').textContent = isForward
+        ? 'Forward Bias: Tegangan (+) ke Anoda — Arus MENGALIR'
+        : 'Reverse Bias: Tegangan (−) ke Anoda — Arus DIBLOKIR';
+      document.getElementById('status-sub').textContent = isForward
+        ? 'Dioda dalam kondisi ON · Vf ≈ 0.7V (silicon)'
+        : 'Dioda dalam kondisi OFF · depletion zone melebar';
+
+      // Flip diode polarity for reverse
+      document.getElementById('anode-sign').textContent = isForward ? 'A(+)' : 'A(−)';
+      document.getElementById('cathode-sign').textContent = isForward ? 'K(−)' : 'K(+)';
+      document.getElementById('anode-txt').textContent = isForward ? 'terhubung ke (+)' : 'terhubung ke (−)';
+      document.getElementById('cathode-txt').textContent = isForward ? 'terhubung ke (−)' : 'terhubung ke (+)';
+    }
+
+    // ===== DIODE TYPE SELECTOR =====
+    const diodeData = {
+      silicon: { vf: '0.700', label: '0.700 V' },
+      germanium: { vf: '0.250', label: '0.250 V' },
+      'led-red': { vf: '2.000', label: '2.000 V' },
+      'led-blue': { vf: '3.200', label: '3.200 V' },
+      schottky: { vf: '0.350', label: '0.350 V' },
+    };
+    function setDiode(type, btn) {
+      document.querySelectorAll('#panel-forward .btn').forEach(b => b.classList.remove('active-btn'));
+      btn.classList.add('active-btn');
+      const d = diodeData[type];
+      document.getElementById('vm-display').innerHTML = d.vf + ' <span class="vm-unit">V</span>';
+      document.getElementById('svg-vm').textContent = d.label;
+    }
+
+    // ===== POLARITY TEST =====
+    function setPolTest(mode) {
+      const isFw = mode === 'fw';
+      document.getElementById('pol-btn1').classList.toggle('active-btn', isFw);
+      document.getElementById('pol-btn2').classList.toggle('active-btn', !isFw);
+      document.getElementById('pol-reading').textContent = isFw ? '0.700 V' : 'OL';
+      document.getElementById('pol-reading').style.color = isFw ? '#22c55e' : '#ef4444';
+      document.getElementById('pol-result').textContent = isFw
+        ? 'Posisi 1: Nilai ada → sisi KIRI = ANODA (+)'
+        : 'Posisi 2 (balik): OL → dioda blocking (normal)';
+      document.getElementById('pol-sub').textContent = isFw
+        ? 'Nilai 0.700 V = dioda baik, forward bias terdeteksi'
+        : 'OL = tidak ada arus → ini konfirmasi dioda baik (reverse bias)';
+      document.getElementById('pol-info').innerHTML = isFw
+        ? '<strong>Posisi 1:</strong> Probe merah di kiri → display 0.7V → berarti <strong>sisi kiri = ANODA (+)</strong>. Katoda = sisi kanan (bergaris).'
+        : '<strong>Posisi 2:</strong> Probe dibalik → display OL → tidak konduksi. Ini <strong>normal</strong> untuk reverse bias. Konfirmasi: sisi kiri = Katoda.';
+    }
+
+    // ===== IV CURVE CANVAS =====
+    function drawIV() {
+      const canvas = document.getElementById('iv-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = 320 * 2;
+      ctx.scale(2, 2);
+      const W = canvas.offsetWidth / 2, H = 320;
+      ctx.clearRect(0, 0, W, H);
+
+      const type = document.getElementById('iv-type').value;
+      const configs = {
+        silicon: { vf: 0.7, vbr: -50, color: '#f5c842', label: 'Silicon 1N4007' },
+        germanium: { vf: 0.25, vbr: -30, color: '#3b82f6', label: 'Germanium' },
+        led: { vf: 2.0, vbr: -5, color: '#ef4444', label: 'LED Merah' },
+        schottky: { vf: 0.3, vbr: -40, color: '#22c55e', label: 'Schottky' },
+      };
+      const cfg = configs[type];
+
+      // Update info
+      document.getElementById('iv-vf').textContent = cfg.vf + ' V';
+      document.getElementById('iv-br').textContent = cfg.vbr + ' V';
+      document.getElementById('iv-region').textContent = 'V ≥ ' + cfg.vf + ' V';
+
+      // Layout
+      const px = 70, py = 40, pw = W - 90, ph = H - 70;
+      const ox = px, oy = py + ph * 0.65; // origin at ~65% height
+
+      // Grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i <= 10; i++) {
+        const x = px + (pw / 10) * i;
+        ctx.beginPath(); ctx.moveTo(x, py); ctx.lineTo(x, py + ph); ctx.stroke();
+      }
+      for (let i = 0; i <= 8; i++) {
+        const y = py + (ph / 8) * i;
+        ctx.beginPath(); ctx.moveTo(px, y); ctx.lineTo(px + pw, y); ctx.stroke();
+      }
+
+      // Axes
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+      ctx.lineWidth = 1.2;
+      // X axis
+      ctx.beginPath(); ctx.moveTo(px, oy); ctx.lineTo(px + pw, oy); ctx.stroke();
+      // Y axis
+      ctx.beginPath(); ctx.moveTo(ox, py); ctx.lineTo(ox, py + ph); ctx.stroke();
+
+      // Axis arrows
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.beginPath(); ctx.moveTo(px + pw, oy); ctx.lineTo(px + pw - 8, oy - 4); ctx.lineTo(px + pw - 8, oy + 4); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(ox, py); ctx.lineTo(ox - 4, py + 8); ctx.lineTo(ox + 4, py + 8); ctx.fill();
+
+      // Axis labels
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.font = '11px Space Mono';
+      ctx.fillText('V (Volt)', px + pw - 50, oy + 18);
+      ctx.save(); ctx.translate(ox - 45, oy - 30); ctx.rotate(-Math.PI / 2);
+      ctx.fillText('I (Ampere)', 0, 0); ctx.restore();
+      ctx.fillText('0', ox - 14, oy + 14);
+
+      // Scale: x maps -3V to +4V, y maps -0.02A to 0.08A
+      const vMin = -3.5, vMax = 4.5;
+      const iMin = -0.02, iMax = 0.1;
+      const vx = v => px + ((v - vMin) / (vMax - vMin)) * pw;
+      const iy = i => oy - ((i - iMin) / (iMax - iMin)) * ph;
+
+      // V-axis ticks
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.font = '9px Space Mono';
+      for (let v = -3; v <= 4; v++) {
+        if (v === 0) continue;
+        ctx.fillText(v + 'V', vx(v) - 6, oy + 14);
+      }
+
+      // Vf marker (dashed vertical)
+      ctx.setLineDash([4, 3]);
+      ctx.strokeStyle = cfg.color + '60';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(vx(cfg.vf), py); ctx.lineTo(vx(cfg.vf), py + ph); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = cfg.color;
+      ctx.font = '9px Space Mono';
+      ctx.fillText('Vf=' + cfg.vf + 'V', vx(cfg.vf) + 3, py + 14);
+
+      // Reverse region label
+      ctx.fillStyle = 'rgba(239,68,68,0.5)';
+      ctx.font = '9px DM Sans';
+      ctx.fillText('Reverse bias', px + 4, oy + 28);
+      ctx.fillStyle = 'rgba(245,200,66,0.5)';
+      ctx.fillText('Forward bias', vx(cfg.vf) + 20, py + 28);
+
+      // Draw IV curve
+      ctx.beginPath();
+      ctx.strokeStyle = cfg.color;
+      ctx.lineWidth = 2.5;
+      let first = true;
+      for (let vi = vMin; vi <= vMax; vi += 0.01) {
+        let current = 0;
+        if (vi >= 0) {
+          // Forward: exponential Shockley simplified
+          const Is = 1e-9;
+          const Vt = 0.026;
+          current = Is * (Math.exp(vi / (cfg.vf * 0.55)) - 1) * 0.08;
+          if (current > iMax * 1.1) current = iMax * 1.1;
+        } else {
+          // Reverse: near 0 until breakdown
+          const vbr = cfg.vbr;
+          if (vi < vbr + 0.3) {
+            current = -0.015 * (1 + (vi - vbr) / 0.5);
+            if (current < -0.018) current = -0.018;
+          } else {
+            current = -0.0001;
+          }
+        }
+        const cx2 = vx(vi), cy2 = iy(current);
+        if (first) { ctx.moveTo(cx2, cy2); first = false; }
+        else ctx.lineTo(cx2, cy2);
+      }
+      ctx.stroke();
+
+      // Knee point dot
+      ctx.fillStyle = cfg.color;
+      ctx.beginPath();
+      ctx.arc(vx(cfg.vf), iy(0.01), 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = '10px DM Sans';
+      ctx.fillText('knee point', vx(cfg.vf) + 6, iy(0.02) - 5);
+
+      // Legend
+      ctx.fillStyle = cfg.color;
+      ctx.fillRect(px + 10, py + 10, 12, 4);
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.font = '10px DM Sans';
+      ctx.fillText(cfg.label, px + 26, py + 16);
+    }
+
+    // Init
+    setBias('forward');
+    setTimeout(drawIV, 200);
+  </script>
+</body>
+
+</html>
