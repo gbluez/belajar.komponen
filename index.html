@@ -648,6 +648,7 @@
       <button class="tab" onclick="switchTab('forward')">Forward Voltage Test</button>
       <button class="tab" onclick="switchTab('polaritas')">Cek Polaritas</button>
       <button class="tab" onclick="switchTab('iv')">Kurva I-V</button>
+      <button class="tab" onclick="switchTab('aplikasi')">Aplikasi</button>
     </div>
 
     <!-- ===== PANEL 1: ALIRAN TEGANGAN ===== -->
@@ -1449,6 +1450,42 @@
     </div>
 
   </div>
+
+    <!-- ===== PANEL 5: APLIKASI ===== -->
+    <div class="panel" id="panel-aplikasi">
+      <div class="card">
+        <div class="card-title">1. Penyearah Setengah Gelombang (Half-Wave Rectifier)</div>
+        <p style="font-size: 14px; color: var(--text); margin-bottom: 12px;"><strong>Fungsi:</strong> Mengubah arus AC menjadi DC berdenyut dengan hanya meloloskan setengah siklus (siklus positif).</p>
+        <div class="infobox">
+          <strong>Kelebihan:</strong> Rangkaian sangat sederhana karena hanya butuh 1 buah dioda.<br>
+          <strong>Kekurangan:</strong> Efisiensi rendah, membuang separuh daya (siklus negatif), dan menghasilkan riak tegangan (ripple) yang sangat besar.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2. Penyearah Gelombang Penuh (Full-Wave / Bridge)</div>
+        <p style="font-size: 14px; color: var(--text); margin-bottom: 12px;"><strong>Fungsi:</strong> Mengubah seluruh siklus AC (baik positif maupun negatif) menjadi DC menggunakan jembatan 4 dioda (Bridge Diode).</p>
+        <div class="infobox green">
+          <strong>Kelebihan:</strong> Sangat efisien, riak gelombang jauh lebih sedikit, dan output daya maksimal. Hampir semua power supply (termasuk adaptor HP) menggunakan teknik ini.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3. Pelipat Tegangan (Voltage Multiplier)</div>
+        <p style="font-size: 14px; color: var(--text); margin-bottom: 12px;"><strong>Fungsi:</strong> Melipatgandakan tegangan AC input menjadi tegangan DC yang jauh lebih tinggi menggunakan formasi bertingkat (cascade) antara dioda dan kapasitor.</p>
+        <div class="infobox blue">
+          <strong>Aplikasi:</strong> Raket nyamuk, generator ion positif/negatif, CRT monitor lama, dan alat yang butuh tegangan tinggi tanpa trafo berukuran besar.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">4. Freewheeling / Flyback Diode (Relay & Buck/Boost)</div>
+        <p style="font-size: 14px; color: var(--text); margin-bottom: 12px;"><strong>Fungsi:</strong> Mencegah lonjakan tegangan (Spike) yang sangat tinggi yang muncul akibat efek induksi saat arus pada induktor diputus secara tiba-tiba.</p>
+        <div class="infobox red">
+          <strong>Aplikasi:</strong> Dioda dipasang paralel (secara reverse bias) pada komponen induktif seperti koil relay, motor DC, dan pada sirkuit Buck/Boost step-up/step-down converter.
+        </div>
+      </div>
+    </div>
 
   <script>
     // ===== TAB SWITCHING =====
