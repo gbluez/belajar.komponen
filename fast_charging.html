@@ -1133,6 +1133,10 @@
       // Set active nav
       event.target.classList.add('active');
 
+      if (secId === 'radar' && typeof resizeRadar === 'function') {
+        setTimeout(resizeRadar, 50);
+      }
+
       // Close mobile menu if open
       closeMobileMenu();
     }
@@ -1268,7 +1272,11 @@
     // Resize handling to keep resolution sharp
     function resizeRadar() {
       const container = radarCanvas.parentElement;
-      radarCanvas.width = container.clientWidth;
+      if (container.clientWidth > 0) {
+        radarCanvas.width = container.clientWidth;
+      } else if (radarCanvas.width === 0) {
+        radarCanvas.width = 800; // fallback
+      }
       radarCanvas.height = 400; // Fixed height for consistency
     }
     window.addEventListener('resize', resizeRadar);
