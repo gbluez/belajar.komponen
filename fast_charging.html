@@ -4,23 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panduan Fast Charging - Servis Pintar</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --color-bg-body: #f8fafc;
-      --color-bg-sidebar: #ffffff;
-      --color-bg-card: #ffffff;
-      --color-border: #e2e8f0;
-      --color-text-main: #0f172a;
-      --color-text-muted: #64748b;
-      --color-primary: #3b82f6;
-      --color-primary-hover: #2563eb;
-      --color-primary-bg: #eff6ff;
+      --color-bg-body: #0d0f14;
+      --color-bg-sidebar: #161920;
+      --color-bg-card: #161920;
+      --color-border: rgba(255, 255, 255, 0.07);
+      --color-text-main: #e8eaf0;
+      --color-text-muted: #7a7f8e;
+      --color-primary: #f5c842;
+      --color-primary-hover: #e8562a;
+      --color-primary-bg: #1e2330;
       --radius-md: 8px;
       --radius-lg: 12px;
-      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-      --font-main: 'Inter', sans-serif;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      --font-main: 'DM Sans', sans-serif;
+      --font-mono: 'Space Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,6 +32,7 @@
       color: var(--color-text-main);
       line-height: 1.6;
       display: flex;
+      flex-direction: column;
       height: 100vh;
       overflow: hidden;
     }
@@ -301,7 +303,7 @@
     }
 
     .ctable th {
-      background: #f8fafc;
+      background: var(--color-bg-sidebar);
       font-weight: 600;
       color: var(--color-text-muted);
       text-transform: uppercase;
@@ -314,7 +316,7 @@
     }
 
     .ctable tr:hover td {
-      background: var(--color-bg-body);
+      background: var(--color-primary-bg);
     }
 
     .watt {
@@ -520,9 +522,16 @@
   </style>
 </head>
 <body>
+  <!-- GLOBAL APP NAVBAR -->
+  <div style="background: var(--color-bg-sidebar); border-bottom: 1px solid var(--color-border); padding: 12px 24px; display: flex; gap: 20px; align-items: center; justify-content: center; position: sticky; top: 0; z-index: 1000; font-family: var(--font-main);">
+    <div style="font-weight: 700; color: var(--color-primary); margin-right: auto; font-family: var(--font-mono); font-size: 16px; letter-spacing: 1px;">⚙️ SERVIS PINTAR</div>
+    <a href="dioda_interaktif.html" style="text-decoration: none; color: var(--color-text-main); padding: 8px 16px; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='var(--color-primary-bg)'" onmouseout="this.style.background='transparent'">⚡ Modul Dioda</a>
+    <a href="fast_charging.html" style="text-decoration: none; color: #0d0f14; background: var(--color-primary); padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(245, 200, 66, 0.2);">🔋 Fast Charging</a>
+  </div>
 
-  <!-- Sidebar Overlay for Mobile -->
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div style="display: flex; height: calc(100vh - 60px); overflow: hidden;">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <!-- Sidebar Navigation -->
   <aside class="sidebar" id="sidebar">
@@ -1015,9 +1024,9 @@
           break;
         case 2:
           elProto.innerHTML = "DETECTING...";
-          elProto.style.color = "#fbbf24"; // amber
+          elProto.style.color = "#f5c842"; // accent (yellow)
           animateValue('sim-v', currentV, 5.00, 300, 2);
-          animateValue('sim-a', currentA, 0.10, 300, 2); // current drops during handshake
+          animateValue('sim-a', currentA, 0.10, 300, 2);
           break;
         case 3:
           elProto.innerHTML = "REQ_PROFILE";
@@ -1027,24 +1036,25 @@
           break;
         case 4:
           elProto.innerHTML = "ACCEPTED_9V";
-          elProto.style.color = "#4ade80"; // green
-          animateValue('sim-v', currentV, 9.00, 800, 2); // voltage rises
+          elProto.style.color = "#22c55e"; // green
+          animateValue('sim-v', currentV, 9.00, 800, 2);
           animateValue('sim-a', currentA, 0.50, 800, 2);
           break;
         case 5:
           elProto.innerHTML = "FAST_CHG_ACTIVE";
-          elProto.style.color = "#f43f5e"; // red/pink for high power
+          elProto.style.color = "#ef4444"; // red/pink for high power
           animateValue('sim-v', currentV, 9.00, 300, 2);
-          animateValue('sim-a', currentA, 2.00, 1000, 2); // amperage ramps up
+          animateValue('sim-a', currentA, 2.00, 1000, 2);
           break;
         case 6:
           elProto.innerHTML = "TAPERING";
-          elProto.style.color = "#fbbf24"; // amber
+          elProto.style.color = "#f5c842"; // yellow
           animateValue('sim-v', currentV, 9.00, 400, 2);
-          animateValue('sim-a', currentA, 0.80, 1200, 2); // amperage drops back down
+          animateValue('sim-a', currentA, 0.80, 1200, 2);
           break;
       }
     }
   </script>
+  </div> <!-- end of flex wrapper -->
 </body>
 </html>
