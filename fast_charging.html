@@ -477,6 +477,78 @@
       box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
     }
 
+    /* === RADAR SIMULATOR === */
+    .radar-container {
+      background: #050505;
+      border: 2px solid #1e293b;
+      border-radius: var(--radius-lg);
+      padding: 4px;
+      position: relative;
+      margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8) inset, 0 4px 15px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    canvas#radarCanvas {
+      width: 100%;
+      height: 400px;
+      display: block;
+      background: #020617;
+      border-radius: 8px;
+    }
+    .radar-overlay-text {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-family: var(--font-mono);
+      color: #22c55e;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+      animation: blink 2s infinite;
+      pointer-events: none;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    
+    .radar-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .btn-radar {
+      background: var(--color-bg-sidebar);
+      border: 1px solid var(--color-border);
+      color: var(--color-text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+    .btn-radar.active {
+      color: var(--color-text-main);
+      background: var(--color-bg-card);
+      border-color: #334155;
+      box-shadow: 0 0 10px rgba(255,255,255,0.05);
+    }
+    .r-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 0 8px currentColor;
+      opacity: 0.3;
+      transition: opacity 0.3s;
+    }
+    .btn-radar.active .r-color {
+      opacity: 1;
+    }
+
     /* Mobile menu button */
     .menu-toggle {
       display: none;
@@ -548,6 +620,7 @@
     </div>
     <nav class="nav-list">
       <div class="nav-item active" onclick="navTo('vendors')">Vendor & Protokol</div>
+      <div class="nav-item" onclick="navTo('radar')">📡 Live 8 Vendor Radar</div>
       <div class="nav-item" onclick="navTo('compare')">Tabel Perbandingan</div>
       <div class="nav-item" onclick="navTo('mechanism')">Mekanisme Negosiasi</div>
       <div class="nav-item" onclick="navTo('pins')">Jalur D+/D− & CC</div>
@@ -861,6 +934,28 @@
         </div>
       </section>
 
+      <!-- RADAR SECTION -->
+      <section id="sec-radar" class="section">
+        <h2 class="section-title">📡 Live 8 Vendor Radar</h2>
+        <p class="pin-desc">Simulasi canggih (Oscilloscope) yang membandingkan kurva Tegangan (Solid) dan Arus (Putus-putus) dari 8 vendor pengisian daya terkemuka secara real-time.</p>
+        
+        <div class="radar-container">
+          <canvas id="radarCanvas" width="800" height="400"></canvas>
+          <div class="radar-overlay-text">LIVE SCAN: ACTIVE</div>
+        </div>
+
+        <div class="radar-controls">
+          <button class="btn-radar active" data-vendor="qc" onclick="toggleRadar('qc')"><span class="r-color" style="color:#3b82f6; background:#3b82f6"></span> QC</button>
+          <button class="btn-radar active" data-vendor="vooc" onclick="toggleRadar('vooc')"><span class="r-color" style="color:#f5c842; background:#f5c842"></span> VOOC</button>
+          <button class="btn-radar active" data-vendor="hw" onclick="toggleRadar('hw')"><span class="r-color" style="color:#22c55e; background:#22c55e"></span> Huawei</button>
+          <button class="btn-radar active" data-vendor="pd" onclick="toggleRadar('pd')"><span class="r-color" style="color:#a855f7; background:#a855f7"></span> USB PD</button>
+          <button class="btn-radar active" data-vendor="ap" onclick="toggleRadar('ap')"><span class="r-color" style="color:#94a3b8; background:#94a3b8"></span> Apple</button>
+          <button class="btn-radar active" data-vendor="sa" onclick="toggleRadar('sa')"><span class="r-color" style="color:#0284c7; background:#0284c7"></span> Samsung</button>
+          <button class="btn-radar active" data-vendor="xi" onclick="toggleRadar('xi')"><span class="r-color" style="color:#ef4444; background:#ef4444"></span> Xiaomi</button>
+          <button class="btn-radar active" data-vendor="mt" onclick="toggleRadar('mt')"><span class="r-color" style="color:#0d9488; background:#0d9488"></span> MediaTek</button>
+        </div>
+      </section>
+
       <!-- COMPARE SECTION -->
       <section id="sec-compare" class="section">
         <h2 class="section-title">Perbandingan Protokol</h2>
@@ -1165,6 +1260,193 @@
           break;
       }
     }
+
+    // --- LIVE RADAR SIMULATOR LOGIC ---
+    const radarCanvas = document.getElementById('radarCanvas');
+    const ctx = radarCanvas.getContext('2d');
+    
+    // Resize handling to keep resolution sharp
+    function resizeRadar() {
+      const container = radarCanvas.parentElement;
+      radarCanvas.width = container.clientWidth;
+      radarCanvas.height = 400; // Fixed height for consistency
+    }
+    window.addEventListener('resize', resizeRadar);
+    // Call after a slight delay to ensure container width is calculated
+    setTimeout(resizeRadar, 100);
+
+    const radarVendors = {
+      qc: { active: true, color: '#3b82f6', targetV: 12, targetA: 2.0, startT: 50 },
+      vooc: { active: true, color: '#f5c842', targetV: 10, targetA: 6.5, startT: 70 },
+      hw: { active: true, color: '#22c55e', targetV: 10, targetA: 4.0, startT: 90 },
+      pd: { active: true, color: '#a855f7', targetV: 20, targetA: 5.0, startT: 110 },
+      ap: { active: true, color: '#94a3b8', targetV: 9, targetA: 3.0, startT: 60 },
+      sa: { active: true, color: '#0284c7', targetV: 10, targetA: 4.5, startT: 100 },
+      xi: { active: true, color: '#ef4444', targetV: 20, targetA: 6.0, startT: 130 },
+      mt: { active: true, color: '#0d9488', targetV: 11, targetA: 3.0, startT: 80 }
+    };
+
+    function toggleRadar(key) {
+      radarVendors[key].active = !radarVendors[key].active;
+      const btn = document.querySelector(`.btn-radar[data-vendor="${key}"]`);
+      if(radarVendors[key].active) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }
+
+    let scanX = 0;
+    let paths = {};
+    for(let k in radarVendors) {
+      paths[k] = { V: [], A: [] };
+    }
+
+    function generateNoise(amp) { return (Math.random() - 0.5) * amp; }
+
+    function getVoltageValue(key, t) {
+      const v = radarVendors[key];
+      let val = 5; // Start at 5V
+      if (t > v.startT) {
+        if (key === 'qc' || key === 'pd' || key === 'mt') {
+          // Stepped logic
+          const steps = Math.floor((t - v.startT) / 50);
+          val = Math.min(v.targetV, 5 + steps * 3);
+        } else {
+          // Smooth logic
+          val = Math.min(v.targetV, 5 + (t - v.startT) * 0.15);
+        }
+      }
+      return val + generateNoise(0.4);
+    }
+
+    function getCurrentValue(key, t) {
+      const v = radarVendors[key];
+      let val = 0.5; // Handshake current
+      if (t > v.startT) {
+        if (key === 'vooc' || key === 'xi') {
+          // Massive jump
+          val = Math.min(v.targetA, 0.5 + (t - v.startT) * 0.5);
+        } else {
+           // Gradual
+          val = Math.min(v.targetA, 0.5 + (t - v.startT) * 0.05);
+        }
+        // Taper off later
+        if (t > v.startT + 300) {
+          val = Math.max(0.5, val - (t - (v.startT + 300)) * 0.015);
+        }
+      }
+      return val + generateNoise(0.2);
+    }
+
+    function drawRadar() {
+      // Fade effect for trails (Futuristic Oscilloscope)
+      ctx.fillStyle = 'rgba(2, 6, 23, 0.12)'; // very dark blue transparent
+      ctx.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
+
+      // Draw Grid
+      ctx.strokeStyle = 'rgba(34, 197, 94, 0.05)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let y=0; y<radarCanvas.height; y+=40) { ctx.moveTo(0,y); ctx.lineTo(radarCanvas.width, y); }
+      for(let x=0; x<radarCanvas.width; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x, radarCanvas.height); }
+      ctx.stroke();
+
+      const midY = radarCanvas.height / 2;
+      
+      // Compute new values
+      for(let key in radarVendors) {
+        if (!radarVendors[key].active) continue;
+        
+        // Map Voltage (0-24V) to top half
+        let vVal = getVoltageValue(key, scanX);
+        let yV = midY - (vVal / 24) * midY * 0.9;
+        paths[key].V.push({x: scanX, y: yV});
+        
+        // Map Current (0-12A) to bottom half
+        let aVal = getCurrentValue(key, scanX);
+        let yA = radarCanvas.height - (aVal / 12) * midY * 0.9;
+        paths[key].A.push({x: scanX, y: yA});
+      }
+
+      // Draw curves
+      for(let key in radarVendors) {
+        if (!radarVendors[key].active) continue;
+        const color = radarVendors[key].color;
+        
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = color;
+        ctx.lineWidth = 2.5;
+        ctx.lineJoin = 'round';
+
+        // Draw V (Solid)
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        if(paths[key].V.length > 0) {
+          ctx.moveTo(paths[key].V[0].x, paths[key].V[0].y);
+          for(let i=1; i<paths[key].V.length; i++) {
+            ctx.lineTo(paths[key].V[i].x, paths[key].V[i].y);
+          }
+          ctx.stroke();
+        }
+
+        // Draw A (Dashed)
+        ctx.setLineDash([8, 8]);
+        ctx.beginPath();
+        if(paths[key].A.length > 0) {
+          ctx.moveTo(paths[key].A[0].x, paths[key].A[0].y);
+          for(let i=1; i<paths[key].A.length; i++) {
+            ctx.lineTo(paths[key].A[i].x, paths[key].A[i].y);
+          }
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+        ctx.shadowBlur = 0; // reset
+      }
+
+      // Draw Scanline
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#22c55e';
+      ctx.strokeStyle = 'rgba(34, 197, 94, 0.9)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(scanX, 0);
+      ctx.lineTo(scanX, radarCanvas.height);
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Draw center divider
+      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, midY);
+      ctx.lineTo(radarCanvas.width, midY);
+      ctx.stroke();
+
+      // Labels
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = '12px "Space Mono", monospace';
+      ctx.fillText("VOLTAGE (V) [0-24V]", 10, 20);
+      ctx.fillText("CURRENT (A) [0-12A]", 10, midY + 20);
+
+      scanX += 1.5; // sweep speed
+      if (scanX > radarCanvas.width) {
+        scanX = 0;
+        // clear old paths
+        for(let k in radarVendors) {
+          paths[k].V = [];
+          paths[k].A = [];
+        }
+        // Blank screen flash
+        ctx.fillStyle = '#020617';
+        ctx.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
+      }
+
+      requestAnimationFrame(drawRadar);
+    }
+    
+    // Start radar animation
+    drawRadar();
   </script>
   </div> <!-- end of flex wrapper -->
 </body>
