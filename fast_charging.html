@@ -589,6 +589,19 @@
                 <tr><td>Voltase</td><td>5 / 9 / 12 / 20V (adaptif)</td></tr>
                 <tr><td>Fitur khas</td><td>INOV (Intelligent Negotiation for Optimum Voltage) — penyesuaian volt per 200mV</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (QC: Steps up to 12V/20V) -->
+                  <path d="M 0 60 L 50 60 L 50 40 L 150 40 L 150 20 L 280 20" fill="none" stroke="#3b82f6" stroke-width="2" />
+                  <text x="285" y="24" fill="#3b82f6" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (Steady then taper) -->
+                  <path d="M 0 70 L 50 70 L 50 45 L 180 45 L 280 75" fill="none" stroke="#93c5fd" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="49" fill="#93c5fd" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -613,6 +626,19 @@
                 <tr><td>Fitur khas</td><td>Panas minimal pada HP, karena sirkuit step-down panasnya berada di adaptor.</td></tr>
                 <tr><td>Keamanan</td><td>Chip autentikasi enkripsi tertanam di kabel. Tanpa kabel ori, gagal fast charge.</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (VOOC: Flat at 5V/10V) -->
+                  <path d="M 0 60 L 50 60 L 50 50 L 280 50" fill="none" stroke="#f5c842" stroke-width="2" />
+                  <text x="285" y="54" fill="#f5c842" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (Massive current jump) -->
+                  <path d="M 0 70 L 50 70 L 50 15 L 180 15 L 280 75" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="19" fill="#fef08a" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -636,6 +662,19 @@
                 <tr><td>SCP voltase</td><td>5V / 10V arus tinggi (Mirip VOOC)</td></tr>
                 <tr><td>Perangkat</td><td>Huawei, Honor</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (Huawei: Small step) -->
+                  <path d="M 0 60 L 50 60 L 50 45 L 280 45" fill="none" stroke="#22c55e" stroke-width="2" />
+                  <text x="285" y="49" fill="#22c55e" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (High current) -->
+                  <path d="M 0 70 L 50 70 L 50 25 L 190 25 L 280 75" fill="none" stroke="#86efac" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="29" fill="#86efac" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -659,6 +698,19 @@
                 <tr><td>Perangkat</td><td>iPhone 15+, Google Pixel, iPad, MacBook, Laptop Windows</td></tr>
                 <tr><td>PPS (Prog. Power Supply)</td><td>Fitur PD 3.0+ yg mengizinkan perubahan voltase stepless secara presisi (3.3–21V) untuk mengurangi panas.</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (PD: Multiple steps) -->
+                  <path d="M 0 60 L 40 60 L 40 45 L 100 45 L 100 25 L 280 25" fill="none" stroke="#a855f7" stroke-width="2" />
+                  <text x="285" y="29" fill="#a855f7" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (Stable) -->
+                  <path d="M 0 70 L 40 70 L 40 40 L 200 40 L 280 75" fill="none" stroke="#d8b4fe" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="44" fill="#d8b4fe" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -682,6 +734,19 @@
                 <tr><td>iPhone ≤14</td><td>Port Lightning. Membutuhkan kabel USB-C to Lightning (di dalam kabel ada chip MFi untuk handshake PD).</td></tr>
                 <tr><td>Catatan</td><td>Apple tidak mendukung Quick Charge (QC). Hanya mendeteksi USB PD.</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (Apple: 9V PD) -->
+                  <path d="M 0 60 L 60 60 L 60 35 L 280 35" fill="none" stroke="#94a3b8" stroke-width="2" />
+                  <text x="285" y="39" fill="#94a3b8" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (Apple: Steady to taper) -->
+                  <path d="M 0 70 L 60 70 L 60 45 L 170 45 L 280 75" fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="49" fill="#cbd5e1" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -705,6 +770,19 @@
                 <tr><td>Protokol Baru</td><td>Super Fast Charging sangat bergantung pada <b style="color:var(--color-primary)">USB PD PPS</b>. Tanpa PPS, biasanya turun ke 15W/25W.</td></tr>
                 <tr><td>Perangkat</td><td>Galaxy S/A/Z/M series</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (Samsung: PPS slope) -->
+                  <path d="M 0 60 L 40 60 L 120 30 L 280 30" fill="none" stroke="#0284c7" stroke-width="2" />
+                  <text x="285" y="34" fill="#0284c7" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (High current PPS) -->
+                  <path d="M 0 70 L 40 70 L 40 20 L 150 20 L 280 75" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="24" fill="#7dd3fc" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -728,6 +806,19 @@
                 <tr><td>Perangkat</td><td>Xiaomi flagship, Redmi Note Pro+, POCO</td></tr>
                 <tr><td>Catatan</td><td>Sangat sensitif terhadap kabel. Membutuhkan kabel dengan pin tambahan atau E-Mark chip.</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (Xiaomi: 10-20V flat) -->
+                  <path d="M 0 60 L 40 60 L 40 30 L 280 30" fill="none" stroke="#ef4444" stroke-width="2" />
+                  <text x="285" y="34" fill="#ef4444" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (Xiaomi: Massive spike) -->
+                  <path d="M 0 70 L 40 70 L 40 10 L 140 10 L 280 75" fill="none" stroke="#fca5a5" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="14" fill="#fca5a5" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -751,6 +842,19 @@
                 <tr><td>Cara kerja baru</td><td>PE 3.0 dan ke atas sudah mematuhi standar USB PD PPS.</td></tr>
                 <tr><td>Perangkat</td><td>HP ber-chipset Helio / Dimensity.</td></tr>
               </table>
+              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
+                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
+                <svg width="100%" height="80" viewBox="0 0 300 80">
+                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
+                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
+                  <!-- V curve (MTK: Micro steps) -->
+                  <path d="M 0 60 L 40 60 L 40 50 L 80 50 L 80 40 L 120 40 L 120 30 L 280 30" fill="none" stroke="#0d9488" stroke-width="2" />
+                  <text x="285" y="34" fill="#0d9488" font-size="10" font-weight="bold">V</text>
+                  <!-- A curve (Steady taper) -->
+                  <path d="M 0 70 L 40 70 L 40 35 L 160 35 L 280 75" fill="none" stroke="#5eead4" stroke-width="2" stroke-dasharray="4" />
+                  <text x="285" y="39" fill="#5eead4" font-size="10" font-weight="bold">A</text>
+                </svg>
+              </div>
             </div>
           </div>
 
