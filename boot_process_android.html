@@ -529,6 +529,46 @@
       </div>
     </div>
 
+    <!-- STUDI KASUS UART LOG 2 -->
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Membaca Log UART (Studi Kasus 2)</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Wah, sangat masuk akal! Bagaimana dengan kasus <em>software</em>? Saya punya log lain dari <strong>Honor Magic 6 Pro</strong> (Snapdragon 8 Gen 3 / SM_LANAI). Keluhannya HP tiba-tiba masuk ke menu <strong>Fastboot</strong> setiap kali dinyalakan. Ini log bagian akhir sebelum dia masuk Fastboot:</p>
+        <div class="tech-box">
+          B -   1534180 - CPUCP_DTB -  Image Load, Start<br>
+          ...<br>
+          > LoadAndApplyPatch boot begin<br>
+          > <span style="color: #ef4444; font-weight: bold;">apply boot patch failed</span><br>
+          > BoardVariant = 2255, DtVariant = E0, DtVariantMajor = 0, DtVariantMinor = 2100<br>
+          > <span style="color: #ef4444; font-weight: bold;">Unable to find the Board Dtb</span><br>
+          > <span style="color: #ef4444; font-weight: bold;">Error: Board Dtbo blob not found</span><br>
+          > <span class="code-path">Launching fastboot</span><br>
+          > Fastboot: Initializing...
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Bootloader (ABL)</div>
+          <div class="role">Level OS Loading</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Ini adalah contoh klasik kegagalan di tahap <strong>Android Bootloader (ABL)</strong>! Masalahnya ada di <em>Device Tree Blob</em> (DTB/DTBO).</p>
+        <p>File DTBO berisi peta instruksi tentang perangkat keras (kamera, layar, sensor) yang khusus untuk tipe papan (board) tersebut. Pada log tertulis <strong style="color: #ef4444;">Unable to find the Board Dtb</strong>. ABL mencoba mencari file DTB yang cocok dengan <span class="code-highlight">BoardVariant = 2255</span> di dalam partisi <code>dtbo</code>, namun tidak menemukannya.</p>
+        <p>Karena peta *hardware*-nya hilang, Kernel Linux menolak untuk di-<em>load</em> (bisa berbahaya jika dipaksakan). Sebagai mekanisme pertahanan (fallback), ABL langsung membelokkan rute proses ke <strong>Fastboot Mode</strong> (<span class="code-path">Launching fastboot</span>) agar teknisi bisa melakukan <em>flashing</em> ulang. Solusinya? Lakukan <em>flash</em> pada partisi <code>boot</code> dan <code>dtbo</code>, atau <em>full flash firmware</em> bawaan karena kemungkinan partisi tersebut korup (mungkin akibat gagal UBL, gagal root Magisk, atau <em>update</em> OTA terputus).</p>
+      </div>
+    </div>
+
   </main>
 
 </body>
