@@ -649,6 +649,44 @@
       </div>
     </div>
 
+    <!-- STUDI KASUS UART LOG 5 (MTK I2C ERROR) -->
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Membaca Log UART (Studi Kasus 5)</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Sangat logis! Terakhir, saya ada bahan log dari <strong>Infinix Note 30 (MediaTek)</strong> lagi. Gejalanya aneh, HP bisa nyala normal sampai ke menu utama, tetapi <strong>sama sekali tidak bisa dicas</strong> padahal konektor USB dan baterai sudah diganti. Log-nya menunjukkan rentetan <em>error</em> I2C di awal <em>boot</em>:</p>
+        <div class="tech-box">
+          > ERROR FOUND BELOW<br>
+          > <span style="color: #ef4444; font-weight: bold;">[I2C] 339: id=5,addr: 54, transfer error</span><br>
+          > pl_chgpump_reset check info failed(add = 84)!<br>
+          > <span style="color: #ef4444; font-weight: bold;">[I2C] 339: id=5,addr: 55, transfer error</span><br>
+          ...<br>
+          > <span style="color: #10b981; font-weight: bold;">welcome to lk/MP</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem MediaTek</div>
+          <div class="role">Preloader & I2C Bus</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Ini adalah contoh sempurna dari <strong>Kegagalan Hardware Non-Fatal</strong>! Perhatikan bahwa meskipun ada banyak pesan <em>error</em> merah, log tetap berujung pada <strong style="color: #10b981;">welcome to lk/MP</strong>, yang artinya proses <em>booting</em> OS tidak terganggu dan HP tetap bisa masuk menu utama.</p>
+        <p>Permasalahan utamanya ada di <strong style="color: #ef4444;">I2C transfer error</strong> pada <span class="code-highlight">addr: 54</span> dan <span class="code-highlight">addr: 55</span>. I2C (Inter-Integrated Circuit) adalah jalur komunikasi data antara CPU dan IC pendukung (seperti IC Charger, IC Kamera, Sensor, dll).</p>
+        <p>Pada Infinix Note 30, alamat I2C 54/55 pada bus ID 5 secara spesifik adalah alamat untuk IC Fast Charging Pump (umumnya menggunakan seri <strong>SC8548</strong>). Karena CPU gagal berkomunikasi dengan IC tersebut, CPU menganggap IC Fast Charging tidak ada (<span class="code-path">no chg chip [sc8548]</span>). <br><br>
+        <strong>Kesimpulan:</strong> IC Charge SC8548 Anda rusak mati total, terlepas dari kakinya, atau jalur I2C SDA/SCL di sekitar IC tersebut putus. Ganti IC SC8548-nya, dan fitur pengecasan akan kembali normal!</p>
+      </div>
+    </div>
+
   </main>
 
 </body>
