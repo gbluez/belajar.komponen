@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pelatihan SKKNI - Servis Pintar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #010409;
+        --card-bg: rgba(10, 16, 35, 0.6);
+        --primary: #00d4ff;
+        --accent1: #ff006e;
+        --accent2: #10b981;
+        --text-main: #f0f4ff;
+        --text-muted: #8ba3d1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Outfit", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        line-height: 1.6;
+      }
+
+      /* Ambient Background Glow */
+      .ambient-glow {
+        position: fixed;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 212, 255, 0.15) 0%,
+          rgba(59, 130, 246, 0.1) 30%,
+          rgba(10, 16, 35, 0) 70%
+        );
+        top: -300px;
+        left: -300px;
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .ambient-glow-2 {
+        position: fixed;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(
+          circle,
+          rgba(139, 92, 246, 0.15) 0%,
+          rgba(255, 0, 110, 0.05) 40%,
+          rgba(10, 16, 35, 0) 70%
+        );
+        bottom: -200px;
+        right: -200px;
+        border-radius: 50%;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* Animated Grid Background */
+      .grid-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* Navbar */
+      .navbar {
+        background: rgba(10, 16, 35, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+        padding: 15px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-brand {
+        font-weight: 700;
+        color: var(--primary);
+        font-family: "Space Mono", monospace;
+        font-size: 1.1rem;
+        text-decoration: none;
+        letter-spacing: 1px;
+      }
+
+      .nav-back {
+        text-decoration: none;
+        color: var(--text-main);
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .nav-back:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: rgba(0, 212, 255, 0.3);
+        color: var(--primary);
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 60px 20px;
+      }
+
+      .header-section {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .badge {
+        font-family: "Space Mono", monospace;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+        color: #a78bfa;
+        padding: 8px 24px;
+        border-radius: 30px;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        display: inline-block;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-size: 3.5rem;
+        font-weight: 900;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #00d4ff, #8b5cf6, #ff006e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -1px;
+      }
+
+      .desc {
+        font-size: 1.15rem;
+        color: var(--text-muted);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      /* Glassmorphism Section Cards */
+      .content-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+      }
+
+      .content-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(0, 212, 255, 0.2);
+      }
+
+      .content-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #00d4ff, #8b5cf6);
+        border-radius: 4px 0 0 4px;
+      }
+
+      h2 {
+        font-size: 1.8rem;
+        color: var(--text-main);
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        color: #a78bfa;
+        margin: 25px 0 15px 0;
+      }
+
+      p {
+        margin-bottom: 15px;
+        color: var(--text-muted);
+      }
+
+      ul {
+        list-style: none;
+        margin-bottom: 20px;
+      }
+
+      li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 10px;
+        color: var(--text-muted);
+      }
+
+      li::before {
+        content: "▹";
+        position: absolute;
+        left: 0;
+        top: -2px;
+        color: var(--primary);
+        font-size: 1.2rem;
+      }
+
+      /* Task Lists */
+      .task-list li {
+        padding-left: 35px;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .task-list li::before {
+        content: "☐";
+        color: var(--text-muted);
+        font-size: 1.4rem;
+        top: -4px;
+      }
+
+      .task-list li:hover {
+        color: var(--text-main);
+      }
+
+      .task-list li:hover::before {
+        content: "☑";
+        color: var(--accent2);
+      }
+
+      /* Case Study Box */
+      .case-box {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .case-title {
+        font-family: "Space Mono", monospace;
+        color: #fbbf24;
+        font-weight: 700;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+        padding-bottom: 10px;
+      }
+
+      .sim-question {
+        background: rgba(139, 92, 246, 0.1);
+        border-left: 3px solid #8b5cf6;
+        padding: 15px 20px;
+        border-radius: 0 8px 8px 0;
+        margin-bottom: 15px;
+      }
+
+      .sim-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-left: 20px;
+        margin-bottom: 25px;
+      }
+
+      .sim-option {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .sim-option:hover {
+        background: rgba(0, 212, 255, 0.1);
+        border-color: rgba(0, 212, 255, 0.3);
+      }
+
+      .sim-option.correct {
+        background: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.5);
+        color: #34d399;
+      }
+
+      .quote {
+        font-family: "Space Mono", monospace;
+        font-style: italic;
+        text-align: center;
+        font-size: 1.2rem;
+        color: var(--primary);
+        padding: 30px;
+        background: rgba(0, 212, 255, 0.05);
+        border-radius: 12px;
+        border: 1px dashed rgba(0, 212, 255, 0.3);
+        margin-top: 40px;
+      }
+
+      @media (max-width: 768px) {
+        h1 { font-size: 2.5rem; }
+        .content-card { padding: 25px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+    <div class="grid-bg"></div>
+
+    <nav class="navbar">
+      <a href="index.html" class="nav-brand">⚙️ SERVIS PINTAR</a>
+      <a href="index.html" class="nav-back">← Kembali</a>
+    </nav>
+
+    <div class="container">
+      <div class="header-section">
+        <div class="badge">📱 Siap SKKNI</div>
+        <h1>Pelatihan Pra SKKNI Teknisi HP</h1>
+        <p class="desc">
+          Dokumen ini dirancang untuk membantu teknisi HP lulus uji kompetensi SKKNI, menguasai troubleshooting real, dan memiliki SOP kerja profesional.
+        </p>
+      </div>
+
+      <!-- Section 1 -->
+      <div class="content-card">
+        <h2>🧠 1. Kisi-Kisi Ujian (Ringkas & Tepat Sasaran)</h2>
+        
+        <h3>A. Dasar Elektronika</h3>
+        <ul>
+          <li>Hukum Ohm (V = I x R)</li>
+          <li>Fungsi komponen:
+            <ul style="margin-top: 10px; margin-bottom: 0;">
+              <li>Resistor → pembatas arus</li>
+              <li>Kapasitor → penyimpan sementara</li>
+              <li>Dioda → penyearah</li>
+              <li>IC → pengolah sinyal</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>B. Alat Kerja</h3>
+        <ul>
+          <li>Multimeter → ukur tegangan / resistansi</li>
+          <li>Power Supply → analisa arus</li>
+          <li>Solder & Blower → bongkar pasang komponen</li>
+        </ul>
+
+        <h3>C. Hardware HP</h3>
+        <ul>
+          <li>Jalur Vbat</li>
+          <li>IC Power (PMIC)</li>
+          <li>CPU, eMMC/UFS</li>
+        </ul>
+
+        <h3>D. Software</h3>
+        <ul>
+          <li>Flashing</li>
+          <li>FRP</li>
+          <li>Bootloop</li>
+        </ul>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="content-card">
+        <h2>📝 2. Simulasi Soal Teori</h2>
+        <p>Pilih jawaban yang paling tepat berdasarkan SOP standar.</p>
+
+        <div class="sim-question">1. Fungsi kapasitor adalah:</div>
+        <div class="sim-options">
+          <div class="sim-option">A. Menambah tegangan</div>
+          <div class="sim-option correct">B. Menyimpan muatan sementara</div>
+          <div class="sim-option">C. Menguatkan sinyal</div>
+          <div class="sim-option">D. Menghubungkan jalur</div>
+        </div>
+
+        <div class="sim-question">2. Jika HP bootloop, tindakan awal:</div>
+        <div class="sim-options">
+          <div class="sim-option">A. Ganti LCD</div>
+          <div class="sim-option correct">B. Flash ulang</div>
+          <div class="sim-option">C. Ganti baterai</div>
+          <div class="sim-option">D. Bongkar mesin</div>
+        </div>
+
+        <div class="sim-question">3. PMIC berfungsi untuk:</div>
+        <div class="sim-options">
+          <div class="sim-option">A. Audio</div>
+          <div class="sim-option">B. Jaringan</div>
+          <div class="sim-option correct">C. Distribusi power</div>
+          <div class="sim-option">D. Kamera</div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="content-card">
+        <h2>🔧 3. Studi Kasus Real (WAJIB KUASAI)</h2>
+
+        <div class="case-box">
+          <div class="case-title">CASE 1: Mati Total (No Power)</div>
+          <p><strong>Gejala:</strong> Tidak ada respon, Tidak terdeteksi PC</p>
+          <p><strong>Analisa:</strong></p>
+          <ul>
+            <li>Cek tegangan baterai</li>
+            <li>Gunakan PSU:
+              <ul style="margin-top: 5px; margin-bottom: 0;">
+                <li>Jika arus 0.00 → jalur putus / IC mati</li>
+                <li>Jika arus naik turun → CPU kerja</li>
+              </ul>
+            </li>
+          </ul>
+          <p><strong>Kemungkinan:</strong> PMIC rusak atau Jalur Vbat putus.</p>
+        </div>
+
+        <div class="case-box">
+          <div class="case-title">CASE 2: Konslet / Short</div>
+          <p><strong>Gejala:</strong> PSU langsung tinggi (0.5A ke atas), Panas di board</p>
+          <p><strong>Langkah:</strong></p>
+          <ol style="margin-left: 20px; color: var(--text-muted); margin-bottom: 10px;">
+            <li>Mode diode</li>
+            <li>Cek jalur Vbat</li>
+            <li>Inject tegangan</li>
+          </ol>
+          <p><strong>Target:</strong> Temukan komponen panas.</p>
+        </div>
+
+        <div class="case-box">
+          <div class="case-title">CASE 3: Tidak Charging</div>
+          <p><strong>Gejala:</strong> Colok charger tidak respon</p>
+          <p><strong>Analisa:</strong></p>
+          <ul>
+            <li>Cek konektor</li>
+            <li>Cek IC charging</li>
+            <li>Cek jalur USB</li>
+          </ul>
+        </div>
+
+        <div class="case-box">
+          <div class="case-title">CASE 4: Bootloop</div>
+          <p><strong>Solusi:</strong></p>
+          <ol style="margin-left: 20px; color: var(--text-muted);">
+            <li>Flash firmware</li>
+            <li>Jika gagal → eMMC bermasalah</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="content-card">
+        <h2>🧪 4. Simulasi Ujian Praktik</h2>
+        <p><strong>Tugas:</strong> Diberikan HP mati total.</p>
+        
+        <h3>Yang dinilai:</h3>
+        <ul>
+          <li>Cara pegang alat</li>
+          <li>Alur analisa</li>
+          <li>Keputusan teknis</li>
+        </ul>
+
+        <h3>Standar Jawaban:</h3>
+        <ol style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li>Cek visual</li>
+          <li>Cek tegangan baterai</li>
+          <li>PSU test</li>
+          <li>Analisa arus</li>
+          <li>Tentukan titik masalah</li>
+        </ol>
+      </div>
+
+      <!-- Section 5 -->
+      <div class="content-card">
+        <h2>✅ 5. Checklist Teknisi Profesional</h2>
+        
+        <h3>Sebelum Perbaikan</h3>
+        <ul class="task-list">
+          <li>Catat kondisi awal</li>
+          <li>Tanya keluhan user</li>
+          <li>Cek fisik unit</li>
+        </ul>
+
+        <h3>Saat Perbaikan</h3>
+        <ul class="task-list">
+          <li>Gunakan ESD</li>
+          <li>Tidak asal jumper</li>
+          <li>Ukur sebelum ganti</li>
+        </ul>
+
+        <h3>Setelah Perbaikan</h3>
+        <ul class="task-list">
+          <li>Test fungsi</li>
+          <li>Bersihkan unit</li>
+          <li>Edukasi user</li>
+        </ul>
+      </div>
+
+      <!-- Section 6 -->
+      <div class="content-card">
+        <h2>🚀 6. Tips Lulus SKKNI</h2>
+        <ul>
+          <li>Jangan hafal, pahami alur</li>
+          <li>Fokus ke arus & logika</li>
+          <li>Jangan tebak, selalu ukur</li>
+        </ul>
+
+        <div class="quote">
+          "Teknisi yang lulus bukan yang paling pintar, tapi yang paling sistematis.<br><br>Ukur → Analisa → Eksekusi"
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

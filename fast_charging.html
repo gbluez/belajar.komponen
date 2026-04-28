@@ -1,1482 +1,3100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panduan Fast Charging - Servis Pintar</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --color-bg-body: #0d0f14;
-      --color-bg-sidebar: #161920;
-      --color-bg-card: #161920;
-      --color-border: rgba(255, 255, 255, 0.07);
-      --color-text-main: #e8eaf0;
-      --color-text-muted: #7a7f8e;
-      --color-primary: #f5c842;
-      --color-primary-hover: #e8562a;
-      --color-primary-bg: #1e2330;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
-      --font-main: 'DM Sans', sans-serif;
-      --font-mono: 'Space Mono', monospace;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panduan Fast Charging - Servis Pintar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-bg-body: #010409;
+        --color-bg-sidebar: #0a1023;
+        --color-bg-card: #0a1023;
+        --color-border: rgba(0, 212, 255, 0.15);
+        --color-text-main: #f0f4ff;
+        --color-text-muted: #8ba3d1;
+        --color-primary: #00d4ff;
+        --color-primary-hover: #ff006e;
+        --color-primary-bg: rgba(0, 212, 255, 0.1);
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        --font-main: "DM Sans", sans-serif;
+        --font-mono: "Space Mono", monospace;
+      }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      font-family: var(--font-main);
-      background-color: var(--color-bg-body);
-      color: var(--color-text-main);
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    /* === SIDEBAR === */
-    .sidebar {
-      width: 280px;
-      background: var(--color-bg-sidebar);
-      border-right: 1px solid var(--color-border);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
-      z-index: 100;
-    }
+      @keyframes glow-pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.8;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 1;
+        }
+      }
 
-    .sidebar-header {
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-    
-    .sidebar-header h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--color-text-main);
-    }
-    .sidebar-header p {
-      font-size: 0.85rem;
-      color: var(--color-text-muted);
-      margin-top: 4px;
-    }
-
-    .nav-list {
-      padding: 1rem 0;
-      overflow-y: auto;
-      flex-grow: 1;
-    }
-
-    .nav-item {
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--color-text-muted);
-      border-left: 3px solid transparent;
-      transition: all 0.2s;
-    }
-
-    .nav-item:hover {
-      background-color: var(--color-bg-body);
-      color: var(--color-text-main);
-    }
-
-    .nav-item.active {
-      background-color: var(--color-primary-bg);
-      color: var(--color-primary);
-      border-left-color: var(--color-primary);
-    }
-
-    /* === MAIN CONTENT === */
-    .main-content {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding: 2rem;
-      position: relative;
-    }
-
-    .content-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .section {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-title {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: var(--color-text-main);
-      padding-bottom: 0.5rem;
-      border-bottom: 2px solid var(--color-border);
-    }
-
-    /* === SEARCH BAR === */
-    .search-box {
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
-    .search-input {
-      width: 100%;
-      padding: 12px 16px 12px 40px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-size: 0.95rem;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .search-input:focus {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 3px var(--color-primary-bg);
-    }
-    .search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--color-text-muted);
-    }
-
-    /* === ACCORDION CARDS (Vendors) === */
-    .vendor-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .vcard {
-      background: var(--color-bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .vcard-header {
-      padding: 1rem 1.25rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      user-select: none;
-      background: var(--color-bg-card);
-      transition: background 0.2s;
-    }
-
-    .vcard-header:hover {
-      background: var(--color-bg-body);
-    }
-
-    .vbadge {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .vinfo {
-      flex-grow: 1;
-    }
-
-    .vname {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-text-main);
-    }
-
-    .vproto {
-      font-size: 0.85rem;
-      color: var(--color-text-muted);
-      margin-top: 2px;
-    }
-
-    .vtoggle {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-muted);
-      transition: transform 0.3s;
-    }
-    
-    .vcard.open .vtoggle {
-      transform: rotate(180deg);
-    }
-
-    .vcard-body {
-      padding: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out, padding 0.3s ease;
-      background: var(--color-bg-card);
-      border-top: 1px solid transparent;
-    }
-
-    .vcard.open .vcard-body {
-      padding: 1.25rem;
-      max-height: 500px; /* arbitrary large number */
-      border-top-color: var(--color-border);
-    }
-
-    .vcard table {
-      width: 100%;
-      font-size: 0.9rem;
-      border-collapse: collapse;
-    }
-
-    .vcard td {
-      padding: 6px 0;
-      vertical-align: top;
-    }
-
-    .vcard td:first-child {
-      color: var(--color-text-muted);
-      width: 35%;
-      font-weight: 500;
-    }
-
-    .vcard td:last-child {
-      color: var(--color-text-main);
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-top: 2px;
-      margin-right: 4px;
-    }
-
-    .pill-blue { background: #eff6ff; color: #2563eb; }
-    .pill-green { background: #f0fdf4; color: #16a34a; }
-    .pill-amber { background: #fffbeb; color: #d97706; }
-    .pill-red { background: #fef2f2; color: #dc2626; }
-    .pill-gray { background: #f1f5f9; color: #475569; }
-
-    /* === COMPARISON TABLE === */
-    .table-responsive {
-      overflow-x: auto;
-      background: var(--color-bg-card);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .ctable {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-      min-width: 600px;
-    }
-
-    .ctable th, .ctable td {
-      padding: 12px 16px;
-      text-align: left;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .ctable th {
-      background: var(--color-bg-sidebar);
-      font-weight: 600;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-    }
-
-    .ctable tr:last-child td {
-      border-bottom: none;
-    }
-
-    .ctable tr:hover td {
-      background: var(--color-primary-bg);
-    }
-
-    .watt {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--color-primary);
-    }
-
-    /* === MECHANISM DIAGRAM & PINS === */
-    .mech-wrap {
-      background: var(--color-bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      box-shadow: var(--shadow-sm);
-      overflow-x: auto;
-    }
-
-    .pin-label {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--color-text-main);
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .pin-desc {
-      font-size: 0.95rem;
-      color: var(--color-text-muted);
-      margin-bottom: 1rem;
-    }
-
-    .step-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      margin-bottom: 12px;
-      padding: 16px;
-      background: var(--color-bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .step-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .step-txt {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-text-main);
-      margin-bottom: 4px;
-    }
-
-    .step-sub {
-      font-size: 0.9rem;
-      color: var(--color-text-muted);
-      line-height: 1.5;
-    }
-
-    /* === USB TESTER SIMULATOR === */
-    .tester-widget {
-      background: #111827;
-      border: 4px solid #374151;
-      border-radius: var(--radius-md);
-      padding: 16px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: inset 0 0 15px rgba(0,0,0,0.8), var(--shadow-md);
-      position: relative;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .tester-screen {
-      background: #020617;
-      border: 2px solid #1e293b;
-      border-radius: 6px;
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      font-family: 'Courier New', Courier, monospace;
-    }
-    .tester-val {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .tester-num {
-      font-size: 2.5rem;
-      font-weight: bold;
-      line-height: 1;
-      transition: color 0.3s;
-    }
-    .num-v { color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.5); }
-    .num-a { color: #f43f5e; text-shadow: 0 0 8px rgba(244, 63, 94, 0.5); }
-    .tester-unit {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      font-weight: bold;
-    }
-    .tester-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px dashed #1e293b;
-      padding-top: 8px;
-    }
-    .tester-proto {
-      color: #4ade80;
-      font-size: 0.9rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-shadow: 0 0 5px rgba(74, 222, 128, 0.4);
-    }
-    .tester-watt {
-      color: #fbbf24;
-      font-size: 1.1rem;
-      font-weight: bold;
-      text-shadow: 0 0 5px rgba(251, 191, 36, 0.4);
-    }
-    
-    .sim-controls {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 24px;
-    }
-    .btn-sim {
-      background: var(--color-bg-body);
-      border: 1px solid var(--color-border);
-      padding: 8px 12px;
-      border-radius: var(--radius-md);
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--color-text-main);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-sim:hover { background: var(--color-border); }
-    .btn-sim.active {
-      background: var(--color-primary);
-      color: white;
-      border-color: var(--color-primary);
-      box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
-    }
-
-    /* === RADAR SIMULATOR === */
-    .radar-container {
-      background: #050505;
-      border: 2px solid #1e293b;
-      border-radius: var(--radius-lg);
-      padding: 4px;
-      position: relative;
-      margin-bottom: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.8) inset, 0 4px 15px rgba(0,0,0,0.5);
-      overflow: hidden;
-    }
-    canvas#radarCanvas {
-      width: 100%;
-      height: 400px;
-      display: block;
-      background: #020617;
-      border-radius: 8px;
-    }
-    .radar-overlay-text {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-family: var(--font-mono);
-      color: #22c55e;
-      font-size: 0.8rem;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
-      animation: blink 2s infinite;
-      pointer-events: none;
-    }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-    
-    .radar-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .btn-radar {
-      background: var(--color-bg-sidebar);
-      border: 1px solid var(--color-border);
-      color: var(--color-text-muted);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s;
-    }
-    .btn-radar.active {
-      color: var(--color-text-main);
-      background: var(--color-bg-card);
-      border-color: #334155;
-      box-shadow: 0 0 10px rgba(255,255,255,0.05);
-    }
-    .r-color {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-      box-shadow: 0 0 8px currentColor;
-      opacity: 0.3;
-      transition: opacity 0.3s;
-    }
-    .btn-radar.active .r-color {
-      opacity: 1;
-    }
-
-    /* Mobile menu button */
-    .menu-toggle {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      border-radius: 25px;
-      background: var(--color-primary);
-      color: white;
-      border: none;
-      box-shadow: var(--shadow-md);
-      z-index: 1000;
-      cursor: pointer;
-    }
-
-    @media (max-width: 768px) {
-      body { flex-direction: column; }
-      .sidebar {
+      body::before {
+        content: "";
         position: fixed;
-        left: 0;
-        top: 0;
-        transform: translateX(-100%);
-        box-shadow: var(--shadow-md);
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 212, 255, 0.25) 0%,
+          rgba(59, 130, 246, 0.15) 30%,
+          rgba(10, 16, 35, 0) 70%
+        );
+        top: -300px;
+        right: -300px;
+        border-radius: 50%;
+        z-index: -1;
+        pointer-events: none;
+        animation: glow-pulse 8s ease-in-out infinite;
       }
-      .sidebar.open {
-        transform: translateX(0);
+
+      body::after {
+        content: "";
+        position: fixed;
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(
+          circle,
+          rgba(139, 92, 246, 0.2) 0%,
+          rgba(255, 0, 110, 0.1) 40%,
+          rgba(10, 16, 35, 0) 70%
+        );
+        bottom: -200px;
+        left: -200px;
+        border-radius: 50%;
+        z-index: -1;
+        pointer-events: none;
+        animation: glow-pulse 10s ease-in-out infinite reverse;
       }
-      .main-content { padding: 1rem; }
-      .menu-toggle { display: flex; align-items: center; justify-content: center; }
-      
-      /* Overlay for mobile sidebar */
-      .sidebar-overlay {
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--color-bg-body);
+        color: var(--color-text-main);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* === SIDEBAR === */
+      .sidebar {
+        width: 280px;
+        background: var(--color-bg-sidebar);
+        border-right: 1px solid var(--color-border);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+        z-index: 100;
+      }
+
+      @keyframes neon-glow-header {
+        0%,
+        100% {
+          text-shadow:
+            0 0 10px #00d4ff,
+            0 0 20px #00d4ff;
+        }
+        50% {
+          text-shadow:
+            0 0 20px #00d4ff,
+            0 0 40px #ff006e;
+        }
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--color-border);
+        background: linear-gradient(
+          135deg,
+          rgba(0, 212, 255, 0.1) 0%,
+          rgba(255, 0, 110, 0.05) 100%
+        );
+      }
+
+      .sidebar-header h1 {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00d4ff, #ff006e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: neon-glow-header 3s ease-in-out infinite;
+      }
+      .sidebar-header p {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        margin-top: 4px;
+      }
+
+      .nav-list {
+        padding: 1rem 0;
+        overflow-y: auto;
+        flex-grow: 1;
+      }
+
+      .nav-item {
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--color-text-muted);
+        border-left: 3px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .nav-item:hover {
+        background-color: var(--color-bg-body);
+        color: var(--color-text-main);
+      }
+
+      .nav-item.active {
+        background-color: var(--color-primary-bg);
+        color: var(--color-primary);
+        border-left-color: var(--color-primary);
+      }
+
+      /* === MAIN CONTENT === */
+      .main-content {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        position: relative;
+      }
+
+      .content-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .section {
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .section.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--color-text-main);
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--color-border);
+      }
+
+      /* === SEARCH BAR === */
+      .search-box {
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      .search-input {
+        width: 100%;
+        padding: 12px 16px 12px 40px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-input:focus {
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px var(--color-primary-bg);
+      }
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--color-text-muted);
+      }
+
+      /* === ACCORDION CARDS (Vendors) === */
+      .vendor-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .vcard {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .vcard-header {
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        user-select: none;
+        background: var(--color-bg-card);
+        transition: background 0.2s;
+      }
+
+      .vcard-header:hover {
+        background: var(--color-bg-body);
+      }
+
+      .vbadge {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .vinfo {
+        flex-grow: 1;
+      }
+
+      .vname {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-text-main);
+      }
+
+      .vproto {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        margin-top: 2px;
+      }
+
+      .vtoggle {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-text-muted);
+        transition: transform 0.3s;
+      }
+
+      .vcard.open .vtoggle {
+        transform: rotate(180deg);
+      }
+
+      .vcard-body {
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.3s ease-out,
+          padding 0.3s ease;
+        background: var(--color-bg-card);
+        border-top: 1px solid transparent;
+      }
+
+      .vcard.open .vcard-body {
+        padding: 1.25rem;
+        max-height: 500px; /* arbitrary large number */
+        border-top-color: var(--color-border);
+      }
+
+      .vcard table {
+        width: 100%;
+        font-size: 0.9rem;
+        border-collapse: collapse;
+      }
+
+      .vcard td {
+        padding: 6px 0;
+        vertical-align: top;
+      }
+
+      .vcard td:first-child {
+        color: var(--color-text-muted);
+        width: 35%;
+        font-weight: 500;
+      }
+
+      .vcard td:last-child {
+        color: var(--color-text-main);
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-top: 2px;
+        margin-right: 4px;
+      }
+
+      .pill-blue {
+        background: #eff6ff;
+        color: #2563eb;
+      }
+      .pill-green {
+        background: #f0fdf4;
+        color: #16a34a;
+      }
+      .pill-amber {
+        background: #fffbeb;
+        color: #d97706;
+      }
+      .pill-red {
+        background: #fef2f2;
+        color: #dc2626;
+      }
+      .pill-gray {
+        background: #f1f5f9;
+        color: #475569;
+      }
+
+      /* === COMPARISON TABLE === */
+      .table-responsive {
+        overflow-x: auto;
+        background: var(--color-bg-card);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--color-border);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .ctable {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        min-width: 600px;
+      }
+
+      .ctable th,
+      .ctable td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .ctable th {
+        background: var(--color-bg-sidebar);
+        font-weight: 600;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+      }
+
+      .ctable tr:last-child td {
+        border-bottom: none;
+      }
+
+      .ctable tr:hover td {
+        background: var(--color-primary-bg);
+      }
+
+      .watt {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+
+      /* === MECHANISM DIAGRAM & PINS === */
+      .mech-wrap {
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 1rem;
+        box-shadow: var(--shadow-sm);
+        overflow-x: auto;
+      }
+
+      .pin-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-text-main);
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .pin-desc {
+        font-size: 0.95rem;
+        color: var(--color-text-muted);
+        margin-bottom: 1rem;
+      }
+
+      .step-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 12px;
+        padding: 16px;
+        background: var(--color-bg-card);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .step-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .step-txt {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-text-main);
+        margin-bottom: 4px;
+      }
+
+      .step-sub {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        line-height: 1.5;
+      }
+
+      /* === USB TESTER SIMULATOR === */
+      .tester-widget {
+        background: #111827;
+        border: 4px solid #374151;
+        border-radius: var(--radius-md);
+        padding: 16px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        box-shadow:
+          inset 0 0 15px rgba(0, 0, 0, 0.8),
+          var(--shadow-md);
+        position: relative;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .tester-screen {
+        background: #020617;
+        border: 2px solid #1e293b;
+        border-radius: 6px;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        font-family: "Courier New", Courier, monospace;
+      }
+      .tester-val {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .tester-num {
+        font-size: 2.5rem;
+        font-weight: bold;
+        line-height: 1;
+        transition: color 0.3s;
+      }
+      .num-v {
+        color: #38bdf8;
+        text-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+      }
+      .num-a {
+        color: #f43f5e;
+        text-shadow: 0 0 8px rgba(244, 63, 94, 0.5);
+      }
+      .tester-unit {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        font-weight: bold;
+      }
+      .tester-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px dashed #1e293b;
+        padding-top: 8px;
+      }
+      .tester-proto {
+        color: #4ade80;
+        font-size: 0.9rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-shadow: 0 0 5px rgba(74, 222, 128, 0.4);
+      }
+      .tester-watt {
+        color: #fbbf24;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-shadow: 0 0 5px rgba(251, 191, 36, 0.4);
+      }
+
+      .sim-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+      .btn-sim {
+        background: var(--color-bg-body);
+        border: 1px solid var(--color-border);
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--color-text-main);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-sim:hover {
+        background: var(--color-border);
+      }
+      .btn-sim.active {
+        background: var(--color-primary);
+        color: white;
+        border-color: var(--color-primary);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
+      }
+
+      /* === RADAR SIMULATOR === */
+      .radar-container {
+        background: #050505;
+        border: 2px solid #1e293b;
+        border-radius: var(--radius-lg);
+        padding: 4px;
+        position: relative;
+        margin-bottom: 20px;
+        box-shadow:
+          0 0 20px rgba(0, 0, 0, 0.8) inset,
+          0 4px 15px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+      canvas#radarCanvas {
+        width: 100%;
+        height: 400px;
+        display: block;
+        background: #020617;
+        border-radius: 8px;
+      }
+      .radar-overlay-text {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-family: var(--font-mono);
+        color: #22c55e;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+        animation: blink 2s infinite;
+        pointer-events: none;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .radar-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .btn-radar {
+        background: var(--color-bg-sidebar);
+        border: 1px solid var(--color-border);
+        color: var(--color-text-muted);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+      .btn-radar.active {
+        color: var(--color-text-main);
+        background: var(--color-bg-card);
+        border-color: #334155;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      }
+      .r-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 8px currentColor;
+        opacity: 0.3;
+        transition: opacity 0.3s;
+      }
+      .btn-radar.active .r-color {
+        opacity: 1;
+      }
+
+      /* Mobile menu button */
+      .menu-toggle {
         display: none;
         position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        z-index: 99;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        box-shadow: var(--shadow-md);
+        z-index: 1000;
+        cursor: pointer;
       }
-      .sidebar-overlay.open { display: block; }
-    }
-  </style>
-</head>
-<body>
-  <!-- GLOBAL APP NAVBAR -->
-  <div style="background: var(--color-bg-sidebar); border-bottom: 1px solid var(--color-border); padding: 12px 24px; display: flex; gap: 20px; align-items: center; justify-content: center; position: sticky; top: 0; z-index: 1000; font-family: var(--font-main);">
-    <div style="display: flex; align-items: center; gap: 12px; margin-right: auto;">
-      <div style="font-weight: 700; color: var(--color-primary); font-family: var(--font-mono); font-size: 16px; letter-spacing: 1px;">⚙️ SERVIS PINTAR</div>
-      <a href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/gbluez/belajar.komponen" target="_blank" title="Share di Facebook" style="color: #3b82f6; display: flex; align-items: center; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
-        </svg>
-      </a>
-    </div>
-    <a href="dioda_interaktif.html" style="text-decoration: none; color: var(--color-text-main); padding: 8px 16px; border-radius: 8px; font-weight: 500; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='var(--color-primary-bg)'" onmouseout="this.style.background='transparent'">⚡ Modul Dioda</a>
-    <a href="fast_charging.html" style="text-decoration: none; color: #0d0f14; background: var(--color-primary); padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(245, 200, 66, 0.2);">🔋 Fast Charging</a>
-  </div>
 
-  <div style="display: flex; height: calc(100vh - 60px); overflow: hidden;">
-    <!-- Sidebar Overlay for Mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          transform: translateX(-100%);
+          box-shadow: var(--shadow-md);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main-content {
+          padding: 1rem;
+        }
+        .menu-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
-  <!-- Sidebar Navigation -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <h1>Servis Pintar</h1>
-      <p>Modul: Fast Charging</p>
-    </div>
-    <nav class="nav-list">
-      <div class="nav-item active" onclick="navTo('vendors')">Vendor & Protokol</div>
-      <div class="nav-item" onclick="navTo('radar')">📡 Live 8 Vendor Radar</div>
-      <div class="nav-item" onclick="navTo('compare')">Tabel Perbandingan</div>
-      <div class="nav-item" onclick="navTo('mechanism')">Mekanisme Negosiasi</div>
-      <div class="nav-item" onclick="navTo('pins')">Jalur D+/D− & CC</div>
-    </nav>
-  </aside>
-
-  <!-- Main Content Area -->
-  <main class="main-content">
-    <div class="content-container">
-      
-      <!-- VENDORS SECTION -->
-      <section id="sec-vendors" class="section active">
-        <h2 class="section-title">Vendor & Protokol Fast Charging</h2>
-        
-        <div class="search-box">
-          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="searchInput" class="search-input" placeholder="Cari merek, teknologi, atau watt... (misal: VOOC, 100W)" onkeyup="filterVendors()">
+        /* Overlay for mobile sidebar */
+        .sidebar-overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 99;
+        }
+        .sidebar-overlay.open {
+          display: block;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- GLOBAL APP NAVBAR -->
+    <div
+      style="
+        background: var(--color-bg-sidebar);
+        border-bottom: 1px solid var(--color-border);
+        padding: 12px 24px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        font-family: var(--font-main);
+      "
+    >
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-right: auto;
+        "
+      >
+        <div
+          style="
+            font-weight: 700;
+            color: var(--color-primary);
+            font-family: var(--font-mono);
+            font-size: 16px;
+            letter-spacing: 1px;
+          "
+        >
+          ⚙️ SERVIS PINTAR
         </div>
-
-        <div class="vendor-list" id="vendorList">
-          <!-- QC -->
-          <div class="vcard" data-search="qualcomm quick charge qc xiaomi asus samsung motorola">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#eff6ff;color:#2563eb">QC</div>
-              <div class="vinfo">
-                <div class="vname">Qualcomm Quick Charge</div>
-                <div class="vproto">QC 2.0 → 5.0</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>100W+ (QC 5.0)</td></tr>
-                <tr><td>Versi populer</td><td>QC 3.0 (18W) / QC 4+ / 5.0</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-blue">D+ / D−</span> <span class="pill pill-green">USB PD</span></td></tr>
-                <tr><td>Perangkat</td><td>Banyak tipe Android (Xiaomi, ASUS, Moto)</td></tr>
-                <tr><td>Voltase</td><td>5 / 9 / 12 / 20V (adaptif)</td></tr>
-                <tr><td>Fitur khas</td><td>INOV (Intelligent Negotiation for Optimum Voltage) — penyesuaian volt per 200mV</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (QC: Steps up to 12V/20V) -->
-                  <path d="M 0 60 L 50 60 L 50 40 L 150 40 L 150 20 L 280 20" fill="none" stroke="#3b82f6" stroke-width="2" />
-                  <text x="285" y="24" fill="#3b82f6" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (Steady then taper) -->
-                  <path d="M 0 70 L 50 70 L 50 45 L 180 45 L 280 75" fill="none" stroke="#93c5fd" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="49" fill="#93c5fd" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- VOOC -->
-          <div class="vcard" data-search="oppo vooc supervooc oneplus realme vivo dart">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#fffbeb;color:#d97706">VO</div>
-              <div class="vinfo">
-                <div class="vname">OPPO VOOC / SuperVOOC</div>
-                <div class="vproto">Flash Charge — Arus tinggi</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>240W (SuperVOOC 2024)</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-blue">D+ / D−</span> <span class="pill pill-amber">Privat</span></td></tr>
-                <tr><td>Voltase</td><td>Biasanya 5V atau 10V (arus sangat tinggi hingga 11A)</td></tr>
-                <tr><td>Perangkat</td><td>OPPO, OnePlus (Warp), Realme (Dart), vivo</td></tr>
-                <tr><td>Fitur khas</td><td>Panas minimal pada HP, karena sirkuit step-down panasnya berada di adaptor.</td></tr>
-                <tr><td>Keamanan</td><td>Chip autentikasi enkripsi tertanam di kabel. Tanpa kabel ori, gagal fast charge.</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (VOOC: Flat at 5V/10V) -->
-                  <path d="M 0 60 L 50 60 L 50 50 L 280 50" fill="none" stroke="#f5c842" stroke-width="2" />
-                  <text x="285" y="54" fill="#f5c842" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (Massive current jump) -->
-                  <path d="M 0 70 L 50 70 L 50 15 L 180 15 L 280 75" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="19" fill="#fef08a" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Huawei -->
-          <div class="vcard" data-search="huawei honor supercharge fcp scp">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#f0fdf4;color:#16a34a">HW</div>
-              <div class="vinfo">
-                <div class="vname">Huawei SuperCharge / FCP</div>
-                <div class="vproto">FCP (High Vol) & SCP (High Curr)</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>135W+</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-blue">D+ / D−</span> <span class="pill pill-green">USB PD</span></td></tr>
-                <tr><td>FCP voltase</td><td>9V / 12V (Mirip QC 2.0)</td></tr>
-                <tr><td>SCP voltase</td><td>5V / 10V arus tinggi (Mirip VOOC)</td></tr>
-                <tr><td>Perangkat</td><td>Huawei, Honor</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (Huawei: Small step) -->
-                  <path d="M 0 60 L 50 60 L 50 45 L 280 45" fill="none" stroke="#22c55e" stroke-width="2" />
-                  <text x="285" y="49" fill="#22c55e" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (High current) -->
-                  <path d="M 0 70 L 50 70 L 50 25 L 190 25 L 280 75" fill="none" stroke="#86efac" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="29" fill="#86efac" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- USB PD -->
-          <div class="vcard" data-search="usb pd power delivery pps type c type-c laptop pixel iphone">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#f3e8ff;color:#7e22ce">PD</div>
-              <div class="vinfo">
-                <div class="vname">USB Power Delivery (PD)</div>
-                <div class="vproto">Standar Global Universal</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>240W (USB PD 3.1)</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-gray">CC Pin (Khusus Type-C)</span></td></tr>
-                <tr><td>Voltase</td><td>5 / 9 / 15 / 20V + PPS adaptif</td></tr>
-                <tr><td>Perangkat</td><td>iPhone 15+, Google Pixel, iPad, MacBook, Laptop Windows</td></tr>
-                <tr><td>PPS (Prog. Power Supply)</td><td>Fitur PD 3.0+ yg mengizinkan perubahan voltase stepless secara presisi (3.3–21V) untuk mengurangi panas.</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (PD: Multiple steps) -->
-                  <path d="M 0 60 L 40 60 L 40 45 L 100 45 L 100 25 L 280 25" fill="none" stroke="#a855f7" stroke-width="2" />
-                  <text x="285" y="29" fill="#a855f7" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (Stable) -->
-                  <path d="M 0 70 L 40 70 L 40 40 L 200 40 L 280 75" fill="none" stroke="#d8b4fe" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="44" fill="#d8b4fe" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Apple -->
-          <div class="vcard" data-search="apple iphone ipad macbook fast charge lightning">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#f1f5f9;color:#475569">AP</div>
-              <div class="vinfo">
-                <div class="vname">Apple Fast Charge</div>
-                <div class="vproto">Menggunakan basis USB PD</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>~27W (iPhone Pro), 140W (MacBook)</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-green">USB PD via CC</span></td></tr>
-                <tr><td>iPhone 15+</td><td>Port USB-C murni standar PD.</td></tr>
-                <tr><td>iPhone ≤14</td><td>Port Lightning. Membutuhkan kabel USB-C to Lightning (di dalam kabel ada chip MFi untuk handshake PD).</td></tr>
-                <tr><td>Catatan</td><td>Apple tidak mendukung Quick Charge (QC). Hanya mendeteksi USB PD.</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (Apple: 9V PD) -->
-                  <path d="M 0 60 L 60 60 L 60 35 L 280 35" fill="none" stroke="#94a3b8" stroke-width="2" />
-                  <text x="285" y="39" fill="#94a3b8" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (Apple: Steady to taper) -->
-                  <path d="M 0 70 L 60 70 L 60 45 L 170 45 L 280 75" fill="none" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="49" fill="#cbd5e1" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Samsung -->
-          <div class="vcard" data-search="samsung afc super fast charging pps galaxy s23 s24">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#e0f2fe;color:#0369a1">SA</div>
-              <div class="vinfo">
-                <div class="vname">Samsung AFC / Super Fast</div>
-                <div class="vproto">Adaptive Fast Charging / SFC 2.0</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>45W - 65W (Super Fast Charging 2.0)</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-blue">D+ / D−</span> <span class="pill pill-green">USB PD PPS</span></td></tr>
-                <tr><td>Protokol Lama</td><td>AFC (Berdasar QC 2.0) - max 15W</td></tr>
-                <tr><td>Protokol Baru</td><td>Super Fast Charging sangat bergantung pada <b style="color:var(--color-primary)">USB PD PPS</b>. Tanpa PPS, biasanya turun ke 15W/25W.</td></tr>
-                <tr><td>Perangkat</td><td>Galaxy S/A/Z/M series</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (Samsung: PPS slope) -->
-                  <path d="M 0 60 L 40 60 L 120 30 L 280 30" fill="none" stroke="#0284c7" stroke-width="2" />
-                  <text x="285" y="34" fill="#0284c7" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (High current PPS) -->
-                  <path d="M 0 70 L 40 70 L 40 20 L 150 20 L 280 75" fill="none" stroke="#7dd3fc" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="24" fill="#7dd3fc" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Xiaomi -->
-          <div class="vcard" data-search="xiaomi redmi poco hypercharge turbo charge">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#fee2e2;color:#b91c1c">XI</div>
-              <div class="vinfo">
-                <div class="vname">Xiaomi HyperCharge / Turbo</div>
-                <div class="vproto">Mi Turbo Charge</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>120W - 300W</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-blue">D+ / D−</span> <span class="pill pill-amber">Privat</span></td></tr>
-                <tr><td>Sistem</td><td>Split-battery (Baterai ganda seri) dan Dual Charge Pumps di motherboard.</td></tr>
-                <tr><td>Perangkat</td><td>Xiaomi flagship, Redmi Note Pro+, POCO</td></tr>
-                <tr><td>Catatan</td><td>Sangat sensitif terhadap kabel. Membutuhkan kabel dengan pin tambahan atau E-Mark chip.</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (Xiaomi: 10-20V flat) -->
-                  <path d="M 0 60 L 40 60 L 40 30 L 280 30" fill="none" stroke="#ef4444" stroke-width="2" />
-                  <text x="285" y="34" fill="#ef4444" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (Xiaomi: Massive spike) -->
-                  <path d="M 0 70 L 40 70 L 40 10 L 140 10 L 280 75" fill="none" stroke="#fca5a5" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="14" fill="#fca5a5" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- MediaTek -->
-          <div class="vcard" data-search="mediatek mtk pump express pe dimensity">
-            <div class="vcard-header" onclick="toggleAccordion(this)">
-              <div class="vbadge" style="background:#ccfbf1;color:#0f766e">MT</div>
-              <div class="vinfo">
-                <div class="vname">MediaTek Pump Express</div>
-                <div class="vproto">PE / PE+ / PE 3.0+</div>
-              </div>
-              <div class="vtoggle">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </div>
-            </div>
-            <div class="vcard-body">
-              <table>
-                <tr><td>Maks daya</td><td>~65W+</td></tr>
-                <tr><td>Metode neg.</td><td><span class="pill pill-blue">Pulse D+</span> / <span class="pill pill-green">USB PD</span></td></tr>
-                <tr><td>Cara kerja lama</td><td>Menaikkan voltase dengan cara mengirim sinyal "pulse" (denyut) arus pada pin D+ berulang kali.</td></tr>
-                <tr><td>Cara kerja baru</td><td>PE 3.0 dan ke atas sudah mematuhi standar USB PD PPS.</td></tr>
-                <tr><td>Perangkat</td><td>HP ber-chipset Helio / Dimensity.</td></tr>
-              </table>
-              <div style="margin-top: 1rem; border-top: 1px dashed var(--color-border); padding-top: 1rem;">
-                <div style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; text-align: center; font-weight: 600;">📈 Kurva Karakteristik (V & A)</div>
-                <svg width="100%" height="80" viewBox="0 0 300 80">
-                  <line x1="0" y1="40" x2="300" y2="40" stroke="var(--color-border)" stroke-dasharray="2" />
-                  <line x1="0" y1="80" x2="300" y2="80" stroke="var(--color-border)" />
-                  <!-- V curve (MTK: Micro steps) -->
-                  <path d="M 0 60 L 40 60 L 40 50 L 80 50 L 80 40 L 120 40 L 120 30 L 280 30" fill="none" stroke="#0d9488" stroke-width="2" />
-                  <text x="285" y="34" fill="#0d9488" font-size="10" font-weight="bold">V</text>
-                  <!-- A curve (Steady taper) -->
-                  <path d="M 0 70 L 40 70 L 40 35 L 160 35 L 280 75" fill="none" stroke="#5eead4" stroke-width="2" stroke-dasharray="4" />
-                  <text x="285" y="39" fill="#5eead4" font-size="10" font-weight="bold">A</text>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- RADAR SECTION -->
-      <section id="sec-radar" class="section">
-        <h2 class="section-title">📡 Live 8 Vendor Radar</h2>
-        <p class="pin-desc">Simulasi canggih (Oscilloscope) yang membandingkan kurva Tegangan (Solid) dan Arus (Putus-putus) dari 8 vendor pengisian daya terkemuka secara real-time.</p>
-        
-        <div class="radar-container">
-          <canvas id="radarCanvas" width="800" height="400"></canvas>
-          <div class="radar-overlay-text">LIVE SCAN: ACTIVE</div>
-        </div>
-
-        <div class="radar-controls">
-          <button class="btn-radar active" data-vendor="qc" onclick="toggleRadar('qc')"><span class="r-color" style="color:#3b82f6; background:#3b82f6"></span> QC</button>
-          <button class="btn-radar active" data-vendor="vooc" onclick="toggleRadar('vooc')"><span class="r-color" style="color:#f5c842; background:#f5c842"></span> VOOC</button>
-          <button class="btn-radar active" data-vendor="hw" onclick="toggleRadar('hw')"><span class="r-color" style="color:#22c55e; background:#22c55e"></span> Huawei</button>
-          <button class="btn-radar active" data-vendor="pd" onclick="toggleRadar('pd')"><span class="r-color" style="color:#a855f7; background:#a855f7"></span> USB PD</button>
-          <button class="btn-radar active" data-vendor="ap" onclick="toggleRadar('ap')"><span class="r-color" style="color:#94a3b8; background:#94a3b8"></span> Apple</button>
-          <button class="btn-radar active" data-vendor="sa" onclick="toggleRadar('sa')"><span class="r-color" style="color:#0284c7; background:#0284c7"></span> Samsung</button>
-          <button class="btn-radar active" data-vendor="xi" onclick="toggleRadar('xi')"><span class="r-color" style="color:#ef4444; background:#ef4444"></span> Xiaomi</button>
-          <button class="btn-radar active" data-vendor="mt" onclick="toggleRadar('mt')"><span class="r-color" style="color:#0d9488; background:#0d9488"></span> MediaTek</button>
-        </div>
-      </section>
-
-      <!-- COMPARE SECTION -->
-      <section id="sec-compare" class="section">
-        <h2 class="section-title">Perbandingan Protokol</h2>
-        
-        <div class="table-responsive">
-          <table class="ctable">
-            <thead>
-              <tr>
-                <th>Protokol</th>
-                <th>Maks Watt</th>
-                <th>Pin Jalur Data</th>
-                <th>Karakteristik Voltase</th>
-                <th>Kabel Ori Wajib?</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td><b>USB PD 3.1</b></td><td><span class="watt">240W</span></td><td>CC (Type-C)</td><td>Variabel (5-48V)</td><td><span class="pill pill-gray">Hanya E-Mark (jika >60W)</span></td></tr>
-              <tr><td><b>OPPO SuperVOOC</b></td><td><span class="watt">240W</span></td><td>D+ / D-</td><td>5V / 10V (Arus Tinggi)</td><td><span class="pill pill-red">Ya (Chip Enkripsi)</span></td></tr>
-              <tr><td><b>Xiaomi HyperCharge</b></td><td><span class="watt">120W+</span></td><td>D+ / D- / CC</td><td>Split Baterai</td><td><span class="pill pill-red">Ya (Pin modifikasi)</span></td></tr>
-              <tr><td><b>Qualcomm QC 5.0</b></td><td><span class="watt">100W</span></td><td>D+ / D- / CC</td><td>Adaptif (INOV)</td><td><span class="pill pill-green">Tidak</span></td></tr>
-              <tr><td><b>Samsung SFC 2.0</b></td><td><span class="watt">45W+</span></td><td>CC (PPS)</td><td>PPS (Stepless)</td><td><span class="pill pill-gray">E-Mark 5A</span></td></tr>
-              <tr><td><b>Huawei SuperCharge</b></td><td><span class="watt">66W+</span></td><td>D+ / D-</td><td>5V/10V/11V</td><td><span class="pill pill-red">Ya (5A/6A)</span></td></tr>
-              <tr><td><b>Apple Fast Charge</b></td><td><span class="watt">~27W</span></td><td>CC / Lightning</td><td>9V / 3A (via PD)</td><td><span class="pill pill-gray">Kabel MFi (untuk Lightning)</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- MECHANISM SECTION -->
-      <section id="sec-mechanism" class="section">
-        <h2 class="section-title">Mekanisme Negosiasi Daya</h2>
-        <p class="pin-desc">Proses bagaimana charger dan ponsel "berkomunikasi" sebelum menaikkan daya dari 5W ke mode Fast Charging. Coba klik tombol di bawah untuk melihat simulasi perubahan tegangan dan arus!</p>
-
-        <div style="background: var(--color-bg-sidebar); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem;">
-          <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--color-primary); margin-bottom: 1rem;">Bahasa Negosiasi (USB PD)</h3>
-          
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="background: var(--color-bg-body); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid #3b82f6; box-shadow: var(--shadow-sm);">
-              <div style="font-weight: 700; color: #3b82f6; margin-bottom: 0.25rem;">1. PDO (Power Data Object)</div>
-              <div style="font-size: 0.95rem; color: var(--color-text-muted);">Ibarat <b style="color:var(--color-text-main)">"Buku Menu"</b> dari charger. Pesan ini dikirim charger ke HP berisi daftar kemampuan daya yang dimilikinya (Contoh: 5V/3A, 9V/2A, 12V/1.5A).</div>
-            </div>
-            
-            <div style="background: var(--color-bg-body); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid #16a34a; box-shadow: var(--shadow-sm);">
-              <div style="font-weight: 700; color: #16a34a; margin-bottom: 0.25rem;">2. RDO (Request Data Object)</div>
-              <div style="font-size: 0.95rem; color: var(--color-text-muted);">Ibarat <b style="color:var(--color-text-main)">"Pesanan"</b> dari HP. Setelah melihat menu, HP mengirim pesan balik memilih salah satu paket daya (Contoh: "Saya pesan PDO nomor 2 yaitu 9V dengan arus 2A").</div>
-            </div>
-
-            <div style="background: var(--color-bg-body); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid #a855f7; box-shadow: var(--shadow-sm);">
-              <div style="font-weight: 700; color: #a855f7; margin-bottom: 0.25rem;">3. BMC (Biphase Mark Coding)</div>
-              <div style="font-size: 0.95rem; color: var(--color-text-muted);">Adalah <b style="color:var(--color-text-main)">"Metode Komunikasi"</b> (sinyal fisik) yang digunakan untuk mengirim pesan PDO dan RDO. Data digital ini disalurkan melalui pin <b>CC (Configuration Channel)</b> pada kabel USB Type-C tanpa mengganggu jalur data biasa.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- USB Tester Simulator -->
-        <div class="tester-widget">
-          <div class="tester-screen">
-            <div class="tester-val">
-              <span class="tester-unit">VOLTAGE (V)</span>
-              <span class="tester-num num-v" id="sim-v">5.00</span>
-            </div>
-            <div class="tester-val" style="text-align: right;">
-              <span class="tester-unit">CURRENT (A)</span>
-              <span class="tester-num num-a" id="sim-a">0.90</span>
-            </div>
-          </div>
-          <div class="tester-bottom">
-            <span class="tester-proto" id="sim-proto">STD_5V</span>
-            <span class="tester-watt" id="sim-w">4.50W</span>
-          </div>
-        </div>
-
-        <div class="sim-controls">
-          <button class="btn-sim active" onclick="runSim(1, this)">1. Standby</button>
-          <button class="btn-sim" onclick="runSim(2, this)">2. Deteksi</button>
-          <button class="btn-sim" onclick="runSim(3, this)">3. Request PD/QC</button>
-          <button class="btn-sim" onclick="runSim(4, this)">4. Negosiasi</button>
-          <button class="btn-sim" onclick="runSim(5, this)">5. Fast Charge!</button>
-          <button class="btn-sim" onclick="runSim(6, this)">6. Tapering</button>
-        </div>
-        
-        <div class="mech-wrap">
-          <svg width="680" height="580" viewBox="0 0 680 580" style="width:100%; height:auto;">
-            <defs>
-              <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M2 1L8 5L2 9" fill="none" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </marker>
-            </defs>
-            
-            <!-- Nodes -->
-            <rect x="40" y="30" width="150" height="44" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
-            <text x="115" y="57" font-family="sans-serif" font-size="14" font-weight="bold" fill="#1e3a8a" text-anchor="middle" dominant-baseline="central">Adaptor Charger</text>
-
-            <rect x="490" y="30" width="150" height="44" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5"/>
-            <text x="565" y="57" font-family="sans-serif" font-size="14" font-weight="bold" fill="#14532d" text-anchor="middle" dominant-baseline="central">Ponsel / IC Charger</text>
-
-            <!-- Step 1 -->
-            <rect x="40" y="110" width="150" height="30" rx="4" fill="#f8fafc" stroke="#cbd5e1"/>
-            <text x="115" y="125" font-family="sans-serif" font-size="12" fill="#475569" text-anchor="middle" dominant-baseline="central">Output default 5V</text>
-            
-            <line x1="190" y1="125" x2="490" y2="125" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
-            <text x="340" y="115" font-family="sans-serif" font-size="12" fill="#334155" text-anchor="middle">1. VBUS terhubung — 5V masuk ke HP</text>
-
-            <!-- Step 2 -->
-            <path d="M490 175 L490 200 L190 200 L190 175" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
-            <text x="340" y="190" font-family="sans-serif" font-size="12" font-weight="bold" fill="#d97706" text-anchor="middle">2. HP kirim sinyal deteksi via D+/D- atau CC Pin</text>
-            <text x="340" y="215" font-family="sans-serif" font-size="11" fill="#64748b" text-anchor="middle">"Saya support QC/PD/VOOC, kamu bisa apa?"</text>
-
-            <!-- Step 3 -->
-            <line x1="190" y1="260" x2="490" y2="260" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
-            <text x="340" y="250" font-family="sans-serif" font-size="12" font-weight="bold" fill="#2563eb" text-anchor="middle">3. Charger merespon kemampuannya (PDO)</text>
-            <text x="340" y="275" font-family="sans-serif" font-size="11" fill="#64748b" text-anchor="middle">"Saya punya 5V/3A, 9V/2A, 12V/1.5A"</text>
-
-            <!-- Step 4 -->
-            <path d="M490 325 L350 325 L350 310 L190 310" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr2)"/>
-            <text x="320" y="318" font-family="sans-serif" font-size="12" font-weight="bold" fill="#16a34a" text-anchor="middle">4. HP meminta daya spesifik (RDO)</text>
-            <text x="320" y="340" font-family="sans-serif" font-size="11" fill="#64748b" text-anchor="middle">"Beri saya 9V/2A sekarang."</text>
-
-            <!-- Step 5 -->
-            <rect x="40" y="360" width="150" height="40" rx="4" fill="#fee2e2" stroke="#ef4444" stroke-dasharray="4"/>
-            <text x="115" y="375" font-family="sans-serif" font-size="12" font-weight="bold" fill="#991b1b" text-anchor="middle" dominant-baseline="central">Naikkan Voltase VBUS</text>
-            
-            <line x1="190" y1="380" x2="490" y2="380" stroke="#ef4444" stroke-width="2.5" marker-end="url(#arr2)"/>
-            <text x="340" y="370" font-family="sans-serif" font-size="13" font-weight="bold" fill="#b91c1c" text-anchor="middle">5. Arus Pengisian Cepat Aktif!</text>
-
-            <!-- Step 6 -->
-            <rect x="190" y="440" width="300" height="40" rx="20" fill="#f1f5f9" stroke="#94a3b8"/>
-            <text x="340" y="460" font-family="sans-serif" font-size="12" fill="#334155" text-anchor="middle" dominant-baseline="central">6. Monitoring suhu & turunkan daya bertahap (Tapering) saat 80%</text>
-            <line x1="340" y1="390" x2="340" y2="440" stroke="#64748b" stroke-width="1" stroke-dasharray="2"/>
-
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u=https://github.com/gbluez/belajar.komponen"
+          target="_blank"
+          title="Share di Facebook"
+          style="
+            color: #3b82f6;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s;
+          "
+          onmouseover="this.style.transform = 'scale(1.1)'"
+          onmouseout="this.style.transform = 'scale(1)'"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+            />
           </svg>
-        </div>
-      </section>
-
-      <!-- PINS SECTION -->
-      <section id="sec-pins" class="section">
-        <h2 class="section-title">Peran Jalur D+/D− dan CC Pin</h2>
-        
-        <div class="pin-label">Jalur D+ / D− (Kabel USB-A ke Micro/Type-C)</div>
-        <div class="pin-desc">Pada awalnya D+/D- murni untuk transfer data (ke PC). Namun vendor memanfaatkannya untuk jalur komunikasi deteksi charger. Jika IC Charger di HP mendeteksi voltase tertentu pada pin ini, ia tahu jenis charger yang ditancapkan.</div>
-
-        <div class="step-row">
-          <div class="step-num" style="background:#f1f5f9;color:#475569">1</div>
-          <div>
-            <div class="step-txt">Apple Mode (5W / 12W)</div>
-            <div class="step-sub">D+ dan D− di-short (hubung singkat) menggunakan resistor pembagi tegangan di dalam charger Apple. Ponsel mendeteksi voltase ~2.0V atau 2.7V di D+/D- untuk mengenali daya adaptor.</div>
-          </div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num" style="background:#eff6ff;color:#2563eb">2</div>
-          <div>
-            <div class="step-txt">Qualcomm QC Handshake</div>
-            <div class="step-sub">Ponsel memberi tegangan 0.6V ke D+. Jika D- ikut naik (karena di-short di charger), HP tahu ini charger QC. Lalu HP memanipulasi voltase D+/D- untuk meminta VBUS (Misal: D+=3.3V, D-=0.6V meminta VBUS naik ke 9V).</div>
-          </div>
-        </div>
-
-        <div class="step-row">
-          <div class="step-num" style="background:#fffbeb;color:#d97706">3</div>
-          <div>
-            <div class="step-txt">Sistem Enkripsi (VOOC / HyperCharge)</div>
-            <div class="step-sub">Murni menggunakan protokol data digital (bukan sekadar voltase analog). Charger dan chip E-Mark di kabel saling bertukar kode sandi via D+/D-. Jika gagal autentikasi, pengisian dibatasi di 5V/2A.</div>
-          </div>
-        </div>
-
-        <div class="pin-label" style="margin-top:2.5rem">Jalur CC / Configuration Channel (Khusus USB Type-C)</div>
-        <div class="pin-desc">Ini adalah standar masa depan. USB-C memiliki dua pin CC (CC1 dan CC2) yang menggantikan tugas D+/D- untuk urusan daya.</div>
-
-        <div class="step-row">
-          <div class="step-num" style="background:#f3e8ff;color:#7e22ce">CC</div>
-          <div>
-            <div class="step-txt">Power Delivery (PD) & BMC Encoding</div>
-            <div class="step-sub">Komunikasi USB PD terjadi sepenuhnya di pin CC, tidak mengganggu D+/D- (sehingga fast charging dan transfer data bisa berjalan bersamaan). Data dikirim dengan modulasi BMC pada kecepatan 300 kbps berisi paket data kemampuan (PDO) dan permintaan (RDO).</div>
-          </div>
-        </div>
-      </section>
-
+        </a>
+      </div>
+      <a
+        href="dioda_interaktif.html"
+        style="
+          text-decoration: none;
+          color: var(--color-text-main);
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-weight: 500;
+          font-size: 14px;
+          transition: all 0.2s;
+        "
+        onmouseover="this.style.background = 'var(--color-primary-bg)'"
+        onmouseout="this.style.background = 'transparent'"
+        >⚡ Modul Dioda</a
+      >
+      <a
+        href="fast_charging.html"
+        style="
+          text-decoration: none;
+          color: #0d0f14;
+          background: var(--color-primary);
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 14px;
+          box-shadow: 0 4px 12px rgba(245, 200, 66, 0.2);
+        "
+        >🔋 Fast Charging</a
+      >
     </div>
-  </main>
 
-  <!-- Mobile Menu Button -->
-  <button class="menu-toggle" onclick="toggleMobileMenu()">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-  </button>
+    <div style="display: flex; height: calc(100vh - 60px); overflow: hidden">
+      <!-- Sidebar Overlay for Mobile -->
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <script>
-    // --- Navigation Logic ---
-    function navTo(secId) {
-      // Hide all sections
-      document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-      // Remove active from all nav items
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      
-      // Show target section
-      document.getElementById('sec-' + secId).classList.add('active');
-      // Set active nav
-      event.target.classList.add('active');
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h1>Servis Pintar</h1>
+          <p>Modul: Fast Charging</p>
+        </div>
+        <nav class="nav-list">
+          <div class="nav-item active" onclick="navTo('vendors')">
+            Vendor & Protokol
+          </div>
+          <div class="nav-item" onclick="navTo('radar')">
+            📡 Live 8 Vendor Radar
+          </div>
+          <div class="nav-item" onclick="navTo('compare')">
+            Tabel Perbandingan
+          </div>
+          <div class="nav-item" onclick="navTo('mechanism')">
+            Mekanisme Negosiasi
+          </div>
+          <div class="nav-item" onclick="navTo('pins')">Jalur D+/D− & CC</div>
+        </nav>
+      </aside>
 
-      if (secId === 'radar' && typeof resizeRadar === 'function') {
-        setTimeout(resizeRadar, 50);
-      }
+      <!-- Main Content Area -->
+      <main class="main-content">
+        <div class="content-container">
+          <!-- VENDORS SECTION -->
+          <section id="sec-vendors" class="section active">
+            <h2 class="section-title">Vendor & Protokol Fast Charging</h2>
 
-      // Close mobile menu if open
-      closeMobileMenu();
-    }
+            <div class="search-box">
+              <svg
+                class="search-icon"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Cari merek, teknologi, atau watt... (misal: VOOC, 100W)"
+                onkeyup="filterVendors()"
+              />
+            </div>
 
-    // --- Accordion Logic ---
-    function toggleAccordion(header) {
-      const card = header.parentElement;
-      // Close others (optional, if we want strict accordion)
-      /*
+            <div class="vendor-list" id="vendorList">
+              <!-- QC -->
+              <div
+                class="vcard"
+                data-search="qualcomm quick charge qc xiaomi asus samsung motorola"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #eff6ff; color: #2563eb"
+                  >
+                    QC
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">Qualcomm Quick Charge</div>
+                    <div class="vproto">QC 2.0 → 5.0</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>100W+ (QC 5.0)</td>
+                    </tr>
+                    <tr>
+                      <td>Versi populer</td>
+                      <td>QC 3.0 (18W) / QC 4+ / 5.0</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-blue">D+ / D−</span>
+                        <span class="pill pill-green">USB PD</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>Banyak tipe Android (Xiaomi, ASUS, Moto)</td>
+                    </tr>
+                    <tr>
+                      <td>Voltase</td>
+                      <td>5 / 9 / 12 / 20V (adaptif)</td>
+                    </tr>
+                    <tr>
+                      <td>Fitur khas</td>
+                      <td>
+                        INOV (Intelligent Negotiation for Optimum Voltage) —
+                        penyesuaian volt per 200mV
+                      </td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (QC: Steps up to 12V/20V) -->
+                      <path
+                        d="M 0 60 L 50 60 L 50 40 L 150 40 L 150 20 L 280 20"
+                        fill="none"
+                        stroke="#3b82f6"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="24"
+                        fill="#3b82f6"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (Steady then taper) -->
+                      <path
+                        d="M 0 70 L 50 70 L 50 45 L 180 45 L 280 75"
+                        fill="none"
+                        stroke="#93c5fd"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="49"
+                        fill="#93c5fd"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- VOOC -->
+              <div
+                class="vcard"
+                data-search="oppo vooc supervooc oneplus realme vivo dart"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #fffbeb; color: #d97706"
+                  >
+                    VO
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">OPPO VOOC / SuperVOOC</div>
+                    <div class="vproto">Flash Charge — Arus tinggi</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>240W (SuperVOOC 2024)</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-blue">D+ / D−</span>
+                        <span class="pill pill-amber">Privat</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Voltase</td>
+                      <td>
+                        Biasanya 5V atau 10V (arus sangat tinggi hingga 11A)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>OPPO, OnePlus (Warp), Realme (Dart), vivo</td>
+                    </tr>
+                    <tr>
+                      <td>Fitur khas</td>
+                      <td>
+                        Panas minimal pada HP, karena sirkuit step-down panasnya
+                        berada di adaptor.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Keamanan</td>
+                      <td>
+                        Chip autentikasi enkripsi tertanam di kabel. Tanpa kabel
+                        ori, gagal fast charge.
+                      </td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (VOOC: Flat at 5V/10V) -->
+                      <path
+                        d="M 0 60 L 50 60 L 50 50 L 280 50"
+                        fill="none"
+                        stroke="#f5c842"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="54"
+                        fill="#f5c842"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (Massive current jump) -->
+                      <path
+                        d="M 0 70 L 50 70 L 50 15 L 180 15 L 280 75"
+                        fill="none"
+                        stroke="#fef08a"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="19"
+                        fill="#fef08a"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Huawei -->
+              <div class="vcard" data-search="huawei honor supercharge fcp scp">
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #f0fdf4; color: #16a34a"
+                  >
+                    HW
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">Huawei SuperCharge / FCP</div>
+                    <div class="vproto">FCP (High Vol) & SCP (High Curr)</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>135W+</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-blue">D+ / D−</span>
+                        <span class="pill pill-green">USB PD</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>FCP voltase</td>
+                      <td>9V / 12V (Mirip QC 2.0)</td>
+                    </tr>
+                    <tr>
+                      <td>SCP voltase</td>
+                      <td>5V / 10V arus tinggi (Mirip VOOC)</td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>Huawei, Honor</td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (Huawei: Small step) -->
+                      <path
+                        d="M 0 60 L 50 60 L 50 45 L 280 45"
+                        fill="none"
+                        stroke="#22c55e"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="49"
+                        fill="#22c55e"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (High current) -->
+                      <path
+                        d="M 0 70 L 50 70 L 50 25 L 190 25 L 280 75"
+                        fill="none"
+                        stroke="#86efac"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="29"
+                        fill="#86efac"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- USB PD -->
+              <div
+                class="vcard"
+                data-search="usb pd power delivery pps type c type-c laptop pixel iphone"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #f3e8ff; color: #7e22ce"
+                  >
+                    PD
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">USB Power Delivery (PD)</div>
+                    <div class="vproto">Standar Global Universal</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>240W (USB PD 3.1)</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-gray"
+                          >CC Pin (Khusus Type-C)</span
+                        >
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Voltase</td>
+                      <td>5 / 9 / 15 / 20V + PPS adaptif</td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>
+                        iPhone 15+, Google Pixel, iPad, MacBook, Laptop Windows
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>PPS (Prog. Power Supply)</td>
+                      <td>
+                        Fitur PD 3.0+ yg mengizinkan perubahan voltase stepless
+                        secara presisi (3.3–21V) untuk mengurangi panas.
+                      </td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (PD: Multiple steps) -->
+                      <path
+                        d="M 0 60 L 40 60 L 40 45 L 100 45 L 100 25 L 280 25"
+                        fill="none"
+                        stroke="#a855f7"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="29"
+                        fill="#a855f7"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (Stable) -->
+                      <path
+                        d="M 0 70 L 40 70 L 40 40 L 200 40 L 280 75"
+                        fill="none"
+                        stroke="#d8b4fe"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="44"
+                        fill="#d8b4fe"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Apple -->
+              <div
+                class="vcard"
+                data-search="apple iphone ipad macbook fast charge lightning"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #f1f5f9; color: #475569"
+                  >
+                    AP
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">Apple Fast Charge</div>
+                    <div class="vproto">Menggunakan basis USB PD</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>~27W (iPhone Pro), 140W (MacBook)</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-green">USB PD via CC</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>iPhone 15+</td>
+                      <td>Port USB-C murni standar PD.</td>
+                    </tr>
+                    <tr>
+                      <td>iPhone ≤14</td>
+                      <td>
+                        Port Lightning. Membutuhkan kabel USB-C to Lightning (di
+                        dalam kabel ada chip MFi untuk handshake PD).
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Catatan</td>
+                      <td>
+                        Apple tidak mendukung Quick Charge (QC). Hanya
+                        mendeteksi USB PD.
+                      </td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (Apple: 9V PD) -->
+                      <path
+                        d="M 0 60 L 60 60 L 60 35 L 280 35"
+                        fill="none"
+                        stroke="#94a3b8"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="39"
+                        fill="#94a3b8"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (Apple: Steady to taper) -->
+                      <path
+                        d="M 0 70 L 60 70 L 60 45 L 170 45 L 280 75"
+                        fill="none"
+                        stroke="#cbd5e1"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="49"
+                        fill="#cbd5e1"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Samsung -->
+              <div
+                class="vcard"
+                data-search="samsung afc super fast charging pps galaxy s23 s24"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #e0f2fe; color: #0369a1"
+                  >
+                    SA
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">Samsung AFC / Super Fast</div>
+                    <div class="vproto">Adaptive Fast Charging / SFC 2.0</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>45W - 65W (Super Fast Charging 2.0)</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-blue">D+ / D−</span>
+                        <span class="pill pill-green">USB PD PPS</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Protokol Lama</td>
+                      <td>AFC (Berdasar QC 2.0) - max 15W</td>
+                    </tr>
+                    <tr>
+                      <td>Protokol Baru</td>
+                      <td>
+                        Super Fast Charging sangat bergantung pada
+                        <b style="color: var(--color-primary)">USB PD PPS</b>.
+                        Tanpa PPS, biasanya turun ke 15W/25W.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>Galaxy S/A/Z/M series</td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (Samsung: PPS slope) -->
+                      <path
+                        d="M 0 60 L 40 60 L 120 30 L 280 30"
+                        fill="none"
+                        stroke="#0284c7"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="34"
+                        fill="#0284c7"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (High current PPS) -->
+                      <path
+                        d="M 0 70 L 40 70 L 40 20 L 150 20 L 280 75"
+                        fill="none"
+                        stroke="#7dd3fc"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="24"
+                        fill="#7dd3fc"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Xiaomi -->
+              <div
+                class="vcard"
+                data-search="xiaomi redmi poco hypercharge turbo charge"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #fee2e2; color: #b91c1c"
+                  >
+                    XI
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">Xiaomi HyperCharge / Turbo</div>
+                    <div class="vproto">Mi Turbo Charge</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>120W - 300W</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-blue">D+ / D−</span>
+                        <span class="pill pill-amber">Privat</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Sistem</td>
+                      <td>
+                        Split-battery (Baterai ganda seri) dan Dual Charge Pumps
+                        di motherboard.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>Xiaomi flagship, Redmi Note Pro+, POCO</td>
+                    </tr>
+                    <tr>
+                      <td>Catatan</td>
+                      <td>
+                        Sangat sensitif terhadap kabel. Membutuhkan kabel dengan
+                        pin tambahan atau E-Mark chip.
+                      </td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (Xiaomi: 10-20V flat) -->
+                      <path
+                        d="M 0 60 L 40 60 L 40 30 L 280 30"
+                        fill="none"
+                        stroke="#ef4444"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="34"
+                        fill="#ef4444"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (Xiaomi: Massive spike) -->
+                      <path
+                        d="M 0 70 L 40 70 L 40 10 L 140 10 L 280 75"
+                        fill="none"
+                        stroke="#fca5a5"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="14"
+                        fill="#fca5a5"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MediaTek -->
+              <div
+                class="vcard"
+                data-search="mediatek mtk pump express pe dimensity"
+              >
+                <div class="vcard-header" onclick="toggleAccordion(this)">
+                  <div
+                    class="vbadge"
+                    style="background: #ccfbf1; color: #0f766e"
+                  >
+                    MT
+                  </div>
+                  <div class="vinfo">
+                    <div class="vname">MediaTek Pump Express</div>
+                    <div class="vproto">PE / PE+ / PE 3.0+</div>
+                  </div>
+                  <div class="vtoggle">
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </div>
+                <div class="vcard-body">
+                  <table>
+                    <tr>
+                      <td>Maks daya</td>
+                      <td>~65W+</td>
+                    </tr>
+                    <tr>
+                      <td>Metode neg.</td>
+                      <td>
+                        <span class="pill pill-blue">Pulse D+</span> /
+                        <span class="pill pill-green">USB PD</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Cara kerja lama</td>
+                      <td>
+                        Menaikkan voltase dengan cara mengirim sinyal "pulse"
+                        (denyut) arus pada pin D+ berulang kali.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Cara kerja baru</td>
+                      <td>
+                        PE 3.0 dan ke atas sudah mematuhi standar USB PD PPS.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Perangkat</td>
+                      <td>HP ber-chipset Helio / Dimensity.</td>
+                    </tr>
+                  </table>
+                  <div
+                    style="
+                      margin-top: 1rem;
+                      border-top: 1px dashed var(--color-border);
+                      padding-top: 1rem;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.8rem;
+                        color: var(--color-text-muted);
+                        margin-bottom: 0.5rem;
+                        text-align: center;
+                        font-weight: 600;
+                      "
+                    >
+                      📈 Kurva Karakteristik (V & A)
+                    </div>
+                    <svg width="100%" height="80" viewBox="0 0 300 80">
+                      <line
+                        x1="0"
+                        y1="40"
+                        x2="300"
+                        y2="40"
+                        stroke="var(--color-border)"
+                        stroke-dasharray="2"
+                      />
+                      <line
+                        x1="0"
+                        y1="80"
+                        x2="300"
+                        y2="80"
+                        stroke="var(--color-border)"
+                      />
+                      <!-- V curve (MTK: Micro steps) -->
+                      <path
+                        d="M 0 60 L 40 60 L 40 50 L 80 50 L 80 40 L 120 40 L 120 30 L 280 30"
+                        fill="none"
+                        stroke="#0d9488"
+                        stroke-width="2"
+                      />
+                      <text
+                        x="285"
+                        y="34"
+                        fill="#0d9488"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        V
+                      </text>
+                      <!-- A curve (Steady taper) -->
+                      <path
+                        d="M 0 70 L 40 70 L 40 35 L 160 35 L 280 75"
+                        fill="none"
+                        stroke="#5eead4"
+                        stroke-width="2"
+                        stroke-dasharray="4"
+                      />
+                      <text
+                        x="285"
+                        y="39"
+                        fill="#5eead4"
+                        font-size="10"
+                        font-weight="bold"
+                      >
+                        A
+                      </text>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- RADAR SECTION -->
+          <section id="sec-radar" class="section">
+            <h2 class="section-title">📡 Live 8 Vendor Radar</h2>
+            <p class="pin-desc">
+              Simulasi canggih (Oscilloscope) yang membandingkan kurva Tegangan
+              (Solid) dan Arus (Putus-putus) dari 8 vendor pengisian daya
+              terkemuka secara real-time.
+            </p>
+
+            <div class="radar-container">
+              <canvas id="radarCanvas" width="800" height="400"></canvas>
+              <div class="radar-overlay-text">LIVE SCAN: ACTIVE</div>
+            </div>
+
+            <div class="radar-controls">
+              <button
+                class="btn-radar active"
+                data-vendor="qc"
+                onclick="toggleRadar('qc')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #3b82f6; background: #3b82f6"
+                ></span>
+                QC
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="vooc"
+                onclick="toggleRadar('vooc')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #f5c842; background: #f5c842"
+                ></span>
+                VOOC
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="hw"
+                onclick="toggleRadar('hw')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #22c55e; background: #22c55e"
+                ></span>
+                Huawei
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="pd"
+                onclick="toggleRadar('pd')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #a855f7; background: #a855f7"
+                ></span>
+                USB PD
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="ap"
+                onclick="toggleRadar('ap')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #94a3b8; background: #94a3b8"
+                ></span>
+                Apple
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="sa"
+                onclick="toggleRadar('sa')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #0284c7; background: #0284c7"
+                ></span>
+                Samsung
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="xi"
+                onclick="toggleRadar('xi')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #ef4444; background: #ef4444"
+                ></span>
+                Xiaomi
+              </button>
+              <button
+                class="btn-radar active"
+                data-vendor="mt"
+                onclick="toggleRadar('mt')"
+              >
+                <span
+                  class="r-color"
+                  style="color: #0d9488; background: #0d9488"
+                ></span>
+                MediaTek
+              </button>
+            </div>
+          </section>
+
+          <!-- COMPARE SECTION -->
+          <section id="sec-compare" class="section">
+            <h2 class="section-title">Perbandingan Protokol</h2>
+
+            <div class="table-responsive">
+              <table class="ctable">
+                <thead>
+                  <tr>
+                    <th>Protokol</th>
+                    <th>Maks Watt</th>
+                    <th>Pin Jalur Data</th>
+                    <th>Karakteristik Voltase</th>
+                    <th>Kabel Ori Wajib?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><b>USB PD 3.1</b></td>
+                    <td><span class="watt">240W</span></td>
+                    <td>CC (Type-C)</td>
+                    <td>Variabel (5-48V)</td>
+                    <td>
+                      <span class="pill pill-gray"
+                        >Hanya E-Mark (jika >60W)</span
+                      >
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>OPPO SuperVOOC</b></td>
+                    <td><span class="watt">240W</span></td>
+                    <td>D+ / D-</td>
+                    <td>5V / 10V (Arus Tinggi)</td>
+                    <td>
+                      <span class="pill pill-red">Ya (Chip Enkripsi)</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Xiaomi HyperCharge</b></td>
+                    <td><span class="watt">120W+</span></td>
+                    <td>D+ / D- / CC</td>
+                    <td>Split Baterai</td>
+                    <td>
+                      <span class="pill pill-red">Ya (Pin modifikasi)</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><b>Qualcomm QC 5.0</b></td>
+                    <td><span class="watt">100W</span></td>
+                    <td>D+ / D- / CC</td>
+                    <td>Adaptif (INOV)</td>
+                    <td><span class="pill pill-green">Tidak</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Samsung SFC 2.0</b></td>
+                    <td><span class="watt">45W+</span></td>
+                    <td>CC (PPS)</td>
+                    <td>PPS (Stepless)</td>
+                    <td><span class="pill pill-gray">E-Mark 5A</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Huawei SuperCharge</b></td>
+                    <td><span class="watt">66W+</span></td>
+                    <td>D+ / D-</td>
+                    <td>5V/10V/11V</td>
+                    <td><span class="pill pill-red">Ya (5A/6A)</span></td>
+                  </tr>
+                  <tr>
+                    <td><b>Apple Fast Charge</b></td>
+                    <td><span class="watt">~27W</span></td>
+                    <td>CC / Lightning</td>
+                    <td>9V / 3A (via PD)</td>
+                    <td>
+                      <span class="pill pill-gray"
+                        >Kabel MFi (untuk Lightning)</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- MECHANISM SECTION -->
+          <section id="sec-mechanism" class="section">
+            <h2 class="section-title">Mekanisme Negosiasi Daya</h2>
+            <p class="pin-desc">
+              Proses bagaimana charger dan ponsel "berkomunikasi" sebelum
+              menaikkan daya dari 5W ke mode Fast Charging. Coba klik tombol di
+              bawah untuk melihat simulasi perubahan tegangan dan arus!
+            </p>
+
+            <div
+              style="
+                background: var(--color-bg-sidebar);
+                border: 1px solid var(--color-border);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                margin-bottom: 2rem;
+              "
+            >
+              <h3
+                style="
+                  font-size: 1.2rem;
+                  font-weight: 700;
+                  color: var(--color-primary);
+                  margin-bottom: 1rem;
+                "
+              >
+                Bahasa Negosiasi (USB PD)
+              </h3>
+
+              <div style="display: flex; flex-direction: column; gap: 1rem">
+                <div
+                  style="
+                    background: var(--color-bg-body);
+                    padding: 1rem;
+                    border-radius: var(--radius-md);
+                    border-left: 4px solid #3b82f6;
+                    box-shadow: var(--shadow-sm);
+                  "
+                >
+                  <div
+                    style="
+                      font-weight: 700;
+                      color: #3b82f6;
+                      margin-bottom: 0.25rem;
+                    "
+                  >
+                    1. PDO (Power Data Object)
+                  </div>
+                  <div
+                    style="font-size: 0.95rem; color: var(--color-text-muted)"
+                  >
+                    Ibarat
+                    <b style="color: var(--color-text-main)">"Buku Menu"</b>
+                    dari charger. Pesan ini dikirim charger ke HP berisi daftar
+                    kemampuan daya yang dimilikinya (Contoh: 5V/3A, 9V/2A,
+                    12V/1.5A).
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    background: var(--color-bg-body);
+                    padding: 1rem;
+                    border-radius: var(--radius-md);
+                    border-left: 4px solid #16a34a;
+                    box-shadow: var(--shadow-sm);
+                  "
+                >
+                  <div
+                    style="
+                      font-weight: 700;
+                      color: #16a34a;
+                      margin-bottom: 0.25rem;
+                    "
+                  >
+                    2. RDO (Request Data Object)
+                  </div>
+                  <div
+                    style="font-size: 0.95rem; color: var(--color-text-muted)"
+                  >
+                    Ibarat
+                    <b style="color: var(--color-text-main)">"Pesanan"</b> dari
+                    HP. Setelah melihat menu, HP mengirim pesan balik memilih
+                    salah satu paket daya (Contoh: "Saya pesan PDO nomor 2 yaitu
+                    9V dengan arus 2A").
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    background: var(--color-bg-body);
+                    padding: 1rem;
+                    border-radius: var(--radius-md);
+                    border-left: 4px solid #a855f7;
+                    box-shadow: var(--shadow-sm);
+                  "
+                >
+                  <div
+                    style="
+                      font-weight: 700;
+                      color: #a855f7;
+                      margin-bottom: 0.25rem;
+                    "
+                  >
+                    3. BMC (Biphase Mark Coding)
+                  </div>
+                  <div
+                    style="font-size: 0.95rem; color: var(--color-text-muted)"
+                  >
+                    Adalah
+                    <b style="color: var(--color-text-main)"
+                      >"Metode Komunikasi"</b
+                    >
+                    (sinyal fisik) yang digunakan untuk mengirim pesan PDO dan
+                    RDO. Data digital ini disalurkan melalui pin
+                    <b>CC (Configuration Channel)</b> pada kabel USB Type-C
+                    tanpa mengganggu jalur data biasa.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- USB Tester Simulator -->
+            <div class="tester-widget">
+              <div class="tester-screen">
+                <div class="tester-val">
+                  <span class="tester-unit">VOLTAGE (V)</span>
+                  <span class="tester-num num-v" id="sim-v">5.00</span>
+                </div>
+                <div class="tester-val" style="text-align: right">
+                  <span class="tester-unit">CURRENT (A)</span>
+                  <span class="tester-num num-a" id="sim-a">0.90</span>
+                </div>
+              </div>
+              <div class="tester-bottom">
+                <span class="tester-proto" id="sim-proto">STD_5V</span>
+                <span class="tester-watt" id="sim-w">4.50W</span>
+              </div>
+            </div>
+
+            <div class="sim-controls">
+              <button class="btn-sim active" onclick="runSim(1, this)">
+                1. Standby
+              </button>
+              <button class="btn-sim" onclick="runSim(2, this)">
+                2. Deteksi
+              </button>
+              <button class="btn-sim" onclick="runSim(3, this)">
+                3. Request PD/QC
+              </button>
+              <button class="btn-sim" onclick="runSim(4, this)">
+                4. Negosiasi
+              </button>
+              <button class="btn-sim" onclick="runSim(5, this)">
+                5. Fast Charge!
+              </button>
+              <button class="btn-sim" onclick="runSim(6, this)">
+                6. Tapering
+              </button>
+            </div>
+
+            <div class="mech-wrap">
+              <svg
+                width="680"
+                height="580"
+                viewBox="0 0 680 580"
+                style="width: 100%; height: auto"
+              >
+                <defs>
+                  <marker
+                    id="arr2"
+                    viewBox="0 0 10 10"
+                    refX="8"
+                    refY="5"
+                    markerWidth="6"
+                    markerHeight="6"
+                    orient="auto-start-reverse"
+                  >
+                    <path
+                      d="M2 1L8 5L2 9"
+                      fill="none"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </marker>
+                </defs>
+
+                <!-- Nodes -->
+                <rect
+                  x="40"
+                  y="30"
+                  width="150"
+                  height="44"
+                  rx="8"
+                  fill="#eff6ff"
+                  stroke="#3b82f6"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="115"
+                  y="57"
+                  font-family="sans-serif"
+                  font-size="14"
+                  font-weight="bold"
+                  fill="#1e3a8a"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                >
+                  Adaptor Charger
+                </text>
+
+                <rect
+                  x="490"
+                  y="30"
+                  width="150"
+                  height="44"
+                  rx="8"
+                  fill="#f0fdf4"
+                  stroke="#22c55e"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="565"
+                  y="57"
+                  font-family="sans-serif"
+                  font-size="14"
+                  font-weight="bold"
+                  fill="#14532d"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                >
+                  Ponsel / IC Charger
+                </text>
+
+                <!-- Step 1 -->
+                <rect
+                  x="40"
+                  y="110"
+                  width="150"
+                  height="30"
+                  rx="4"
+                  fill="#f8fafc"
+                  stroke="#cbd5e1"
+                />
+                <text
+                  x="115"
+                  y="125"
+                  font-family="sans-serif"
+                  font-size="12"
+                  fill="#475569"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                >
+                  Output default 5V
+                </text>
+
+                <line
+                  x1="190"
+                  y1="125"
+                  x2="490"
+                  y2="125"
+                  stroke="#64748b"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <text
+                  x="340"
+                  y="115"
+                  font-family="sans-serif"
+                  font-size="12"
+                  fill="#334155"
+                  text-anchor="middle"
+                >
+                  1. VBUS terhubung — 5V masuk ke HP
+                </text>
+
+                <!-- Step 2 -->
+                <path
+                  d="M490 175 L490 200 L190 200 L190 175"
+                  fill="none"
+                  stroke="#64748b"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <text
+                  x="340"
+                  y="190"
+                  font-family="sans-serif"
+                  font-size="12"
+                  font-weight="bold"
+                  fill="#d97706"
+                  text-anchor="middle"
+                >
+                  2. HP kirim sinyal deteksi via D+/D- atau CC Pin
+                </text>
+                <text
+                  x="340"
+                  y="215"
+                  font-family="sans-serif"
+                  font-size="11"
+                  fill="#64748b"
+                  text-anchor="middle"
+                >
+                  "Saya support QC/PD/VOOC, kamu bisa apa?"
+                </text>
+
+                <!-- Step 3 -->
+                <line
+                  x1="190"
+                  y1="260"
+                  x2="490"
+                  y2="260"
+                  stroke="#64748b"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <text
+                  x="340"
+                  y="250"
+                  font-family="sans-serif"
+                  font-size="12"
+                  font-weight="bold"
+                  fill="#2563eb"
+                  text-anchor="middle"
+                >
+                  3. Charger merespon kemampuannya (PDO)
+                </text>
+                <text
+                  x="340"
+                  y="275"
+                  font-family="sans-serif"
+                  font-size="11"
+                  fill="#64748b"
+                  text-anchor="middle"
+                >
+                  "Saya punya 5V/3A, 9V/2A, 12V/1.5A"
+                </text>
+
+                <!-- Step 4 -->
+                <path
+                  d="M490 325 L350 325 L350 310 L190 310"
+                  fill="none"
+                  stroke="#64748b"
+                  stroke-width="1.5"
+                  marker-end="url(#arr2)"
+                />
+                <text
+                  x="320"
+                  y="318"
+                  font-family="sans-serif"
+                  font-size="12"
+                  font-weight="bold"
+                  fill="#16a34a"
+                  text-anchor="middle"
+                >
+                  4. HP meminta daya spesifik (RDO)
+                </text>
+                <text
+                  x="320"
+                  y="340"
+                  font-family="sans-serif"
+                  font-size="11"
+                  fill="#64748b"
+                  text-anchor="middle"
+                >
+                  "Beri saya 9V/2A sekarang."
+                </text>
+
+                <!-- Step 5 -->
+                <rect
+                  x="40"
+                  y="360"
+                  width="150"
+                  height="40"
+                  rx="4"
+                  fill="#fee2e2"
+                  stroke="#ef4444"
+                  stroke-dasharray="4"
+                />
+                <text
+                  x="115"
+                  y="375"
+                  font-family="sans-serif"
+                  font-size="12"
+                  font-weight="bold"
+                  fill="#991b1b"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                >
+                  Naikkan Voltase VBUS
+                </text>
+
+                <line
+                  x1="190"
+                  y1="380"
+                  x2="490"
+                  y2="380"
+                  stroke="#ef4444"
+                  stroke-width="2.5"
+                  marker-end="url(#arr2)"
+                />
+                <text
+                  x="340"
+                  y="370"
+                  font-family="sans-serif"
+                  font-size="13"
+                  font-weight="bold"
+                  fill="#b91c1c"
+                  text-anchor="middle"
+                >
+                  5. Arus Pengisian Cepat Aktif!
+                </text>
+
+                <!-- Step 6 -->
+                <rect
+                  x="190"
+                  y="440"
+                  width="300"
+                  height="40"
+                  rx="20"
+                  fill="#f1f5f9"
+                  stroke="#94a3b8"
+                />
+                <text
+                  x="340"
+                  y="460"
+                  font-family="sans-serif"
+                  font-size="12"
+                  fill="#334155"
+                  text-anchor="middle"
+                  dominant-baseline="central"
+                >
+                  6. Monitoring suhu & turunkan daya bertahap (Tapering) saat
+                  80%
+                </text>
+                <line
+                  x1="340"
+                  y1="390"
+                  x2="340"
+                  y2="440"
+                  stroke="#64748b"
+                  stroke-width="1"
+                  stroke-dasharray="2"
+                />
+              </svg>
+            </div>
+          </section>
+
+          <!-- PINS SECTION -->
+          <section id="sec-pins" class="section">
+            <h2 class="section-title">Peran Jalur D+/D− dan CC Pin</h2>
+
+            <div class="pin-label">
+              Jalur D+ / D− (Kabel USB-A ke Micro/Type-C)
+            </div>
+            <div class="pin-desc">
+              Pada awalnya D+/D- murni untuk transfer data (ke PC). Namun vendor
+              memanfaatkannya untuk jalur komunikasi deteksi charger. Jika IC
+              Charger di HP mendeteksi voltase tertentu pada pin ini, ia tahu
+              jenis charger yang ditancapkan.
+            </div>
+
+            <div class="step-row">
+              <div class="step-num" style="background: #f1f5f9; color: #475569">
+                1
+              </div>
+              <div>
+                <div class="step-txt">Apple Mode (5W / 12W)</div>
+                <div class="step-sub">
+                  D+ dan D− di-short (hubung singkat) menggunakan resistor
+                  pembagi tegangan di dalam charger Apple. Ponsel mendeteksi
+                  voltase ~2.0V atau 2.7V di D+/D- untuk mengenali daya adaptor.
+                </div>
+              </div>
+            </div>
+
+            <div class="step-row">
+              <div class="step-num" style="background: #eff6ff; color: #2563eb">
+                2
+              </div>
+              <div>
+                <div class="step-txt">Qualcomm QC Handshake</div>
+                <div class="step-sub">
+                  Ponsel memberi tegangan 0.6V ke D+. Jika D- ikut naik (karena
+                  di-short di charger), HP tahu ini charger QC. Lalu HP
+                  memanipulasi voltase D+/D- untuk meminta VBUS (Misal: D+=3.3V,
+                  D-=0.6V meminta VBUS naik ke 9V).
+                </div>
+              </div>
+            </div>
+
+            <div class="step-row">
+              <div class="step-num" style="background: #fffbeb; color: #d97706">
+                3
+              </div>
+              <div>
+                <div class="step-txt">Sistem Enkripsi (VOOC / HyperCharge)</div>
+                <div class="step-sub">
+                  Murni menggunakan protokol data digital (bukan sekadar voltase
+                  analog). Charger dan chip E-Mark di kabel saling bertukar kode
+                  sandi via D+/D-. Jika gagal autentikasi, pengisian dibatasi di
+                  5V/2A.
+                </div>
+              </div>
+            </div>
+
+            <div class="pin-label" style="margin-top: 2.5rem">
+              Jalur CC / Configuration Channel (Khusus USB Type-C)
+            </div>
+            <div class="pin-desc">
+              Ini adalah standar masa depan. USB-C memiliki dua pin CC (CC1 dan
+              CC2) yang menggantikan tugas D+/D- untuk urusan daya.
+            </div>
+
+            <div class="step-row">
+              <div class="step-num" style="background: #f3e8ff; color: #7e22ce">
+                CC
+              </div>
+              <div>
+                <div class="step-txt">Power Delivery (PD) & BMC Encoding</div>
+                <div class="step-sub">
+                  Komunikasi USB PD terjadi sepenuhnya di pin CC, tidak
+                  mengganggu D+/D- (sehingga fast charging dan transfer data
+                  bisa berjalan bersamaan). Data dikirim dengan modulasi BMC
+                  pada kecepatan 300 kbps berisi paket data kemampuan (PDO) dan
+                  permintaan (RDO).
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- Mobile Menu Button -->
+      <button class="menu-toggle" onclick="toggleMobileMenu()">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <script>
+        // --- Navigation Logic ---
+        function navTo(secId) {
+          // Hide all sections
+          document
+            .querySelectorAll(".section")
+            .forEach((el) => el.classList.remove("active"));
+          // Remove active from all nav items
+          document
+            .querySelectorAll(".nav-item")
+            .forEach((el) => el.classList.remove("active"));
+
+          // Show target section
+          document.getElementById("sec-" + secId).classList.add("active");
+          // Set active nav
+          event.target.classList.add("active");
+
+          if (secId === "radar" && typeof resizeRadar === "function") {
+            setTimeout(resizeRadar, 50);
+          }
+
+          // Close mobile menu if open
+          closeMobileMenu();
+        }
+
+        // --- Accordion Logic ---
+        function toggleAccordion(header) {
+          const card = header.parentElement;
+          // Close others (optional, if we want strict accordion)
+          /*
       document.querySelectorAll('.vcard').forEach(c => {
         if(c !== card) c.classList.remove('open');
       });
       */
-      card.classList.toggle('open');
-    }
-
-    // --- Search / Filter Logic ---
-    function filterVendors() {
-      const input = document.getElementById('searchInput').value.toLowerCase();
-      const cards = document.querySelectorAll('.vcard');
-      
-      cards.forEach(card => {
-        const terms = card.getAttribute('data-search').toLowerCase();
-        if (terms.includes(input)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
+          card.classList.toggle("open");
         }
-      });
-    }
 
-    // --- Mobile Menu Logic ---
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
+        // --- Search / Filter Logic ---
+        function filterVendors() {
+          const input = document
+            .getElementById("searchInput")
+            .value.toLowerCase();
+          const cards = document.querySelectorAll(".vcard");
 
-    function toggleMobileMenu() {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('open');
-    }
-
-    function closeMobileMenu() {
-      sidebar.classList.remove('open');
-      overlay.classList.remove('open');
-    }
-
-    overlay.addEventListener('click', closeMobileMenu);
-
-    // Open first vendor by default
-    document.querySelector('.vcard').classList.add('open');
-
-    // --- USB Tester Simulator Logic ---
-    function animateValue(id, start, end, duration, decimals) {
-      const obj = document.getElementById(id);
-      let startTimestamp = null;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        // ease out quad for smooth stopping
-        const easeProgress = progress * (2 - progress);
-        const current = start + easeProgress * (end - start);
-        obj.innerHTML = current.toFixed(decimals);
-        
-        // update watt automatically
-        if (id === 'sim-v' || id === 'sim-a') {
-            const v = parseFloat(document.getElementById('sim-v').innerHTML);
-            const a = parseFloat(document.getElementById('sim-a').innerHTML);
-            document.getElementById('sim-w').innerHTML = (v * a).toFixed(2) + 'W';
+          cards.forEach((card) => {
+            const terms = card.getAttribute("data-search").toLowerCase();
+            if (terms.includes(input)) {
+              card.style.display = "block";
+            } else {
+              card.style.display = "none";
+            }
+          });
         }
-        
-        if (progress < 1) {
+
+        // --- Mobile Menu Logic ---
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+
+        function toggleMobileMenu() {
+          sidebar.classList.toggle("open");
+          overlay.classList.toggle("open");
+        }
+
+        function closeMobileMenu() {
+          sidebar.classList.remove("open");
+          overlay.classList.remove("open");
+        }
+
+        overlay.addEventListener("click", closeMobileMenu);
+
+        // Open first vendor by default
+        document.querySelector(".vcard").classList.add("open");
+
+        // --- USB Tester Simulator Logic ---
+        function animateValue(id, start, end, duration, decimals) {
+          const obj = document.getElementById(id);
+          let startTimestamp = null;
+          const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min(
+              (timestamp - startTimestamp) / duration,
+              1,
+            );
+            // ease out quad for smooth stopping
+            const easeProgress = progress * (2 - progress);
+            const current = start + easeProgress * (end - start);
+            obj.innerHTML = current.toFixed(decimals);
+
+            // update watt automatically
+            if (id === "sim-v" || id === "sim-a") {
+              const v = parseFloat(document.getElementById("sim-v").innerHTML);
+              const a = parseFloat(document.getElementById("sim-a").innerHTML);
+              document.getElementById("sim-w").innerHTML =
+                (v * a).toFixed(2) + "W";
+            }
+
+            if (progress < 1) {
+              window.requestAnimationFrame(step);
+            }
+          };
           window.requestAnimationFrame(step);
         }
-      };
-      window.requestAnimationFrame(step);
-    }
 
-    function runSim(step, btn) {
-      // Update active button
-      document.querySelectorAll('.btn-sim').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
+        function runSim(step, btn) {
+          // Update active button
+          document
+            .querySelectorAll(".btn-sim")
+            .forEach((b) => b.classList.remove("active"));
+          if (btn) btn.classList.add("active");
 
-      const elV = document.getElementById('sim-v');
-      const elA = document.getElementById('sim-a');
-      const elProto = document.getElementById('sim-proto');
-      
-      const currentV = parseFloat(elV.innerHTML);
-      const currentA = parseFloat(elA.innerHTML);
+          const elV = document.getElementById("sim-v");
+          const elA = document.getElementById("sim-a");
+          const elProto = document.getElementById("sim-proto");
 
-      switch(step) {
-        case 1:
-          elProto.innerHTML = "STD_5V";
-          elProto.style.color = "#94a3b8"; // gray
-          animateValue('sim-v', currentV, 5.00, 400, 2);
-          animateValue('sim-a', currentA, 0.90, 400, 2);
-          break;
-        case 2:
-          elProto.innerHTML = "DETECTING...";
-          elProto.style.color = "#f5c842"; // accent (yellow)
-          animateValue('sim-v', currentV, 5.00, 300, 2);
-          animateValue('sim-a', currentA, 0.10, 300, 2);
-          break;
-        case 3:
-          elProto.innerHTML = "REQ_PROFILE";
-          elProto.style.color = "#38bdf8"; // blue
-          animateValue('sim-v', currentV, 5.00, 300, 2);
-          animateValue('sim-a', currentA, 0.20, 300, 2);
-          break;
-        case 4:
-          elProto.innerHTML = "ACCEPTED_9V";
-          elProto.style.color = "#22c55e"; // green
-          animateValue('sim-v', currentV, 9.00, 800, 2);
-          animateValue('sim-a', currentA, 0.50, 800, 2);
-          break;
-        case 5:
-          elProto.innerHTML = "FAST_CHG_ACTIVE";
-          elProto.style.color = "#ef4444"; // red/pink for high power
-          animateValue('sim-v', currentV, 9.00, 300, 2);
-          animateValue('sim-a', currentA, 2.00, 1000, 2);
-          break;
-        case 6:
-          elProto.innerHTML = "TAPERING";
-          elProto.style.color = "#f5c842"; // yellow
-          animateValue('sim-v', currentV, 9.00, 400, 2);
-          animateValue('sim-a', currentA, 0.80, 1200, 2);
-          break;
-      }
-    }
+          const currentV = parseFloat(elV.innerHTML);
+          const currentA = parseFloat(elA.innerHTML);
 
-    // --- LIVE RADAR SIMULATOR LOGIC ---
-    const radarCanvas = document.getElementById('radarCanvas');
-    const ctx = radarCanvas.getContext('2d');
-    
-    // Resize handling to keep resolution sharp
-    function resizeRadar() {
-      const container = radarCanvas.parentElement;
-      if (container.clientWidth > 0) {
-        radarCanvas.width = container.clientWidth;
-      } else if (radarCanvas.width === 0) {
-        radarCanvas.width = 800; // fallback
-      }
-      radarCanvas.height = 400; // Fixed height for consistency
-    }
-    window.addEventListener('resize', resizeRadar);
-    // Call after a slight delay to ensure container width is calculated
-    setTimeout(resizeRadar, 100);
-
-    const radarVendors = {
-      qc: { active: true, color: '#3b82f6', targetV: 12, targetA: 2.0, startT: 50 },
-      vooc: { active: true, color: '#f5c842', targetV: 10, targetA: 6.5, startT: 70 },
-      hw: { active: true, color: '#22c55e', targetV: 10, targetA: 4.0, startT: 90 },
-      pd: { active: true, color: '#a855f7', targetV: 20, targetA: 5.0, startT: 110 },
-      ap: { active: true, color: '#94a3b8', targetV: 9, targetA: 3.0, startT: 60 },
-      sa: { active: true, color: '#0284c7', targetV: 10, targetA: 4.5, startT: 100 },
-      xi: { active: true, color: '#ef4444', targetV: 20, targetA: 6.0, startT: 130 },
-      mt: { active: true, color: '#0d9488', targetV: 11, targetA: 3.0, startT: 80 }
-    };
-
-    function toggleRadar(key) {
-      radarVendors[key].active = !radarVendors[key].active;
-      const btn = document.querySelector(`.btn-radar[data-vendor="${key}"]`);
-      if(radarVendors[key].active) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    }
-
-    let scanX = 0;
-    let paths = {};
-    for(let k in radarVendors) {
-      paths[k] = { V: [], A: [] };
-    }
-
-    function generateNoise(amp) { return (Math.random() - 0.5) * amp; }
-
-    function getVoltageValue(key, t) {
-      const v = radarVendors[key];
-      let val = 5; // Start at 5V
-      if (t > v.startT) {
-        if (key === 'qc' || key === 'pd' || key === 'mt') {
-          // Stepped logic
-          const steps = Math.floor((t - v.startT) / 50);
-          val = Math.min(v.targetV, 5 + steps * 3);
-        } else {
-          // Smooth logic
-          val = Math.min(v.targetV, 5 + (t - v.startT) * 0.15);
+          switch (step) {
+            case 1:
+              elProto.innerHTML = "STD_5V";
+              elProto.style.color = "#94a3b8"; // gray
+              animateValue("sim-v", currentV, 5.0, 400, 2);
+              animateValue("sim-a", currentA, 0.9, 400, 2);
+              break;
+            case 2:
+              elProto.innerHTML = "DETECTING...";
+              elProto.style.color = "#f5c842"; // accent (yellow)
+              animateValue("sim-v", currentV, 5.0, 300, 2);
+              animateValue("sim-a", currentA, 0.1, 300, 2);
+              break;
+            case 3:
+              elProto.innerHTML = "REQ_PROFILE";
+              elProto.style.color = "#38bdf8"; // blue
+              animateValue("sim-v", currentV, 5.0, 300, 2);
+              animateValue("sim-a", currentA, 0.2, 300, 2);
+              break;
+            case 4:
+              elProto.innerHTML = "ACCEPTED_9V";
+              elProto.style.color = "#22c55e"; // green
+              animateValue("sim-v", currentV, 9.0, 800, 2);
+              animateValue("sim-a", currentA, 0.5, 800, 2);
+              break;
+            case 5:
+              elProto.innerHTML = "FAST_CHG_ACTIVE";
+              elProto.style.color = "#ef4444"; // red/pink for high power
+              animateValue("sim-v", currentV, 9.0, 300, 2);
+              animateValue("sim-a", currentA, 2.0, 1000, 2);
+              break;
+            case 6:
+              elProto.innerHTML = "TAPERING";
+              elProto.style.color = "#f5c842"; // yellow
+              animateValue("sim-v", currentV, 9.0, 400, 2);
+              animateValue("sim-a", currentA, 0.8, 1200, 2);
+              break;
+          }
         }
-      }
-      return val + generateNoise(0.4);
-    }
 
-    function getCurrentValue(key, t) {
-      const v = radarVendors[key];
-      let val = 0.5; // Handshake current
-      if (t > v.startT) {
-        if (key === 'vooc' || key === 'xi') {
-          // Massive jump
-          val = Math.min(v.targetA, 0.5 + (t - v.startT) * 0.5);
-        } else {
-           // Gradual
-          val = Math.min(v.targetA, 0.5 + (t - v.startT) * 0.05);
+        // --- LIVE RADAR SIMULATOR LOGIC ---
+        const radarCanvas = document.getElementById("radarCanvas");
+        const ctx = radarCanvas.getContext("2d");
+
+        // Resize handling to keep resolution sharp
+        function resizeRadar() {
+          const container = radarCanvas.parentElement;
+          if (container.clientWidth > 0) {
+            radarCanvas.width = container.clientWidth;
+          } else if (radarCanvas.width === 0) {
+            radarCanvas.width = 800; // fallback
+          }
+          radarCanvas.height = 400; // Fixed height for consistency
         }
-        // Taper off later
-        if (t > v.startT + 300) {
-          val = Math.max(0.5, val - (t - (v.startT + 300)) * 0.015);
+        window.addEventListener("resize", resizeRadar);
+        // Call after a slight delay to ensure container width is calculated
+        setTimeout(resizeRadar, 100);
+
+        const radarVendors = {
+          qc: {
+            active: true,
+            color: "#3b82f6",
+            targetV: 12,
+            targetA: 2.0,
+            startT: 50,
+          },
+          vooc: {
+            active: true,
+            color: "#f5c842",
+            targetV: 10,
+            targetA: 6.5,
+            startT: 70,
+          },
+          hw: {
+            active: true,
+            color: "#22c55e",
+            targetV: 10,
+            targetA: 4.0,
+            startT: 90,
+          },
+          pd: {
+            active: true,
+            color: "#a855f7",
+            targetV: 20,
+            targetA: 5.0,
+            startT: 110,
+          },
+          ap: {
+            active: true,
+            color: "#94a3b8",
+            targetV: 9,
+            targetA: 3.0,
+            startT: 60,
+          },
+          sa: {
+            active: true,
+            color: "#0284c7",
+            targetV: 10,
+            targetA: 4.5,
+            startT: 100,
+          },
+          xi: {
+            active: true,
+            color: "#ef4444",
+            targetV: 20,
+            targetA: 6.0,
+            startT: 130,
+          },
+          mt: {
+            active: true,
+            color: "#0d9488",
+            targetV: 11,
+            targetA: 3.0,
+            startT: 80,
+          },
+        };
+
+        function toggleRadar(key) {
+          radarVendors[key].active = !radarVendors[key].active;
+          const btn = document.querySelector(
+            `.btn-radar[data-vendor="${key}"]`,
+          );
+          if (radarVendors[key].active) {
+            btn.classList.add("active");
+          } else {
+            btn.classList.remove("active");
+          }
         }
-      }
-      return val + generateNoise(0.2);
-    }
 
-    function drawRadar() {
-      // Fade effect for trails (Futuristic Oscilloscope)
-      ctx.fillStyle = 'rgba(2, 6, 23, 0.12)'; // very dark blue transparent
-      ctx.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
+        let scanX = 0;
+        let paths = {};
+        for (let k in radarVendors) {
+          paths[k] = { V: [], A: [] };
+        }
 
-      // Draw Grid
-      ctx.strokeStyle = 'rgba(34, 197, 94, 0.05)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      for(let y=0; y<radarCanvas.height; y+=40) { ctx.moveTo(0,y); ctx.lineTo(radarCanvas.width, y); }
-      for(let x=0; x<radarCanvas.width; x+=40) { ctx.moveTo(x,0); ctx.lineTo(x, radarCanvas.height); }
-      ctx.stroke();
+        function generateNoise(amp) {
+          return (Math.random() - 0.5) * amp;
+        }
 
-      const midY = radarCanvas.height / 2;
-      
-      // Compute new values
-      for(let key in radarVendors) {
-        if (!radarVendors[key].active) continue;
-        
-        // Map Voltage (0-24V) to top half
-        let vVal = getVoltageValue(key, scanX);
-        let yV = midY - (vVal / 24) * midY * 0.9;
-        paths[key].V.push({x: scanX, y: yV});
-        
-        // Map Current (0-12A) to bottom half
-        let aVal = getCurrentValue(key, scanX);
-        let yA = radarCanvas.height - (aVal / 12) * midY * 0.9;
-        paths[key].A.push({x: scanX, y: yA});
-      }
+        function getVoltageValue(key, t) {
+          const v = radarVendors[key];
+          let val = 5; // Start at 5V
+          if (t > v.startT) {
+            if (key === "qc" || key === "pd" || key === "mt") {
+              // Stepped logic
+              const steps = Math.floor((t - v.startT) / 50);
+              val = Math.min(v.targetV, 5 + steps * 3);
+            } else {
+              // Smooth logic
+              val = Math.min(v.targetV, 5 + (t - v.startT) * 0.15);
+            }
+          }
+          return val + generateNoise(0.4);
+        }
 
-      // Draw curves
-      for(let key in radarVendors) {
-        if (!radarVendors[key].active) continue;
-        const color = radarVendors[key].color;
-        
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = color;
-        ctx.lineWidth = 2.5;
-        ctx.lineJoin = 'round';
+        function getCurrentValue(key, t) {
+          const v = radarVendors[key];
+          let val = 0.5; // Handshake current
+          if (t > v.startT) {
+            if (key === "vooc" || key === "xi") {
+              // Massive jump
+              val = Math.min(v.targetA, 0.5 + (t - v.startT) * 0.5);
+            } else {
+              // Gradual
+              val = Math.min(v.targetA, 0.5 + (t - v.startT) * 0.05);
+            }
+            // Taper off later
+            if (t > v.startT + 300) {
+              val = Math.max(0.5, val - (t - (v.startT + 300)) * 0.015);
+            }
+          }
+          return val + generateNoise(0.2);
+        }
 
-        // Draw V (Solid)
-        ctx.strokeStyle = color;
-        ctx.beginPath();
-        if(paths[key].V.length > 0) {
-          ctx.moveTo(paths[key].V[0].x, paths[key].V[0].y);
-          for(let i=1; i<paths[key].V.length; i++) {
-            ctx.lineTo(paths[key].V[i].x, paths[key].V[i].y);
+        function drawRadar() {
+          // Fade effect for trails (Futuristic Oscilloscope)
+          ctx.fillStyle = "rgba(2, 6, 23, 0.12)"; // very dark blue transparent
+          ctx.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
+
+          // Draw Grid
+          ctx.strokeStyle = "rgba(34, 197, 94, 0.05)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          for (let y = 0; y < radarCanvas.height; y += 40) {
+            ctx.moveTo(0, y);
+            ctx.lineTo(radarCanvas.width, y);
+          }
+          for (let x = 0; x < radarCanvas.width; x += 40) {
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, radarCanvas.height);
           }
           ctx.stroke();
-        }
 
-        // Draw A (Dashed)
-        ctx.setLineDash([8, 8]);
-        ctx.beginPath();
-        if(paths[key].A.length > 0) {
-          ctx.moveTo(paths[key].A[0].x, paths[key].A[0].y);
-          for(let i=1; i<paths[key].A.length; i++) {
-            ctx.lineTo(paths[key].A[i].x, paths[key].A[i].y);
+          const midY = radarCanvas.height / 2;
+
+          // Compute new values
+          for (let key in radarVendors) {
+            if (!radarVendors[key].active) continue;
+
+            // Map Voltage (0-24V) to top half
+            let vVal = getVoltageValue(key, scanX);
+            let yV = midY - (vVal / 24) * midY * 0.9;
+            paths[key].V.push({ x: scanX, y: yV });
+
+            // Map Current (0-12A) to bottom half
+            let aVal = getCurrentValue(key, scanX);
+            let yA = radarCanvas.height - (aVal / 12) * midY * 0.9;
+            paths[key].A.push({ x: scanX, y: yA });
           }
+
+          // Draw curves
+          for (let key in radarVendors) {
+            if (!radarVendors[key].active) continue;
+            const color = radarVendors[key].color;
+
+            ctx.shadowBlur = 8;
+            ctx.shadowColor = color;
+            ctx.lineWidth = 2.5;
+            ctx.lineJoin = "round";
+
+            // Draw V (Solid)
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            if (paths[key].V.length > 0) {
+              ctx.moveTo(paths[key].V[0].x, paths[key].V[0].y);
+              for (let i = 1; i < paths[key].V.length; i++) {
+                ctx.lineTo(paths[key].V[i].x, paths[key].V[i].y);
+              }
+              ctx.stroke();
+            }
+
+            // Draw A (Dashed)
+            ctx.setLineDash([8, 8]);
+            ctx.beginPath();
+            if (paths[key].A.length > 0) {
+              ctx.moveTo(paths[key].A[0].x, paths[key].A[0].y);
+              for (let i = 1; i < paths[key].A.length; i++) {
+                ctx.lineTo(paths[key].A[i].x, paths[key].A[i].y);
+              }
+              ctx.stroke();
+            }
+            ctx.setLineDash([]);
+            ctx.shadowBlur = 0; // reset
+          }
+
+          // Draw Scanline
+          ctx.shadowBlur = 15;
+          ctx.shadowColor = "#22c55e";
+          ctx.strokeStyle = "rgba(34, 197, 94, 0.9)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(scanX, 0);
+          ctx.lineTo(scanX, radarCanvas.height);
           ctx.stroke();
+          ctx.shadowBlur = 0;
+
+          // Draw center divider
+          ctx.strokeStyle = "rgba(255,255,255,0.2)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, midY);
+          ctx.lineTo(radarCanvas.width, midY);
+          ctx.stroke();
+
+          // Labels
+          ctx.fillStyle = "rgba(255,255,255,0.5)";
+          ctx.font = '12px "Space Mono", monospace';
+          ctx.fillText("VOLTAGE (V) [0-24V]", 10, 20);
+          ctx.fillText("CURRENT (A) [0-12A]", 10, midY + 20);
+
+          scanX += 1.5; // sweep speed
+          if (scanX > radarCanvas.width) {
+            scanX = 0;
+            // clear old paths
+            for (let k in radarVendors) {
+              paths[k].V = [];
+              paths[k].A = [];
+            }
+            // Blank screen flash
+            ctx.fillStyle = "#020617";
+            ctx.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
+          }
+
+          requestAnimationFrame(drawRadar);
         }
-        ctx.setLineDash([]);
-        ctx.shadowBlur = 0; // reset
-      }
 
-      // Draw Scanline
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = '#22c55e';
-      ctx.strokeStyle = 'rgba(34, 197, 94, 0.9)';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(scanX, 0);
-      ctx.lineTo(scanX, radarCanvas.height);
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Draw center divider
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, midY);
-      ctx.lineTo(radarCanvas.width, midY);
-      ctx.stroke();
-
-      // Labels
-      ctx.fillStyle = 'rgba(255,255,255,0.5)';
-      ctx.font = '12px "Space Mono", monospace';
-      ctx.fillText("VOLTAGE (V) [0-24V]", 10, 20);
-      ctx.fillText("CURRENT (A) [0-12A]", 10, midY + 20);
-
-      scanX += 1.5; // sweep speed
-      if (scanX > radarCanvas.width) {
-        scanX = 0;
-        // clear old paths
-        for(let k in radarVendors) {
-          paths[k].V = [];
-          paths[k].A = [];
-        }
-        // Blank screen flash
-        ctx.fillStyle = '#020617';
-        ctx.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
-      }
-
-      requestAnimationFrame(drawRadar);
-    }
-    
-    // Start radar animation
-    drawRadar();
-  </script>
-  </div> <!-- end of flex wrapper -->
-</body>
+        // Start radar animation
+        drawRadar();
+      </script>
+    </div>
+    <!-- end of flex wrapper -->
+  </body>
 </html>
