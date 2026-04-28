@@ -169,6 +169,17 @@
     .card-dioda::before { background: linear-gradient(90deg, transparent, #10b981, transparent); }
     .card-dioda:hover::before { opacity: 1; }
 
+    /* Card 3: Boot Process */
+    .card-boot {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(249, 115, 22, 0.2);
+    }
+    .card-boot:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(249, 115, 22, 0.2), inset 0 0 0 1px rgba(249, 115, 22, 0.5);
+    }
+    .card-boot::before { background: linear-gradient(90deg, transparent, #f97316, transparent); }
+    .card-boot:hover::before { opacity: 1; }
+
     .card-icon {
       width: 64px;
       height: 64px;
@@ -190,6 +201,12 @@
       background: rgba(16, 185, 129, 0.15);
       color: #34d399;
       box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .card-boot .card-icon {
+      background: rgba(249, 115, 22, 0.15);
+      color: #fb923c;
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
     }
 
     .card-title {
@@ -220,6 +237,7 @@
 
     .card-fc .card-action { color: #a78bfa; }
     .card-dioda .card-action { color: #34d399; }
+    .card-boot .card-action { color: #fb923c; }
 
     .card-action svg {
       transition: transform 0.3s ease;
@@ -274,6 +292,23 @@
         </div>
         <div class="card-title">Modul Dioda & Buck</div>
         <div class="card-desc">Pahami cara kerja Dioda, Rectifier, perlindungan ESD, hingga simulasi interaktif sirkuit Buck Converter step-down.</div>
+        <div class="card-action">
+          Buka Modul
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <!-- BOOT PROCESS CARD -->
+      <a href="boot_process_android.html" class="module-card card-boot">
+        <div class="card-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>
+          </svg>
+        </div>
+        <div class="card-title">Analisa Boot Process</div>
+        <div class="card-desc">Pahami alur menyala HP dari mati total. Bedah urutan PBL, XBL, ABL, hingga Kernel pada platform Qualcomm Snapdragon.</div>
         <div class="card-action">
           Buka Modul
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analisa Proses Boot Android - Qualcomm Xiaomi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #030712;
+      --card-bg: rgba(17, 24, 39, 0.7);
+      --primary: #f97316; /* Qualcomm Orange */
+      --accent1: #3b82f6; /* Android Blue */
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-glow: #fdba74;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.7;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-glow {
+      position: fixed;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, rgba(3,7,18,0) 60%);
+      top: -200px;
+      right: -200px;
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .ambient-glow-2 {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, rgba(3,7,18,0) 60%);
+      bottom: -100px;
+      left: -100px;
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Animated Grid Background */
+    .grid-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -2;
+    }
+
+    .nav {
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(3,7,18,0.8);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      transition: color 0.3s;
+    }
+
+    .nav a:hover { color: var(--primary); }
+
+    .header-container {
+      max-width: 900px;
+      margin: 60px auto 40px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--primary);
+      background: rgba(249,115,22,0.1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 20px;
+      border: 1px solid rgba(249,115,22,0.3);
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      background: linear-gradient(to right, #fdba74, #f97316, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Artistic Graphics (Grafis Seni) - CSS Boot Sequence Visualization */
+    .artistic-graphic {
+      max-width: 1000px;
+      margin: 60px auto;
+      height: 400px;
+      position: relative;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(3,7,18,0.9));
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      padding: 40px;
+    }
+
+    .art-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .art-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(17,24,39,1);
+      border: 2px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text-main);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      transition: all 0.5s ease;
+      position: relative;
+    }
+
+    .art-circle::after {
+      content: '';
+      position: absolute;
+      top: -10px; left: -10px; right: -10px; bottom: -10px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.2);
+      animation: rotate 10s linear infinite;
+    }
+
+    .art-circle.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 0 30px rgba(249,115,22,0.4), inset 0 0 20px rgba(249,115,22,0.2);
+    }
+
+    .art-circle.active::after {
+      border-color: var(--primary);
+      animation: rotate 4s linear infinite;
+    }
+
+    .art-label {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: center;
+      width: 120px;
+    }
+
+    .art-path {
+      position: absolute;
+      top: 50%;
+      left: 100px;
+      right: 100px;
+      height: 4px;
+      background: rgba(255,255,255,0.05);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+
+    .art-path-fill {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 0%;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--accent1));
+      box-shadow: 0 0 15px var(--primary);
+      animation: bootFlow 8s infinite ease-in-out;
+    }
+
+    .data-particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 0 10px #fff;
+      z-index: 3;
+      animation: particleMove 8s infinite linear;
+      opacity: 0;
+    }
+
+    @keyframes rotate { 100% { transform: rotate(360deg); } }
+    @keyframes bootFlow { 
+      0% { width: 0%; opacity: 0; } 
+      20% { opacity: 1; }
+      80% { opacity: 1; width: 100%; } 
+      100% { width: 100%; opacity: 0; } 
+    }
+    @keyframes particleMove {
+      0% { left: 5%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 95%; opacity: 0; }
+    }
+
+    /* Content Area */
+    .content-wrapper {
+      max-width: 800px;
+      margin: 0 auto 100px;
+      padding: 0 20px;
+    }
+
+    .conversation-block {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .conversation-block::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20px; bottom: 20px; width: 4px;
+      background: var(--primary);
+      border-radius: 0 4px 4px 0;
+      opacity: 0.5;
+    }
+
+    .conversation-block.android-color::before { background: var(--accent1); }
+
+    .speaker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .avatar.tech { background: rgba(249,115,22,0.15); color: var(--primary); }
+    .avatar.system { background: rgba(59,130,246,0.15); color: var(--accent1); }
+
+    .name { font-weight: 700; font-size: 1.1rem; }
+    
+    .role { font-size: 0.85rem; color: var(--text-muted); font-family: 'Space Mono'; }
+
+    .text p { margin-bottom: 16px; font-size: 1.1rem; color: #e2e8f0; }
+    .text p:last-child { margin-bottom: 0; }
+    
+    .text strong { color: var(--text-glow); font-weight: 600; }
+    .android-color .text strong { color: #93c5fd; }
+
+    .tech-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+    }
+
+    .tech-box span.code-highlight { color: #f472b6; }
+    .tech-box span.code-path { color: #a78bfa; }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .artistic-graphic { flex-direction: column; height: auto; padding: 40px 20px; gap: 40px; }
+      .art-path { width: 4px; height: auto; top: 100px; bottom: 100px; left: 50%; transform: translateX(-50%); }
+      .art-path-fill { width: 100%; height: 0%; top: 0; bottom: auto; background: linear-gradient(180deg, transparent, var(--primary), var(--accent1)); animation: bootFlowVert 8s infinite ease-in-out; }
+      @keyframes bootFlowVert { 0% { height: 0%; opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; height: 100%; } 100% { height: 100%; opacity: 0; } }
+      .data-particle { top: 0; left: 50%; transform: translateX(-50%); animation: particleMoveVert 8s infinite linear; }
+      @keyframes particleMoveVert { 0% { top: 5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 95%; opacity: 0; } }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+  <div class="ambient-glow-2"></div>
+  <div class="grid-bg"></div>
+
+  <nav class="nav">
+    <a href="index.html">← KEMBALI KE DASHBOARD</a>
+    <span style="color: rgba(255,255,255,0.2)">/</span>
+    <span style="font-family: 'Space Mono'; font-size: 0.9rem; color: var(--primary)">ANALISA BOOT</span>
+  </nav>
+
+  <header class="header-container">
+    <div class="tag">Platform: Qualcomm Snapdragon (Xiaomi)</div>
+    <h1>Membedah Anatomi Boot Process</h1>
+    <p class="subtitle">Perjalanan kompleks sebuah smartphone Xiaomi dari kondisi mati total hingga layar Homescreen menyala, dijelaskan secara mengalir untuk teknisi.</p>
+  </header>
+
+  <!-- Grafis Seni (Artistic Graphic) -->
+  <div class="artistic-graphic">
+    <div class="art-path">
+      <div class="art-path-fill"></div>
+    </div>
+    <div class="data-particle" style="animation-delay: 0s"></div>
+    <div class="data-particle" style="animation-delay: 2s"></div>
+    <div class="data-particle" style="animation-delay: 4s"></div>
+    
+    <div class="art-node">
+      <div class="art-circle active" style="animation-delay: 0s">PBL</div>
+      <div class="art-label">Primary Bootloader</div>
+    </div>
+    
+    <div class="art-node">
+      <div class="art-circle active" style="animation-delay: 1.5s; border-color: #f97316; color: #f97316;">XBL</div>
+      <div class="art-label">eXtensible Bootloader</div>
+    </div>
+    
+    <div class="art-node">
+      <div class="art-circle active" style="animation-delay: 3s; border-color: #8b5cf6; color: #8b5cf6;">ABL</div>
+      <div class="art-label">Android Bootloader</div>
+    </div>
+    
+    <div class="art-node">
+      <div class="art-circle active" style="animation-delay: 4.5s; border-color: #3b82f6; color: #3b82f6;">KERNEL</div>
+      <div class="art-label">Linux Init</div>
+    </div>
+    
+    <div class="art-node">
+      <div class="art-circle active" style="animation-delay: 6s; border-color: #10b981; color: #10b981;">ZYGOTE</div>
+      <div class="art-label">Android Runtime</div>
+    </div>
+  </div>
+
+  <main class="content-wrapper">
+
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Menekan Tombol Power</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Ketika saya menekan dan menahan tombol Power di HP Xiaomi bertenaga Snapdragon, apa yang sebenarnya pertama kali terjadi secara hardware dan software? Mengapa kadang HP hanya bergetar namun layarnya gelap (brick)?</p>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Qualcomm</div>
+          <div class="role">Level Hardware & ROM</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Saat tombol power ditekan, IC Power (PMIC) mendistribusikan tegangan ke CPU. Begitu CPU mendapat daya, dia langsung mencari instruksi pertama di lokasi memori yang sifatnya read-only yang sudah ditanam dari pabrik (Mask ROM). Ini disebut <strong>PBL (Primary Bootloader)</strong>.</p>
+        <p>Tugas PBL sangat sederhana: inisialisasi hardware super dasar, mendeteksi jenis memori (eMMC/UFS), dan mencari bootloader tahap kedua di partisi tersebut. Jika PBL gagal mendeteksi eMMC/UFS atau datanya korup (hardbrick), CPU akan masuk ke mode darurat yang disebut <strong>EDL (Emergency Download Mode)</strong> - yang biasa kamu lihat sebagai <em>Qualcomm HS-USB QDLoader 9008</em> di Device Manager komputermu.</p>
+        <div class="tech-box">
+          > Power On -> PMIC Power Sequence -> CPU Reset Vector<br>
+          > Executing <span class="code-highlight">PBL</span> from BootROM<br>
+          > Checking eMMC/UFS presence... [OK]<br>
+          > Loading next stage from <span class="code-path">/xbl</span> partition
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Menganalisa Gejala Bootloop</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Oh, pantesan HP matot sering kedetek 9008 di PC. Terus, kalau eMMC/UFS-nya normal, setelah PBL jalan dia akan memanggil siapa? HP lawas biasanya panggil SBL (Secondary Bootloader), bagaimana dengan Snapdragon modern?</p>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Qualcomm</div>
+          <div class="role">Level Firmware</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Tepat sekali. Di Snapdragon modern, SBL sudah digantikan oleh <strong>XBL (eXtensible Bootloader)</strong>. XBL ini lebih canggih karena berjalan di atas standar UEFI (mirip BIOS komputer modern). </p>
+        <p>Tugas utama XBL adalah menyalakan RAM (DDR Init), mengatur clock CPU, layar awal, dan menyiapkan lingkungan keamanan TrustZone (TEE) yang sangat penting bagi Xiaomi untuk fitur Find Device, Fingerprint, dan enkripsi. Setelah RAM aktif, ruang gerak sistem jadi lebih lega, lalu XBL akan menyerahkan tongkat estafet ke <strong>ABL (Android Bootloader)</strong>.</p>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Android</div>
+          <div class="role">Transisi ke OS</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Halo, mulai dari <strong>ABL (Android Bootloader)</strong> ini adalah wilayah perbatasanku. ABL inilah yang menampilkan logo <em>"MI / POCO"</em> di layar untuk pertama kalinya. ABL juga yang bertugas membaca status tombol fisik saat boot.</p>
+        <p>Jika kamu menahan tombol Volume Bawah, ABL akan menghentikan proses boot normal dan masuk ke mode <strong>Fastboot</strong>. ABL juga menjalankan AVB (Android Verified Boot) untuk mengecek apakah partisi <em>boot</em> dan <em>system</em> tidak dimodifikasi (kecuali UBL/Unlock Bootloader). Jika aman, ABL memuat <strong>Linux Kernel</strong> ke dalam RAM dan menjalankannya.</p>
+        <div class="tech-box">
+          > Executing <span class="code-highlight">XBL</span> (UEFI Environment)<br>
+          > Initializing DDR RAM... [OK]<br>
+          > Executing <span class="code-highlight">ABL</span><br>
+          > Displaying Splash Screen Logo<br>
+          > Checking AVB (Verified Boot) Status: <span class="code-highlight">LOCKED</span><br>
+          > Extracting and jumping to <span class="code-path">Linux Kernel</span>...
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Memahami Stuck Logo</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Berarti kalau HP nyangkut di logo MI terus mati lagi (bootloop ringan), itu kemungkinan gagal di tahap ABL saat mengecek partisi, atau Linux Kernel gagal berjalan karena korup sistemnya ya? Lalu setelah Linux Kernel jalan, bagaimana proses memuat UI Androidnya?</p>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Android</div>
+          <div class="role">Kernel & Init</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Betul. Setelah Kernel mengambil alih, ia akan menghidupkan driver-driver tingkat rendah (touchscreen, baterai, display, dll) dan melakukan <em>mounting</em> partisi root. Setelah selesai, Kernel mengeksekusi file sakti bernama <strong><span class="code-highlight">init</span></strong>.</p>
+        <p>Proses <em>init</em> adalah induk dari segala proses (PID=1). Dia akan menjalankan animasi bootloader MIUI/HyperOS (titik-titik muter). Sementara animasi itu berjalan, di latar belakang <em>init</em> menetaskan sebuah proses raksasa bernama <strong>Zygote</strong>.</p>
+        <p>Zygote bertugas memuat core libraries Java (ART/Dalvik). Melalui Zygote inilah <strong>System Server</strong> dihidupkan, yang kemudian membangunkan Activity Manager, Package Manager, dan berbagai service Android lainnya, hingga akhirnya <strong>Launcher (Homescreen)</strong> ditampilkan ke layar dan HP siap kamu gunakan!</p>
+      </div>
+    </div>
+
+    <!-- STUDI KASUS UART LOG -->
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Membaca Log UART (Studi Kasus)</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Menarik! Saya kebetulan baru saja menarik data log kabel UART dari HP Xiaomi Mi 10T (Kodenama: <strong>Apollo</strong> / Snapdragon 865) yang kasusnya sering <em>restart</em> acak saat sedang booting. Di baris awal saya melihat <span style="font-family: monospace; color: #a78bfa;">QC_IMAGE_VERSION_STRING=BOOT.XF.3.2-00278-SM8250-2</span> dan proses SBL1 berjalan, namun di pertengahan ada pesan peringatan. Apa artinya?</p>
+        <div class="tech-box">
+          B -    807548 - PM: PM 0=0x4000008000000040:0x40 <br>
+          B -    821517 - PM: POWER ON by CBLPWR, <span style="color: #ef4444; font-weight: bold;">POWER OFF due to FAULT UVLO</span><br>
+          B -    834083 - PM: PMA_2 PON:KPD WR:RES ON:WARM POFF:RES OFF:FLT <br>
+          B -    966484 - <span class="code-highlight">Product name is apollo</span><br>
+          B -   1013362 - PM: <span style="color: #ef4444; font-weight: bold;">Vbatt: 0; Ibatt: 0</span><br>
+          B -   1017205 - PM: Charger SRC: SDP
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Qualcomm</div>
+          <div class="role">Level Hardware PMIC</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Ah, log itu adalah bukti otentik dari kegagalan Hardware tingkat daya! Pesan <strong style="color: #ef4444;">POWER OFF due to FAULT UVLO</strong> adalah kunci utamanya.</p>
+        <p><strong>UVLO (Under Voltage Lock Out)</strong> adalah mekanisme proteksi otomatis di IC Power (PMIC). Ketika CPU atau komponen lain mulai menarik arus besar (biasanya saat CPU clock mulai naik dari SBL ke Kernel), tegangan baterai tiba-tiba <em>drop</em> terlalu rendah dari ambang batas aman. PMIC langsung memutus arus untuk mencegah kerusakan, sehingga HP akan mati/restart.</p>
+        <p>Jika kamu perhatikan baris <span class="code-highlight">Vbatt: 0; Ibatt: 0</span>, itu mengkonfirmasi bahwa PMIC sama sekali tidak mendeteksi tegangan (Vbatt) dari baterai, dan sumber daya murni mengandalkan suplai lemah dari kabel USB (<span class="code-highlight">Charger SRC: SDP</span>). Kesimpulannya: Baterai rusak/soak parah, konektor baterai kendor, atau ada jalur BATT_ID/THERM yang putus!</p>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>

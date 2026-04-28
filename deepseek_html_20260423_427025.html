@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Servis Pintar Pro - Flowchart Relevan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #EFF3F8;
+      padding: 20px;
+    }
+
+    .app-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1E2A3E, #0F1724);
+      color: white;
+      padding: 20px 28px;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header p {
+      opacity: 0.8;
+      margin-top: 6px;
+      font-size: 0.9rem;
+    }
+
+    .selection-area {
+      padding: 24px 28px;
+      background: #F9FBFD;
+      border-bottom: 1px solid #E4E9F0;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .field-group {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .field-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+      color: #1E2A3E;
+    }
+
+    .smart-combo {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #CFDDE6;
+      border-radius: 20px;
+      font-size: 1rem;
+      background: white;
+      outline: none;
+    }
+
+    .smart-combo:focus {
+      border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-primary {
+      background: #3B82F6;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #2563EB;
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #EFF3F8;
+      border: 1px solid #CBD5E1;
+      padding: 8px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+
+    .flowchart-area {
+      padding: 24px 28px;
+    }
+
+    .step-card {
+      background: #FFFFFF;
+      border-radius: 28px;
+      border: 1px solid #E9EEF3;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .step-badge {
+      background: #EFF6FF;
+      color: #1E40AF;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .instruction-text {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin: 20px 0 16px;
+      line-height: 1.3;
+      color: #0F172A;
+    }
+
+    .level-tag {
+      background: #FEF3C7;
+      color: #92400E;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-right: 12px;
+    }
+
+    .video-link {
+      color: #3B82F6;
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 16px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .btn-yes {
+      background: #10B981;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .btn-no {
+      background: #EF4444;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 60px;
+      font-weight: bold;
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .history-panel {
+      background: #F8FAFE;
+      border-radius: 24px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .history-list {
+      margin-top: 12px;
+      padding-left: 24px;
+      color: #334155;
+    }
+
+    .footer-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
+
+    .alert-box {
+      background: #FEE2E2;
+      border-left: 6px solid #DC2626;
+      padding: 16px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .instruction-text {
+        font-size: 1.2rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-wrapper">
+    <div class="card">
+      <div class="header">
+        <h1>🔧 Servis Pintar <span style="font-size:0.9rem;">Pro - Relevan</span></h1>
+        <p>Flowchart adaptif berdasarkan kerusakan yang dipilih</p>
+      </div>
+      <div class="selection-area">
+        <div class="row">
+          <div class="field-group"><label>📱 Merek</label><input type="text" id="brandCombo" class="smart-combo"
+              list="brandList" placeholder="Samsung, Xiaomi..."><datalist id="brandList"></datalist></div>
+          <div class="field-group"><label>📲 Tipe</label><input type="text" id="modelCombo" class="smart-combo"
+              list="modelList" placeholder="Ketik atau pilih"><datalist id="modelList"></datalist></div>
+          <div class="field-group"><label>⚠️ Kerusakan</label><input type="text" id="faultCombo" class="smart-combo"
+              list="faultList" placeholder="Pilih kerusakan"><datalist id="faultList"></datalist></div>
+          <div class="field-group" style="flex:0.3;"><label>&nbsp;</label><button id="loadFlowBtn" class="btn-primary">▶
+              Mulai Flowchart</button></div>
+        </div>
+      </div>
+      <div id="flowchartContainer" class="flowchart-area">
+        <div style="text-align:center; padding: 40px; color:#6C86A3;">⚙️ Pilih merek, tipe, dan kerusakan, lalu klik
+          "Mulai Flowchart"</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== DATABASE MEREK & TIPE ==========
+    const brandModels = {
+      "Samsung": ["Galaxy A03", "Galaxy A04", "Galaxy A12", "Galaxy A13", "Galaxy A51", "Galaxy J2 Prime", "Galaxy M12"],
+      "Xiaomi / Redmi / Poco": ["Redmi 9A", "Redmi 9C", "Redmi Note 8", "Redmi Note 10", "Redmi Note 11", "Poco M3", "Poco X3 NFC"],
+      "Oppo": ["A15", "A16", "A3s", "A5s", "A53", "A54", "Reno 4", "Reno 5"],
+      "Vivo": ["Y12", "Y20", "Y91", "Y91C", "V15", "V21"],
+      "Realme": ["C11", "C21", "C21Y", "C35", "5i", "Narzo 50"],
+      "Infinix": ["Hot 10", "Hot 11 Play", "Hot 12i", "Smart 5", "Smart 6"],
+      "Lainnya": ["Tipe lain (Ketik Manual)"]
+    };
+    const faultListGlobal = [
+      "Mati total (tidak nyala)",
+      "Tidak bisa cas / port cas goyang",
+      "Bootloop (mentok logo / restart terus)",
+      "LCD retak / layar bergaris / sentuhan error",
+      "Baterai cepat habis / gembung",
+      "Tidak ada sinyal / kartu tidak terbaca",
+      "Lupa Pola / Sandi Layar",
+      "Speaker tidak bunyi / Mic mati",
+      "Kamera error / buram",
+      "Tombol Power / Volume mendem",
+      "Suhu HP terlalu panas/dingin saat dicas"
+    ];
+
+    // ========== FLOWCHART SPESIFIK PER KERUSAKAN ==========
+    // 1. Mati total
+    const flowMatiTotal = {
+      start: "cek_charger",
+      steps: {
+        cek_charger: { text: "Colokkan charger 30 menit, apakah lampu LED indikator menyala / ada getaran?", level: "Mudah", yes: "restart_paksa", no: "bersihkan_port" },
+        restart_paksa: { text: "Coba restart paksa (Tahan Tombol Power + Volume Bawah selama 15 detik). Apakah HP hidup?", level: "Mudah", yes: "success", no: "buka_casing" },
+        bersihkan_port: { text: "Bersihkan port cas dengan sikat gigi kering / pinset plastik pelan-pelan. Coba cas lagi. Masuk?", level: "Mudah", yes: "cek_charger", no: "ganti_kabel" },
+        ganti_kabel: { text: "Coba gunakan kabel dan kepala charger lain yang dipastikan normal. Masuk?", level: "Mudah", yes: "cek_charger", no: "buka_casing" },
+        buka_casing: { text: "Buka casing belakang dan penutup mesin. Cek soket baterai, apakah lepas atau longgar?", level: "Sedang", yes: "konektor_ulang", no: "lepas_pasang" },
+        konektor_ulang: { text: "Tekan dan pasang kembali soket baterai sampai rapat. Coba nyalakan. Hidup?", level: "Sedang", yes: "success", no: "lepas_pasang" },
+        lepas_pasang: { text: "Lepas soket baterai, diamkan 1 menit, lalu pasang lagi. Coba nyalakan. Hidup?", level: "Sedang", yes: "success", no: "ganti_baterai" },
+        ganti_baterai: { text: "Coba pasang baterai baru atau baterai cabutan yang normal. Nyala?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        success: { text: "✅ HP berhasil hidup. Perbaikan selesai.", final: true },
+        bawa_senior: { text: "❌ Kerusakan ada di mesin (seperti IC Power / CPU). Serahkan ke Teknisi Senior / Lanjutan.", final: true }
+      }
+    };
+
+    // 2. Tidak ada sinyal
+    const flowNoSignal = {
+      start: "cek_mode_pesawat",
+      steps: {
+        cek_mode_pesawat: { text: "Aktifkan Mode Pesawat selama 10 detik, lalu matikan lagi. Apakah sinyal muncul?", level: "Mudah", yes: "success", no: "restart_hp" },
+        restart_hp: { text: "Mulai Ulang (Restart) HP. Setelah menyala kembali, apakah sinyal ada?", level: "Mudah", yes: "success", no: "cek_sim" },
+        cek_sim: { text: "Lepas slot SIM card. Bersihkan kuningan kartu SIM dengan penghapus. Pasang lagi. Sinyal muncul?", level: "Mudah", yes: "success", no: "ganti_sim" },
+        ganti_sim: { text: "Coba masukkan kartu SIM lain yang aktif dan normal. Sinyal muncul?", level: "Mudah", yes: "success_kartu", no: "cek_imei" },
+        cek_imei: { text: "Ketik *#06# di Panggilan. Apakah nomor IMEI muncul dengan benar (tidak null / kosong)?", level: "Mudah", yes: "reset_jaringan", no: "imei_hilang" },
+        reset_jaringan: { text: "Buka Pengaturan > Reset > Reset Pengaturan Jaringan (Hanya reset wifi/bluetooth/sinyal). Sinyal muncul?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        imei_hilang: { text: "❌ IMEI hilang/software bermasalah. Serahkan ke Teknisi Senior.", final: true },
+        bawa_senior: { text: "❌ Diduga IC WTR / IC PA / Jalur Antena rusak (Kerusakan Mesin). Serahkan ke Teknisi Senior.", final: true },
+        success_kartu: { text: "✅ Kartu SIM pelanggan yang rusak/hangus, sarankan pelanggan ke Galeri operator.", final: true },
+        success: { text: "✅ Sinyal kembali normal. Selesai.", final: true }
+      }
+    };
+
+    // 3. Bootloop (restart terus)
+    const flowBootloop = {
+      start: "cek_tombol",
+      steps: {
+        cek_tombol: { text: "Cek fisik tombol Power dan Volume. Apakah terasa mendem (tertahan di dalam) atau keras?", level: "Mudah", yes: "ganti_tombol", no: "safe_mode" },
+        ganti_tombol: { text: "Buka casing, bersihkan plat kuning tombol atau ganti satu set fleksibel tombolnya (Plug & Play). Masih bootloop?", level: "Sedang", yes: "safe_mode", no: "success" },
+        safe_mode: { text: "Coba masuk Recovery Mode (Tahan Power + Vol Atas). Pilih 'Wipe Cache Partition'. Masih bootloop?", level: "Sedang", yes: "factory_reset", no: "success" },
+        factory_reset: { text: "Di Recovery Mode, pilih 'Wipe Data/Factory Reset' (Peringatan: Semua data foto/kontak pelanggan akan hilang!). Masih bootloop?", level: "Sedang", yes: "bawa_senior", no: "success" },
+        bawa_senior: { text: "❌ Perlu di-Flash Ulang via PC atau Kerusakan IC EMMC/Memori. Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Bootloop teratasi. HP menyala normal.", final: true }
+      }
+    };
+
+    // 4. Baterai cepat habis / panas
+    const flowBaterai = {
+      start: "cek_fisik",
+      steps: {
+        cek_fisik: { text: "Cek fisik bagian belakang HP. Apakah casing/baterai terasa membengkak (gembung) atau sangat panas meski diam?", level: "Mudah", yes: "ganti_baterai", no: "cek_aplikasi" },
+        cek_aplikasi: { text: "Cek di Pengaturan > Baterai. Apakah ada peringatan atau aplikasi aneh yang boros baterai?", level: "Mudah", yes: "hapus_aplikasi", no: "ganti_baterai" },
+        hapus_aplikasi: { text: "Uninstall aplikasi yang memakan banyak baterai dan matikan fitur GPS/Bluetooth jika tidak terpakai. Masih cepat habis?", level: "Mudah", yes: "ganti_baterai", no: "success" },
+        ganti_baterai: { text: "Buka casing belakang, lepas baterai lama, dan pasang baterai baru (Bongkar pasang mudah). Tes pemakaian. Normal?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        bawa_senior: { text: "❌ Mesin mengalami Short (Konslet) / bocor arus komponen. Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Masalah baterai bocor/boros selesai.", final: true }
+      }
+    };
+
+    // 5. LCD retak / pecah
+    const flowLcd = {
+      start: "cek_tampilan",
+      steps: {
+        cek_tampilan: { text: "Apakah layar tampil gambar sempurna (meski kaca luar retak) dan sentuhan normal 100% di semua area?", level: "Mudah", yes: "ganti_glass", no: "cek_konektor" },
+        ganti_glass: { text: "Hanya kaca luar pecah. Sarankan pelanggan untuk 'Ganti Kaca' (Glass Replacement) yang dilakukan Teknisi Senior (butuh pemanas separator).", final: true },
+        cek_konektor: { text: "Buka casing, lepas dan pasang kembali soket LCD. Pastikan tidak longgar. Nyalakan HP. Layar normal?", level: "Sedang", yes: "success", no: "tes_lcd_baru" },
+        tes_lcd_baru: { text: "Siapkan LCD baru. Cukup colokkan soketnya dulu (JANGAN DILEM DULU). Nyalakan HP, tes tampilan dan sentuhan. Normal?", level: "Sedang", yes: "lem_lcd", no: "bawa_senior" },
+        lem_lcd: { text: "Matikan HP, lepas LCD baru tadi. Bersihkan sisa lem di frame (bezel), beri lem LCD baru, rekatkan LCD dan ikat dengan karet pelan. Selesai?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        bawa_senior: { text: "❌ LCD baru juga tidak tampil. Kemungkinan jalur lampu mati atau IC Display rusak. Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Penggantian LCD / Pemasangan soket berhasil. Selesai.", final: true }
+      }
+    };
+
+    // 6. Tidak bisa cas
+    const flowTidakBisaCas = {
+      start: "cek_kabel",
+      steps: {
+        cek_kabel: { text: "Coba gunakan kabel dan kepala charger lain yang dipastikan bisa di HP lain. Masuk?", level: "Mudah", yes: "success_ganti", no: "bersihkan_port" },
+        bersihkan_port: { text: "Lihat dalam lubang cas (port). Ada kotoran/debu? Bersihkan pelan-pelan pakai jarum/pinset non-logam. Coba cas. Masuk?", level: "Mudah", yes: "success", no: "cek_konektor" },
+        cek_konektor: { text: "Buka casing belakang. Cek soket fleksibel dari papan bawah ke mainboard atas. Apakah lepas?", level: "Sedang", yes: "rapatkan_soket", no: "ganti_papan_cas" },
+        rapatkan_soket: { text: "Lepas dan pasang kembali soket dengan bunyi 'klik' rapat. Coba cas. Masuk?", level: "Sedang", yes: "success", no: "ganti_papan_cas" },
+        ganti_papan_cas: { text: "Beli Papan Cas (Sub-board utuh). Tinggal ganti 1 blok papan cas bawah, pasang baut dan soket (Tanpa nyolder/blower). Coba cas. Masuk?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        bawa_senior: { text: "❌ Jalur cas di mainboard atas atau IC Charger/OVP rusak. Serahkan ke Teknisi Senior.", final: true },
+        success_ganti: { text: "✅ Masalah hanya di charger/kabel milik pelanggan.", final: true },
+        success: { text: "✅ HP kembali bisa dicas normal. Selesai.", final: true }
+      }
+    };
+
+    // 7. Lupa Pola / Sandi
+    const flowLupaPola = {
+      start: "hard_reset",
+      steps: {
+        hard_reset: { text: "Pastikan info ke pelanggan bahwa SEMUA DATA AKAN HILANG. Masuk Recovery Mode (Tahan Power + Vol Atas). Pilih 'Wipe Data/Factory Reset'. Berhasil masuk menu awal?", level: "Mudah", yes: "cek_frp", no: "bawa_senior" },
+        cek_frp: { text: "Saat setup pengaturan awal (Pilih Bahasa dsb), apakah nyangkut dan meminta memasukkan Akun Google sebelumnya (FRP Lock)?", level: "Sedang", yes: "bawa_senior_frp", no: "success" },
+        bawa_senior_frp: { text: "❌ HP terkunci FRP (Akun Google). Serahkan ke Teknisi Senior untuk Bypass / Unlock via PC.", final: true },
+        bawa_senior: { text: "❌ HP tidak bisa di-reset via kombinasi tombol. Serahkan ke Teknisi Senior (Mungkin butuh Direct EMMC).", final: true },
+        success: { text: "✅ Sandi terhapus. HP siap digunakan layaknya baru.", final: true }
+      }
+    };
+
+    // 8. Suara / Mic Error
+    const flowSuara = {
+      start: "cek_volume",
+      steps: {
+        cek_volume: { text: "Tekan tombol volume, pastikan suara sudah maksimal dan mode 'Jangan Ganggu/Hening' dimatikan. Suara keluar?", level: "Mudah", yes: "success", no: "cek_headset" },
+        cek_headset: { text: "Lihat layar atas, apakah muncul logo 'Headset' padahal tidak colok headset (Mode Headset Nyangkut)?", level: "Mudah", yes: "bersihkan_audio", no: "tes_hardware" },
+        bersihkan_audio: { text: "Lubang headset kotor/kemasukan air. Bersihkan dengan cotton bud. Logo headset hilang?", level: "Mudah", yes: "success", no: "bawa_senior" },
+        tes_hardware: { text: "Buka casing belakang. Cek pin kuningan speaker, apakah menyentuh mesin dengan baik? Coba renggangkan pin ke atas sedikit agar nyentuh.", level: "Sedang", yes: "success", no: "ganti_speaker" },
+        ganti_speaker: { text: "Ganti part Speaker/Buzzer (untuk musik) atau papan cas bawah (untuk Mic) tinggal pasang. Suara kembali normal?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        bawa_senior: { text: "❌ IC Audio / Jalur suara di mesin putus. Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Suara atau Mic kembali normal.", final: true }
+      }
+    };
+
+    // 9. Kamera Error
+    const flowKamera = {
+      start: "cek_kaca",
+      steps: {
+        cek_kaca: { text: "Cek kaca pelindung luar kamera. Apakah pecah parah atau ada banyak debu/embun air di dalamnya?", level: "Mudah", yes: "bersihkan_kamera", no: "clear_data" },
+        bersihkan_kamera: { text: "Buka casing pelan-pelan, bersihkan lensa kamera dengan cotton bud kering (jangan ditekan keras). Normal?", level: "Sedang", yes: "success", no: "clear_data" },
+        clear_data: { text: "Masuk Pengaturan > Aplikasi > Kamera > Hapus Data / Cache. Coba buka aplikasi kamera lagi. Tampil?", level: "Mudah", yes: "success", no: "ganti_kamera" },
+        ganti_kamera: { text: "Buka casing belakang, lepas baterai. Cabut soket kamera, lalu tancapkan lagi. Masih error, ganti modul kamera baru (Plug & Play). Tampil?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        bawa_senior: { text: "❌ Jalur kamera di mesin putus atau rusak IC LDO Kamera. Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Kamera kembali bening / normal.", final: true }
+      }
+    };
+
+    // 10. Tombol Rusak
+    const flowTombol = {
+      start: "bersihkan_luar",
+      steps: {
+        bersihkan_luar: { text: "Teteskan sangat sedikit minyak kayu putih di sela tombol luar, lalu tekan-tekan dengan cepat untuk menghilangkan kotoran. Normal?", level: "Mudah", yes: "success", no: "buka_casing" },
+        buka_casing: { text: "Buka casing belakang (backdoor). Apakah fleksibel tombol di pinggir kerangka terlihat sobek?", level: "Sedang", yes: "ganti_fleksibel", no: "bersihkan_kubah" },
+        bersihkan_kubah: { text: "Buka lapisan selotip kuning pada tombol. Bersihkan plat besi bulatnya pakai penghapus, lalu selotip lagi. Normal?", level: "Sedang", yes: "success", no: "ganti_fleksibel" },
+        ganti_fleksibel: { text: "Cabut fleksibel tombol yang lama dan tempelkan fleksibel tombol baru (soket atau tempel). Tombol berfungsi?", level: "Sedang", yes: "success", no: "bawa_senior" },
+        bawa_senior: { text: "❌ Jalur tombol dari mesin ke CPU putus (Putus Jalur). Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Tombol kembali empuk dan normal.", final: true }
+      }
+    };
+
+    // 11. Suhu Error saat cas (Temperatur)
+    const flowSuhu = {
+      start: "ganti_kabel_suhu",
+      steps: {
+        ganti_kabel_suhu: { text: "Gunakan kabel dan kepala charger original atau berkualitas baik. Apakah peringatan suhu masih muncul?", level: "Mudah", yes: "bersihkan_konektor_baterai", no: "success" },
+        bersihkan_konektor_baterai: { text: "Buka casing belakang. Lepas soket baterai, bersihkan konektor dari debu/korosi/air dengan sikat kering pelan-pelan, lalu pasang lagi. Masih muncul?", level: "Sedang", yes: "ganti_papan_bawah", no: "success" },
+        ganti_papan_bawah: { text: "Ganti Papan Cas (Sub-board) bagian bawah. (Peringatan suhu sering disebabkan oleh komponen thermistor yang korosi di papan bawah). Masih muncul?", level: "Sedang", yes: "ganti_baterai_suhu", no: "success" },
+        ganti_baterai_suhu: { text: "Coba ganti dengan baterai baru/normal (karena baterai lama mungkin sensor panasnya sudah rusak). Masih muncul?", level: "Sedang", yes: "bawa_senior", no: "success" },
+        bawa_senior: { text: "❌ Jalur Thermistor di mesin utama (Mainboard) putus / rusak komponennya. Serahkan ke Teknisi Senior.", final: true },
+        success: { text: "✅ Peringatan suhu hilang. HP kembali mengecas normal.", final: true }
+      }
+    };
+
+    // Default fallback jika kerusakan tidak dikenali
+    const flowUnrecognized = (fault) => ({
+      start: "unknown",
+      steps: {
+        unknown: { text: `Panduan untuk "${fault}" belum tersedia di database. Silakan hubungi teknisi atau cek panduan manual.`, final: true }
+      }
+    });
+
+    // Fungsi pencocokan kerusakan ke flowchart (if-else yang matang)
+    function getFlowchartByFault(fault) {
+      const f = fault.toLowerCase();
+      if (f.includes("mati")) return JSON.parse(JSON.stringify(flowMatiTotal));
+      if (f.includes("sinyal") || f.includes("kartu")) return JSON.parse(JSON.stringify(flowNoSignal));
+      if (f.includes("bootloop") || f.includes("logo") || f.includes("restart")) return JSON.parse(JSON.stringify(flowBootloop));
+      if (f.includes("baterai") || f.includes("gembung") || f.includes("habis")) return JSON.parse(JSON.stringify(flowBaterai));
+      if (f.includes("lcd") || f.includes("layar") || f.includes("sentuh") || f.includes("garis")) return JSON.parse(JSON.stringify(flowLcd));
+      if (f.includes("cas") || f.includes("port")) return JSON.parse(JSON.stringify(flowTidakBisaCas));
+      if (f.includes("pola") || f.includes("sandi")) return JSON.parse(JSON.stringify(flowLupaPola));
+      if (f.includes("speaker") || f.includes("mic") || f.includes("bunyi")) return JSON.parse(JSON.stringify(flowSuara));
+      if (f.includes("kamera") || f.includes("buram")) return JSON.parse(JSON.stringify(flowKamera));
+      if (f.includes("tombol") || f.includes("mendem")) return JSON.parse(JSON.stringify(flowTombol));
+      if (f.includes("suhu") || f.includes("panas") || f.includes("dingin") || f.includes("temperatur")) return JSON.parse(JSON.stringify(flowSuhu));
+
+      // kirimkan objek fallback dengan pesan
+      return flowUnrecognized(fault);
+    }
+
+    // State dan DOM
+    let currentFlow = null, currentStepId = "", historyLog = [];
+    const brandInput = document.getElementById("brandCombo");
+    const modelInput = document.getElementById("modelCombo");
+    const faultInput = document.getElementById("faultCombo");
+    const loadBtn = document.getElementById("loadFlowBtn");
+    const flowchartContainer = document.getElementById("flowchartContainer");
+
+    function populateBrands() {
+      const brandList = document.getElementById("brandList");
+      brandList.innerHTML = "";
+      for (let b in brandModels) { let opt = document.createElement("option"); opt.value = b; brandList.appendChild(opt); }
+    }
+    function updateModelsByBrand(brand) {
+      const modelList = document.getElementById("modelList");
+      modelList.innerHTML = "";
+      let models = brandModels[brand] || ["(Ketik manual)"];
+      models.forEach(m => { let opt = document.createElement("option"); opt.value = m; modelList.appendChild(opt); });
+    }
+    function populateFaults() {
+      const faultListElem = document.getElementById("faultList");
+      faultListElem.innerHTML = "";
+      faultListGlobal.forEach(f => { let opt = document.createElement("option"); opt.value = f; faultListElem.appendChild(opt); });
+    }
+
+    brandInput.addEventListener("input", (e) => updateModelsByBrand(e.target.value));
+    brandInput.addEventListener("change", (e) => updateModelsByBrand(e.target.value));
+
+    function renderStep() {
+      if (!currentFlow || !currentStepId) return;
+      const step = currentFlow.steps[currentStepId];
+      if (!step) return;
+      let isFinal = step.final === true;
+      let html = `<div class="step-card"><div class="step-badge">Langkah ${historyLog.length + 1}</div>
+      <div class="instruction-text">${step.text}</div><div>${step.level ? `<span class="level-tag">🛠️ ${step.level}</span>` : ""}
+      ${step.video ? `<a href="${step.video}" target="_blank" class="video-link">🎥 Video</a>` : ""}</div>`;
+      if (!isFinal) {
+        html += `<div class="action-buttons"><button class="btn-yes" id="yesBtn">✔ YA / BERHASIL</button><button class="btn-no" id="noBtn">✘ TIDAK / MASIH GAGAL</button></div>`;
+      } else {
+        html += `<div class="action-buttons"><button id="resetFlowBtn" class="btn-primary">🔄 Mulai ulang</button></div>`;
+      }
+      html += `</div>`;
+      let historyHtml = `<div class="history-panel"><strong>📋 Riwayat langkah:</strong><ul class="history-list">`;
+      if (historyLog.length === 0) historyHtml += `<li>Belum ada langkah.</li>`;
+      historyLog.forEach((log, idx) => { historyHtml += `<li>${idx + 1}. ${log.text.substring(0, 70)} → ${log.choice}</li>`; });
+      historyHtml += `</ul><div class="footer-actions"><button id="resetHistoryBtn" class="btn-secondary">⟳ Reset dari awal</button></div></div>`;
+      flowchartContainer.innerHTML = html + historyHtml;
+      if (!isFinal) {
+        document.getElementById("yesBtn").addEventListener("click", () => moveTo(step.yes, "YA"));
+        document.getElementById("noBtn").addEventListener("click", () => moveTo(step.no, "TIDAK"));
+      } else {
+        const resetBtn = document.getElementById("resetFlowBtn");
+        if (resetBtn) resetBtn.addEventListener("click", () => startFlowchart());
+        const resetHistory = document.getElementById("resetHistoryBtn");
+        if (resetHistory) resetHistory.addEventListener("click", () => startFlowchart());
+      }
+      const resetHist = document.getElementById("resetHistoryBtn");
+      if (resetHist && !isFinal) resetHist.addEventListener("click", () => startFlowchart());
+    }
+
+    function moveTo(nextStepId, choice) {
+      if (!nextStepId) return;
+      const step = currentFlow.steps[currentStepId];
+      historyLog.push({ text: step.text, choice: choice });
+      currentStepId = nextStepId;
+      renderStep();
+    }
+
+    function startFlowchart() {
+      const brand = brandInput.value.trim();
+      const model = modelInput.value.trim();
+      const fault = faultInput.value.trim();
+      if (!brand || !fault) { alert("Harap pilih merek dan kerusakan."); return; }
+      currentFlow = getFlowchartByFault(fault);
+      currentStepId = currentFlow.start;
+      historyLog = [];
+      renderStep();
+      // tambahkan info device
+      const infoDiv = document.createElement("div");
+      infoDiv.className = "history-panel";
+      infoDiv.style.marginBottom = "16px";
+      infoDiv.style.background = "#EFF6FF";
+      infoDiv.innerHTML = `<strong>📌 Perangkat:</strong> ${brand} ${model} — <strong>Kerusakan:</strong> ${fault}`;
+      const firstCard = document.querySelector(".step-card");
+      if (firstCard) firstCard.insertAdjacentElement("beforebegin", infoDiv);
+      else flowchartContainer.insertAdjacentHTML("afterbegin", infoDiv.outerHTML);
+    }
+
+    loadBtn.addEventListener("click", startFlowchart);
+    populateBrands(); populateFaults(); updateModelsByBrand("Samsung");
+    brandInput.value = "Samsung"; updateModelsByBrand("Samsung");
+    modelInput.value = "Galaxy A12";
+    faultInput.value = "Tidak ada sinyal / kartu tidak terbaca";
+  </script>
+</body>
+
+</html>
