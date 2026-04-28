@@ -569,6 +569,47 @@
       </div>
     </div>
 
+    <!-- STUDI KASUS UART LOG 3 (MEDIATEK NORMAL) -->
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Membaca Log UART (Studi Kasus 3)</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Lalu bagaimana jika chipsetnya bukan Qualcomm? Saya baru merekam log dari HP <strong>Infinix Note 30</strong> yang keadaannya 100% normal. Kelihatannya alurnya sangat berbeda dari Qualcomm ya?</p>
+        <div class="tech-box">
+          > [PMIC]Preloader Start<br>
+          > [PMIC] CHIP Code = 0x6610<br>
+          ...<br>
+          > ====> GZ (0)[    2.375112]Version of MTEE: mTEE_SDK: 2.2.2.004<br>
+          > Say Hello from EL2!<br>
+          ...<br>
+          > welcome to lk/MP<br>
+          > boot args 0x48600000 0x48600000 0x5920 0x11002000<br>
+          > calling constructors<br>
+          > initializing heap
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem MediaTek</div>
+          <div class="role">Preloader & Little Kernel</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Sangat tajam! Infinix Note 30 menggunakan chipset <strong>MediaTek (MTK) Helio G99</strong>. Arsitektur <em>bootloader</em> MediaTek menggunakan istilah yang berbeda dari Qualcomm, meskipun fungsinya mirip.</p>
+        <p>Pada MediaTek, CPU pertama kali memuat <strong>BROM (Boot ROM)</strong> yang kemudian memanggil <span class="code-highlight">[PMIC]Preloader Start</span>. <strong>Preloader</strong> ini setara dengan gabungan tugas PBL & XBL di Qualcomm. Ia bertugas mengecek PMIC (tegangan aman), inisialisasi RAM DDR, dan memuat lingkungan keamanan TrustZone yang disebut <strong>MTEE (MediaTek Trusted Execution Environment)</strong>.</p>
+        <p>Setelah keamanan siap (<span class="code-path">Say Hello from EL2!</span>), Preloader tidak menyerahkan tugas ke ABL, melainkan ke <strong>LK (Little Kernel)</strong>. Tulisan <strong style="color: #10b981;">welcome to lk/MP</strong> adalah pertanda bahwa proses <em>hardware init</em> telah berhasil dan HP siap untuk memuat OS Android utama! Log ini adalah contoh "Buku Teks" dari proses <em>booting</em> yang sehat dan sempurna.</p>
+      </div>
+    </div>
+
   </main>
 
 </body>
