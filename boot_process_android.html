@@ -610,6 +610,45 @@
       </div>
     </div>
 
+    <!-- STUDI KASUS UART LOG 4 (POCO F3 OCP) -->
+    <div class="conversation-block">
+      <div class="speaker">
+        <div class="avatar tech">T</div>
+        <div>
+          <div class="name">Teknisi (Kita)</div>
+          <div class="role">Membaca Log UART (Studi Kasus 4)</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Kembali ke platform Qualcomm, saya mendapat pasien <strong>Poco F3 (Alioth / Snapdragon 870)</strong>. Gejalanya HP hanya mentok logo Poco sebentar lalu mati lagi (geblus). Saya tarik log UART-nya, dan melihat kejanggalan di area PMIC. Bisakah dibantu analisanya?</p>
+        <div class="tech-box">
+          B -    455090 - PM: POWER ON by CBLPWR, <span style="color: #ef4444; font-weight: bold;">POWER OFF due to FAULT GP_FAULT0</span><br>
+          B -    467900 - PM: PMA_2 PON:KPD ON:PON OFF:XVDD<br>
+          B -    566995 - PM: Device Init # SPMI Transn: 4724<br>
+          B -    576938 - PM: <span style="color: #ef4444; font-weight: bold;">OCP Occured: PMIC: 0; SMPS: 7 </span><br>
+          B -    576999 - PM: <span style="color: #ef4444; font-weight: bold;">OCP Occured: PMIC: 0; SMPS: 8 </span><br>
+          B -    581635 - PM: <span style="color: #ef4444; font-weight: bold;">OCP Occured: PMIC: 0; SMPS: 9 </span><br>
+          B -    598684 - Product name is <span class="code-highlight">alioth</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="conversation-block android-color">
+      <div class="speaker">
+        <div class="avatar system">S</div>
+        <div>
+          <div class="name">Sistem Qualcomm</div>
+          <div class="role">Level Hardware PMIC</div>
+        </div>
+      </div>
+      <div class="text">
+        <p>Itu adalah masalah <em>hardware</em> tingkat akut! Kata kuncinya ada pada peringatan <strong style="color: #ef4444;">OCP Occured</strong> di jalur SMPS 7, 8, dan 9.</p>
+        <p><strong>OCP (Over Current Protection)</strong> adalah sistem pengamanan pada IC Power (PMIC) ketika mendeteksi adanya penarikan arus yang terlalu besar dan tidak wajar pada suatu jalur suplai, yang hampir selalu berarti ada jalur yang <strong style="color: #ef4444;">Korslet (Short)</strong> ke *Ground*.</p>
+        <p>Pada Snapdragon seri 800 (seperti 870 di Poco F3), jalur <strong>SMPS 7, 8, dan 9</strong> biasanya menyuplai tegangan inti sangat rendah namun berarus besar langsung ke dalam *die* CPU (VCC_CORE / VCC_MODEM). Ketika IC Power mencoba mengalirkan listrik ke CPU saat memunculkan logo, listrik tersebut bocor (korslet), memicu proteksi OCP, yang kemudian memicu <span class="code-highlight">FAULT GP_FAULT0</span> sehingga HP mematikan dirinya sendiri secara instan untuk mencegah komponen terbakar.</p>
+        <p><strong>Solusi Teknisi:</strong> Jangan me-<em>reball</em> IC Power terlebih dahulu! Periksa kapasitor-kapasitor *decoupling* berukuran besar yang berada di sekitar area CPU/RAM. Seringkali, masalah <em>restart</em> pada seri Poco F3 / Poco X3 disebabkan oleh korsletnya salah satu kapasitor filter pada jalur suplai *core* CPU ini.</p>
+      </div>
+    </div>
+
   </main>
 
 </body>
