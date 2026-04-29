@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Huawei Security Platform dan Produk - Servis Pintar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1"></script>
+    <style>
+      :root {
+        --bg-color: #050510;
+        --card-bg: rgba(15, 20, 35, 0.7);
+        --primary: #00e5ff;
+        --accent-red: #ff2a5f;
+        --accent-green: #00e676;
+        --accent-purple: #b388ff;
+        --text-main: #f0f4ff;
+        --text-muted: #8ba3d1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Outfit", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        line-height: 1.7;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* Ambient Background */
+      .ambient-glow {
+        position: fixed;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+        top: -300px;
+        left: -300px;
+        border-radius: 50%;
+        z-index: -1;
+      }
+
+      h1, h2, h3 {
+        color: var(--primary);
+        margin-top: 40px;
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 2.5em;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: 2em;
+        border-bottom: 2px solid var(--accent-purple);
+        padding-bottom: 10px;
+      }
+
+      h3 {
+        font-size: 1.5em;
+        color: var(--accent-green);
+      }
+
+      ul {
+        margin-left: 20px;
+        margin-bottom: 20px;
+      }
+
+      li {
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin-bottom: 20px;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 40px;
+        color: var(--accent-red);
+        text-decoration: none;
+        font-weight: 600;
+        font-family: "Space Mono", monospace;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient-glow"></div>
+    <a href="index.html" class="back-link">← KEMBALI KE DASHBOARD</a>
+
+    <h1>Huawei Security Platform dan Produk</h1>
+
+    <h2>Tujuan Halaman</h2>
+    <p>Dokumen ini ditujukan untuk teknisi yang bekerja dengan produk keamanan Huawei. Fokus pada platform, line-up produk, dan prosedur perbaikan teknis.</p>
+
+    <h2>Ringkasan</h2>
+    <p>Huawei menyediakan ekosistem keamanan terintegrasi yang mencakup firewall, manajemen log, monitoring, dan proteksi jaringan. Teknisi harus memahami arsitektur, fungsi tiap produk, dan langkah troubleshooting.</p>
+
+    <h2>Platform Keamanan Utama</h2>
+
+    <h3>Huawei Security Fabric</h3>
+    <ul>
+      <li>Integrasi endpoint, jaringan, aplikasi, dan cloud</li>
+      <li>Korelasi insiden dan orkestrasi respons</li>
+      <li>Sumber data: USG, eSight, HiSec, CloudCampus</li>
+    </ul>
+
+    <h3>Huawei HiSec</h3>
+    <ul>
+      <li>SIEM dan manajemen informasi keamanan</li>
+      <li>Event correlation, notifikasi, dan analisis</li>
+      <li>Fokus pada forensik log dan deteksi anomali</li>
+    </ul>
+
+    <h3>Huawei eSight</h3>
+    <ul>
+      <li>Manajemen jaringan dan keamanan terpusat</li>
+      <li>Monitoring performa, konfigurasi, dan alarm</li>
+      <li>Inventory perangkat, firmware, dan topologi</li>
+    </ul>
+
+    <h3>CloudCampus / CloudCampus Security</h3>
+    <ul>
+      <li>Keamanan kampus terintegrasi</li>
+      <li>NAC, 802.1X, policy enforcement, captive portal</li>
+      <li>Segmentasi dan kontrol akses pengguna</li>
+    </ul>
+
+    <h3>FusionSphere Trusted Platform</h3>
+    <ul>
+      <li>Platform cloud / private cloud</li>
+      <li>Isolasi VM, enkripsi data, dan hardening</li>
+      <li>Basis untuk solusi keamanan virtual</li>
+    </ul>
+
+    <h2>Line-Up Produk Security Huawei</h2>
+
+    <h3>USG Series (Unified Security Gateway)</h3>
+    <ul>
+      <li>Firewall stateful</li>
+      <li>IPS / IDS</li>
+      <li>VPN: IPsec, SSL</li>
+      <li>Application control</li>
+      <li>Anti-virus, anti-malware, URL filtering</li>
+      <li>NAT, zone-based policy, session control</li>
+    </ul>
+
+    <h3>HiSec Device / Security Management</h3>
+    <ul>
+      <li>SIEM / SOC</li>
+      <li>Event correlation dan alarm</li>
+      <li>Asset profiling</li>
+      <li>Vulnerability scanning</li>
+      <li>Audit log dan reporting</li>
+    </ul>
+
+    <h3>eSight</h3>
+    <ul>
+      <li>Centralized management</li>
+      <li>Konfigurasi dan provisioning</li>
+      <li>Monitoring trafik dan keamanan</li>
+      <li>Backup konfigurasi dan deployment</li>
+    </ul>
+
+    <h3>SecoManager</h3>
+    <ul>
+      <li>Manajemen signature</li>
+      <li>Distribusi policy</li>
+      <li>Sinkronisasi update</li>
+      <li>Support untuk perangkat keamanan Huawei</li>
+    </ul>
+
+    <h3>CloudEngine / AirEngine</h3>
+    <ul>
+      <li>Switch dan wireless access point</li>
+      <li>ACL, port isolation, 802.1X</li>
+      <li>Micro-segmentation</li>
+      <li>Integrasi dengan NAC dan policy enforcement</li>
+    </ul>
+
+    <h3>Anti-DDoS / NIPS</h3>
+    <ul>
+      <li>Proteksi serangan volumetrik</li>
+      <li>Deteksi intrusi dan mitigasi</li>
+      <li>Threshold-based defense</li>
+      <li>Adaptive flow control</li>
+    </ul>
+
+    <h2>Aspek Teknis Perbaikan</h2>
+
+    <h3>1. Persiapan Diagnosa</h3>
+    <ul>
+      <li>Cek status perangkat: CPU, memori, sesi aktif, uptime</li>
+      <li>Ambil output log dan konfigurasi</li>
+      <li>USG: <code>display current-configuration</code>, <code>display logbuffer</code></li>
+      <li>HiSec: event log, alarm, correlation</li>
+      <li>eSight: alarm list, status node</li>
+      <li>Verifikasi konektivitas jaringan: <code>ping</code>, <code>tracert</code>, <code>display interface brief</code></li>
+    </ul>
+
+    <h3>2. Verifikasi Konfigurasi</h3>
+    <ul>
+      <li>Pastikan urutan policy firewall dan rule match</li>
+      <li>Periksa ACL, NAT, zone, interface binding</li>
+      <li>Cek sertifikat VPN / SSL dan validitasnya</li>
+      <li>Validasi konfigurasi 802.1X / NAC pada switch dan AP</li>
+      <li>Periksa sinkronisasi waktu NTP dan timezone</li>
+    </ul>
+
+    <h3>3. Perbaikan Umum</h3>
+    <ul>
+      <li>Reset session bila traffic terblokir salah</li>
+      <li>Upgrade firmware / patch secara terencana</li>
+      <li>Backup konfigurasi sebelum perubahan</li>
+      <li>Restore konfigurasi dari backup jika diperlukan</li>
+      <li>Sinkronisasi konfigurasi pada cluster HA / active-standby</li>
+    </ul>
+
+    <h3>4. Troubleshooting Spesifik</h3>
+    <ul>
+      <li><strong>VPN:</strong> <code>display ipsec sa</code>, <code>display ike sa</code>, Pastikan Phase 1 dan Phase 2 cocok</li>
+      <li><strong>Authentication:</strong> Periksa log RADIUS / LDAP / AD, Verifikasi account dan policy auth</li>
+      <li><strong>Throughput / kinerja:</strong> Cek table session, CPU, memory, Tinjau rule signature atau deep inspection yang berat</li>
+      <li><strong>HA:</strong> Verifikasi link HA, Bandingkan konfigurasi active dan standby, Cek failover event log</li>
+    </ul>
+
+    <h2>Prosedur Perbaikan Praktis</h2>
+    <ul>
+      <li>Identifikasi masalah dan komponen terdampak</li>
+      <li>Kumpulkan data log, status, dan konfigurasi</li>
+      <li>Analisis rule, policy, dan proses terkait</li>
+      <li>Terapkan perbaikan minimal dan uji fungsi</li>
+      <li>Validasi hasil dengan skenario end-to-end</li>
+      <li>Dokumentasikan perubahan dan hasil troubleshooting</li>
+    </ul>
+
+    <h2>Catatan Tambahan</h2>
+    <ul>
+      <li>Jika ada daftar produk spesifik di <code>1.txt</code>, masukkan ke bagian "Line-Up Produk Security Huawei"</li>
+      <li>Susun ulang detail menjadi daftar teknis agar mudah dibaca oleh teknisi</li>
+    </ul>
+
+    <h2>Referensi</h2>
+    <ul>
+      <li>Dokumen Huawei Security Fabric</li>
+      <li>Manual USG Series</li>
+      <li>Panduan konfigurasi eSight</li>
+      <li>Manual HiSec SIEM</li>
+      <li>Catatan release firmware dan patch</li>
+    </ul>
+
+    <div class="fb-like" data-href="https://gbluez.github.io/gadget-fix/Huawei_Platform.html" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
+  </body>
+</html>
