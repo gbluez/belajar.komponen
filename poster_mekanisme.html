@@ -199,9 +199,35 @@
       text-align: center;
       margin: 20px 0;
     }
+
+    .navbar {
+      background: #050505;
+      border-bottom: 1px solid #333;
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      color: #00d4ff;
+      text-decoration: none;
+      font-size: 16px;
+      letter-spacing: 1px;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .nav-brand:hover {
+      color: #8b5cf6;
+    }
   </style>
 </head>
 <body>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-brand">⚙️ SERVIS PINTAR</a>
+  </nav>
 
   <div class="poster-container">
     <div class="poster-overlay"></div>
