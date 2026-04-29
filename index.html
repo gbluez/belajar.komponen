@@ -368,6 +368,25 @@
         opacity: 1;
       }
 
+      /* Card 5: Security Auth */
+      .card-auth {
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          inset 0 0 0 1px rgba(0, 212, 255, 0.2);
+      }
+      .card-auth:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow:
+          0 20px 40px rgba(0, 212, 255, 0.2),
+          inset 0 0 0 1px rgba(0, 212, 255, 0.5);
+      }
+      .card-auth::before {
+        background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+      }
+      .card-auth:hover::before {
+        opacity: 1;
+      }
+
       .card-icon {
         width: 64px;
         height: 64px;
@@ -401,6 +420,12 @@
         background: rgba(236, 72, 153, 0.15);
         color: #f472b6;
         box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      }
+
+      .card-auth .card-icon {
+        background: rgba(0, 212, 255, 0.15);
+        color: #00d4ff;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
       }
 
       .card-title {
@@ -440,6 +465,9 @@
       }
       .card-skkni .card-action {
         color: #f472b6;
+      }
+      .card-auth .card-action {
+        color: #00d4ff;
       }
 
       .card-action svg {
@@ -805,6 +833,45 @@
           <div class="card-title">Pelatihan Pra SKKNI</div>
           <div class="card-desc">
             Dokumen untuk membantu teknisi lulus uji kompetensi SKKNI, menguasai troubleshooting real, dan SOP kerja.
+          </div>
+          <div class="card-action">
+            Buka Modul
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </a>
+
+        <!-- SECURITY AUTH CARD -->
+        <a href="flashing_auth.html" class="module-card card-auth">
+          <div class="card-icon">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div class="card-title">Mekanisme Flashing Auth</div>
+          <div class="card-desc">
+            Visualisasi protokol Server Vendor Auth (Mi, Oppo, SLA), Apple TSS Server, hingga proteksi OS (FRP, MDM, PayJoy).
           </div>
           <div class="card-action">
             Buka Modul

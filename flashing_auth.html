@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mekanisme Security & Flashing Auth - Servis Pintar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #050510;
+        --card-bg: rgba(15, 20, 35, 0.7);
+        --primary: #00e5ff;
+        --accent-red: #ff2a5f;
+        --accent-green: #00e676;
+        --accent-purple: #b388ff;
+        --text-main: #f0f4ff;
+        --text-muted: #8ba3d1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Outfit", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        line-height: 1.7;
+      }
+
+      /* Ambient Background */
+      .ambient-glow {
+        position: fixed;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(circle, rgba(0, 229, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+        top: -300px;
+        left: -300px;
+        border-radius: 50%;
+        z-index: -1;
+      }
+
+      .ambient-glow-2 {
+        position: fixed;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(255, 42, 95, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
+        bottom: -200px;
+        right: -200px;
+        border-radius: 50%;
+        z-index: -1;
+      }
+
+      .grid-bg {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-image: 
+          linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: -2;
+      }
+
+      .nav {
+        padding: 20px 40px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 1px solid rgba(0, 229, 255, 0.2);
+        background: rgba(5, 5, 16, 0.8);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-family: "Space Mono", monospace;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+
+      .nav a:hover { color: var(--primary); }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .header-section {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .tag {
+        font-family: "Space Mono", monospace;
+        font-size: 0.85rem;
+        color: var(--primary);
+        background: rgba(0, 229, 255, 0.1);
+        padding: 6px 16px;
+        border-radius: 20px;
+        display: inline-block;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0, 229, 255, 0.3);
+      }
+
+      h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        background: linear-gradient(to right, #00e5ff, #b388ff, #ff2a5f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+      }
+
+      /* Animated Flowchart System */
+      .flowchart-container {
+        background: rgba(10, 15, 25, 0.8);
+        border: 1px solid rgba(0, 229, 255, 0.2);
+        border-radius: 24px;
+        padding: 50px 20px;
+        margin-bottom: 60px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      }
+
+      .flowchart-nodes {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 140px;
+        text-align: center;
+      }
+
+      .node-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        background: rgba(20, 25, 45, 0.9);
+        border: 2px solid var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 15px;
+        position: relative;
+        transition: all 0.3s;
+        box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      }
+
+      .node.pc .node-icon { border-color: var(--primary); color: var(--primary); }
+      .node.server .node-icon { border-color: var(--accent-purple); color: var(--accent-purple); }
+      .node.phone .node-icon { border-color: var(--accent-red); color: var(--accent-red); }
+
+      .node-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--text-main);
+      }
+
+      .node-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: 5px;
+      }
+
+      /* Animation paths */
+      .path-container {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        transform: translateY(-50%);
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .data-packet {
+        position: absolute;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-family: "Space Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: bold;
+        background: var(--primary);
+        color: #000;
+        opacity: 0;
+        top: 10px;
+      }
+
+      /* Keyframes for the sequence */
+      @keyframes sendChallenge {
+        0% { left: 15%; opacity: 0; transform: scale(0.5); }
+        10% { opacity: 1; transform: scale(1); }
+        40% { left: 50%; opacity: 1; }
+        50% { left: 50%; opacity: 0; transform: scale(0.5); }
+        100% { left: 50%; opacity: 0; }
+      }
+
+      @keyframes validateToken {
+        0% { left: 50%; opacity: 0; transform: scale(0.5); top: 50px; }
+        50% { left: 50%; opacity: 0; transform: scale(0.5); top: 50px; }
+        60% { opacity: 1; transform: scale(1); }
+        90% { left: 85%; opacity: 1; }
+        100% { left: 85%; opacity: 0; transform: scale(0.5); top: 50px; }
+      }
+
+      .packet-1 {
+        background: var(--primary);
+        animation: sendChallenge 6s infinite linear;
+      }
+      
+      .packet-2 {
+        background: var(--accent-purple);
+        animation: validateToken 6s infinite linear;
+      }
+
+      /* Cards Section */
+      .section-title {
+        font-size: 2rem;
+        margin: 50px 0 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .info-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 25px;
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s, border-color 0.3s;
+      }
+
+      .info-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+
+      .info-card p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+      }
+
+      .tech-list {
+        list-style: none;
+      }
+
+      .tech-list li {
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        color: #cbd5e1;
+      }
+
+      .tech-list li::before {
+        content: "▹";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+      }
+
+      /* Specific colors */
+      .c-blue .card-icon { background: rgba(0, 229, 255, 0.1); color: #00e5ff; }
+      .c-green .card-icon { background: rgba(0, 230, 118, 0.1); color: #00e676; }
+      .c-red .card-icon { background: rgba(255, 42, 95, 0.1); color: #ff2a5f; }
+      .c-purple .card-icon { background: rgba(179, 136, 255, 0.1); color: #b388ff; }
+      .c-orange .card-icon { background: rgba(255, 152, 0, 0.1); color: #ff9800; }
+      
+      .alert-box {
+        background: rgba(255, 42, 95, 0.1);
+        border-left: 4px solid var(--accent-red);
+        padding: 15px 20px;
+        border-radius: 0 8px 8px 0;
+        margin-top: 20px;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .grid-2 { grid-template-columns: 1fr; }
+        .flowchart-nodes { flex-direction: column; gap: 40px; }
+        .path-container { display: none; } /* Disable complex animation on mobile for now */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+    <div class="grid-bg"></div>
+
+    <nav class="nav">
+      <a href="index.html">← KEMBALI KE DASHBOARD</a>
+      <span style="color: rgba(255, 255, 255, 0.2)">/</span>
+      <span style="font-family: 'Space Mono'; font-size: 0.9rem; color: var(--primary);">SECURITY & AUTH</span>
+    </nav>
+
+    <div class="container">
+      <div class="header-section">
+        <div class="tag">System Level Security</div>
+        <h1>Mekanisme Flashing Auth & Proteksi Sistem</h1>
+        <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto; font-size: 1.1rem;">
+          Memahami bagaimana level keamanan Hardware (Secure Boot), Server Vendor (SLA/EDL Auth), hingga proteksi OS (FRP/MDM) bekerja untuk melindungi perangkat.
+        </p>
+      </div>
+
+      <!-- Flowchart Animation -->
+      <div class="flowchart-container">
+        <div class="path-container">
+          <div class="data-packet packet-1">1. Minta Token (Token Req)</div>
+          <div class="data-packet packet-2">2. Validasi & Unlock (Auth OK)</div>
+        </div>
+        <div class="flowchart-nodes">
+          <div class="node pc">
+            <div class="node-icon">💻</div>
+            <div class="node-title">PC / Flash Tool</div>
+            <div class="node-desc">MiFlash, SP Flash Tool, MSM Download</div>
+          </div>
+          <div class="node server">
+            <div class="node-icon">☁️</div>
+            <div class="node-title">Vendor Server</div>
+            <div class="node-desc">Mi Auth, O-Tap, TSS Server (Apple)</div>
+          </div>
+          <div class="node phone">
+            <div class="node-icon">📱</div>
+            <div class="node-title">CPU / eMMC</div>
+            <div class="node-desc">Secure Boot, BootROM Block</div>
+          </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.9rem;">
+          <em>Ilustrasi di atas: PC Flashing Tool tidak bisa langsung menulis data ke CPU/eMMC tanpa divalidasi oleh Server Resmi Vendor (Authentication).</em>
+        </div>
+      </div>
+
+      <!-- BAGIAN 1: HARDWARE LEVEL AUTH -->
+      <h2 class="section-title">⚙️ Hardware Level Auth (SoC Protocol)</h2>
+      <div class="grid-2">
+        <div class="info-card c-blue">
+          <div class="card-header">
+            <div class="card-icon">Q</div>
+            <div class="card-title">Qualcomm (Secure Boot)</div>
+          </div>
+          <p>Qualcomm menggunakan protokol Sahara/Firehose di mode EDL (Emergency Download 9008). Jika <em>Secure Boot</em> aktif (via eFuse), SoC memblokir *loader* biasa.</p>
+          <ul class="tech-list">
+            <li><strong>Mekanisme:</strong> CPU memverifikasi *digital signature* dari file <code>prog_emmc_firehose.mbn</code>.</li>
+            <li><strong>Auth By-Pass:</strong> Membutuhkan *Firehose* yang ditandatangani ulang oleh server khusus vendor, atau *programmer* bocoran (patched).</li>
+          </ul>
+        </div>
+
+        <div class="info-card c-green">
+          <div class="card-header">
+            <div class="card-icon">M</div>
+            <div class="card-title">MediaTek (SLA / DAA)</div>
+          </div>
+          <p>MTK memiliki <em>Serial Link Authentication</em> (SLA) dan <em>Download Agent Auth</em> (DAA) di level BootROM.</p>
+          <ul class="tech-list">
+            <li><strong>Mekanisme:</strong> BROM menolak perintah tulis kecuali SP Flash Tool mengirimkan *Custom DA* (Download Agent) dan file kredensial (Auth file).</li>
+            <li><strong>Auth By-Pass:</strong> Dulu bisa dibypass menggunakan <em>MCT MTK Bypass</em> (exploiting BROM), namun CPU MTK modern (Dimensity) sudah menambal celah ini.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- BAGIAN 2: VENDOR IMPLEMENTATION -->
+      <h2 class="section-title">🏢 Implementasi Vendor (Online Auth)</h2>
+      <div class="grid-2">
+        <div class="info-card c-orange">
+          <div class="card-header">
+            <div class="card-icon">Mi</div>
+            <div class="card-title">Xiaomi (EDL Mi Auth)</div>
+          </div>
+          <p>Xiaomi mengunci mode EDL untuk mencegah <em>unbrick</em> atau ganti ROM distributor secara sepihak.</p>
+          <ul class="tech-list">
+            <li>Saat masuk EDL, MiFlash akan memanggil server Xiaomi.</li>
+            <li>Diperlukan login **Mi Account** dengan status "Authorized" (biasanya hanya dimiliki Mi Service Center).</li>
+            <li>Jika akun valid, server mengirimkan token <em>unlock</em> ke CPU.</li>
+          </ul>
+        </div>
+
+        <div class="info-card c-green">
+          <div class="card-header">
+            <div class="card-icon">O</div>
+            <div class="card-title">Oppo & Realme (O-Tap)</div>
+          </div>
+          <p>Oppo menggunakan *MSM Download Tool* (Qualcomm) dan *DownloadTool* khusus (MTK).</p>
+          <ul class="tech-list">
+            <li>Menggunakan protokol **O-Tap / Oppo Server Account**.</li>
+            <li>Tool hanya bisa dibuka/berjalan jika login dengan kredensial staf Aftersales resmi.</li>
+            <li>Token dikirim terenkripsi langsung ke perangkat.</li>
+          </ul>
+        </div>
+
+        <div class="info-card c-blue">
+          <div class="card-header">
+            <div class="card-icon">V</div>
+            <div class="card-title">Vivo (AFTool Auth)</div>
+          </div>
+          <p>Sistem pengamanan flashing Vivo terintegrasi dengan <em>AFTool</em> resmi mereka.</p>
+          <ul class="tech-list">
+            <li>Menggunakan sistem login akun *A-售后* (Aftersales).</li>
+            <li>Bekerja mirip Oppo, di mana AFTool akan mengotentikasi koneksi *Download Agent* MTK atau Firehose Qualcomm ke server Vivo.</li>
+          </ul>
+        </div>
+
+        <div class="info-card c-purple">
+          <div class="card-header">
+            <div class="card-icon">S</div>
+            <div class="card-title">Samsung (Odin / Knox Guard)</div>
+          </div>
+          <p>Samsung tidak menggunakan sistem akun login (Server Auth) untuk mem-flash stock ROM.</p>
+          <ul class="tech-list">
+            <li>Mereka mengandalkan verifikasi tanda tangan lokal: file `.tar.md5` diverifikasi langsung oleh *Bootloader* perangkat.</li>
+            <li>Jika *bootloader* mendeteksi file modifikasi, **Knox Warranty Void** (eFuse) akan putus secara permanen (menjadi 0x1).</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- BAGIAN 3: APPLE ECOSYSTEM -->
+      <h2 class="section-title">🍎 Ekosistem Apple iOS</h2>
+      <div class="info-card c-purple" style="margin-bottom: 20px;">
+        <div class="card-header">
+          <div class="card-icon" style="border-radius: 50%;"></div>
+          <div class="card-title">TSS Server & SHSH Blobs</div>
+        </div>
+        <p>Proses <em>Restore</em> (Flashing) pada iPhone/iPad sangat terkontrol dan tersentralisasi. Anda tidak bisa menginstal versi iOS sembarangan.</p>
+        <ul class="tech-list">
+          <li><strong>SHSH Blobs (Signature HaSH):</strong> Tanda tangan digital unik (dibuat dari ECID perangkat + Versi iOS) yang dihasilkan oleh TSS Server Apple.</li>
+          <li><strong>Mekanisme:</strong> Saat iTunes atau 3uTools melakukan <em>restore</em>, mereka harus meminta SHSH Blobs dari server Apple. Server hanya akan mengeluarkan tanda tangan untuk versi iOS terbaru (yang masih <em>signed</em>).</li>
+          <li><strong>Dampak:</strong> Perangkat keras (BootROM/SecureROM) akan menolak memuat <em>firmware</em> jika SHSH tidak cocok atau tidak ada. Inilah alasan mengapa kita tidak bisa "Downgrade" iOS sesuka hati.</li>
+        </ul>
+      </div>
+
+      <!-- BAGIAN 4: OS LEVEL LOCKS (FRP & MDM) -->
+      <h2 class="section-title">🔒 OS Level Locks (FRP, Admin & Payment)</h2>
+      <div class="grid-2">
+        <div class="info-card c-red">
+          <div class="card-header">
+            <div class="card-icon">F</div>
+            <div class="card-title">FRP & Cloud Lock</div>
+          </div>
+          <p>Sistem proteksi paska-Factory Reset (Mencegah pencurian).</p>
+          <ul class="tech-list">
+            <li><strong>Google FRP:</strong> Kunci akun Google di level <em>Persistent Partition</em> Android.</li>
+            <li><strong>Mi Cloud Lock:</strong> Kunci berbasis ID perangkat (IMEI/SN) yang disinkronisasi ke server Xiaomi. Membutuhkan <em>Bypass</em> server (Clean) atau <em>Micloud Disable</em> (mengedit partisi persisten).</li>
+            <li><strong>iCloud Activation Lock:</strong> File <code>Setup.app</code> iOS terkunci ke server Aktivasi Apple menggunakan UDID/SN perangkat.</li>
+          </ul>
+        </div>
+
+        <div class="info-card c-orange">
+          <div class="card-header">
+            <div class="card-icon">K</div>
+            <div class="card-title">MDM, Knox & PayJoy</div>
+          </div>
+          <p>Proteksi Administratif dan sistem kredit/cicilan.</p>
+          <ul class="tech-list">
+            <li><strong>MDM (Mobile Device Management):</strong> Profil perusahaan yang mengunci fitur OS secara jarak jauh (contoh: HP aset perusahaan).</li>
+            <li><strong>Knox Guard (KG State):</strong> Keamanan Samsung yang memblokir fungsi <em>flashing</em> (KG State: Prenormal/Locked) jika perangkat cicilan belum lunas. Membutuhkan <em>unlock tool</em> khusus atau via server.</li>
+            <li><strong>PayJoy:</strong> Aplikasi <em>Device Administrator</em> tingkat kernel yang memblokir UI HP jika cicilan menunggak. Sangat sulit dihapus karena masuk ke partisi sistem dalam mode <em>read-only</em>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="alert-box">
+        <strong>Peringatan Teknisi:</strong> Melakukan <em>bypass</em> pada sistem Auth, FRP, atau MDM seringkali melibatkan resiko <em>brick</em> permanen (hilangnya IMEI, baseband, atau matot) jika terjadi kesalahan penulisan partisi. Selalu pahami legalitas dan asal-usul perangkat sebelum melakukan <em>unlocking</em>.
+      </div>
+
+    </div>
+  </body>
+</html>
