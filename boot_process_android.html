@@ -465,6 +465,21 @@
         color: #a78bfa;
       }
 
+      .code-block {
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 14px;
+        padding: 18px;
+        margin-top: 20px;
+        font-family: "Space Mono", monospace;
+        font-size: 0.92rem;
+        color: #cbd5e1;
+        line-height: 1.6;
+        white-space: pre;
+        overflow: auto;
+        max-height: 320px;
+      }
+
       @media (max-width: 768px) {
         h1 {
           font-size: 2.5rem;
@@ -1321,6 +1336,102 @@
             > boot_from_bl31: boot to <span class="code-path">trusted firmware</span>. addr=0x00000000<br/>
             > <span class="code-highlight">Booting Linux</span> on physical CPU 0x0
           </div>
+        </div>
+      </div>
+
+      <!-- STUDI KASUS BOOT SEQUENCE MEDIATEK -->
+      <div class="conversation-block">
+        <div class="speaker">
+          <div class="avatar tech">T</div>
+          <div>
+            <div class="name">Teknisi (Kita)</div>
+            <div class="role">Laporan Analisis Log SOC: MediaTek Boot Sequence</div>
+          </div>
+        </div>
+        <div class="text">
+          <p>
+            Berikut adalah potongan log UART MediaTek yang kami temukan pada
+            perangkat Infinix/Note dengan PMIC <strong>MT6357</strong>. Yang
+            menarik adalah struktur boot sequencenya sangat jelas: mulai dari
+            pengecekan PMIC, preloader, memori, hingga TrustZone dan ATF.
+          </p>
+          <div class="code-block">
+[MT6357] 1 3,64
+[MT6357] get volt 3, 64, 918750
+[MT6357] get volt 5, 80, 1018750
+[PLFM] boot to LK by ATAG.
+PL_VERSION = 0.1.00
+emmc ocr = 0xC0FF8080
+emmc cid: 0x15010041 0x4A544434 0x5206436A 0xBCE0A76F
+emmc csd: 0xD0270132 0xF5903FF 0xF6DBFFEF 0x8E40400D
+mblock num: 0x5
+mblock start: 0x0000000040000000
+mblock size: 0x000000003FFC0000
+mblock rank: 0x0
+mblock start: 0x0000000080000000
+mblock size: 0x0000000040000000
+mblock rank: 0x0
+mblock start: 0x00000000C0000000
+mblock size: 0x000000003EF00000
+mblock rank: 0x1
+mblock start: 0x00000000FF000000
+mblock size: 0x00000000009C0000
+mblock rank: 0x1
+tee start: 0x00000000FF9C0000
+tee size: 0x0000000000040000
+[TZ_INIT] hwuid[0] : 0xA8D2FEC5
+[TZ_INIT] atf_log_port : 0x11002000
+[TZ_INIT] ATF log buffer start : 0xFF9C0000
+Device APC: sec_postinit Infra MAS_SEC_0=0x0
+[BLDR] Others, jump to ATF
+[224] mblock[5].start: 0xc0000000, sz: 0x3ef00000, limit: 0x4c880000, max_addr: 0x54000000, target: 0, reserved_addr: 0x40080000,reserved_size: 0xc800000
+[226] mblock_reserve dbg[5]: 1, 0, 1, 1
+[232] mblock_reserve: 40080000 - 4c880000 from mblock 0
+[232] mblock_reserve [0].start: 0x40000000, sz: 0x80000
+[233] mblock_reserve [1].start: 0x4c880000, sz: 0x7780000
+[234] mblock_reserve [2].start: 0x54080000, sz: 0x1f80000
+[235] mblock_reserve [3].start: 0x56400000, sz: 0x500000
+[236] mblock_reserve [4].start: 0x5f900000, sz: 0x206c0000
+[237] mblock_reserve [5].start: 0x80000000, sz: 0x40000000
+[238] mblock_reserve [6].start: 0xc0000000, sz: 0x3ef00000
+[239] mblock_reserve [7].start: 0xff000000, sz: 0x9c0000
+[239] mblock_reserve-R[0].start: 0x7ffc0000, sz: 0x40000 map:1 name:log_store
+[240] mblock_reserve-R[1].start: 0xff9c0000, sz: 0x640000 map:0 name:tee
+[241] mblock_reserve-R[2].start: 0xfef00000, sz: 0x100000 map:0 name:PICACHU
+[242] mblock_reserve-R[3].start: 0x56000000, sz: 0x400000 map:0 name:lk_addr_mb
+[243] mblock_reserve-R[4].start: 0x56900000, sz: 0x9000000 map:0 name:scratch_addr_mb
+[244] mblock_reserve-R[5].start: 0x54000000, sz: 0x80000 map:0 name:dtb_kernel_addr_mb
+[245] mblock_reserve-R[6].start: 0x40080000, sz: 0xc800000 map:0 name:kernel_addr_mb
+[246] mblock_reserve-R[7].start: 0x55000000, sz: 0x1000000 map:0 name:ramdisk_addr_mb
+[247] mblock_reserve-R[8].start: 0x7bae0000, sz: 0x1f20000 map:0 name:platform_init
+[248] mblock_reserve-R[9].start: 0xbff80000, sz: 0x80000 map:0 name:atf-ramdump-memory
+[249] mblock_reserve-R[10].start: 0xb9b80000, sz: 0x6400000 map:0 name:avb
+          </div>
+          <p>
+            Glosarium singkat:
+          </p>
+          <ul style="margin-left: 20px; margin-bottom: 15px; color: #e2e8f0;">
+            <li><strong>MT6357</strong> = PMIC MediaTek, melakukan pengukuran voltase dan memantau rail daya internal.</li>
+            <li><strong>PLFM</strong> = Platform loader yang memberikan arahan boot ke <code>LK</code> via ATAG.</li>
+            <li><strong>mblock</strong> / <strong>mblock_reserve</strong> = peta memori fisik dan area cadangan untuk partisi kernel, tee, log, dan platform.</li>
+            <li><strong>TZ_INIT</strong> / <strong>ATF</strong> = inisialisasi TrustZone dan AArch32 Trusted Firmware sebelum OS Android dijalankan.</li>
+          </ul>
+          <p>
+            Dari log ini kita dapat membaca 4 fase penting:
+          </p>
+          <ol style="margin-left: 20px; margin-bottom: 15px; color: #e2e8f0;">
+            <li><strong>Inisialisasi Daya</strong> - PMIC MT6357 mengukur tegangan VCORE / VSYS / VSRT, memastikan rail aman sebelum memulai DDR dan boot.</li>
+            <li><strong>Preloader ke LK</strong> - baris <span class="code-highlight">[PLFM] boot to LK by ATAG</span> menunjukkan serah terima dari preloader ke Little Kernel.</li>
+            <li><strong>Konfigurasi Memori</strong> - entri <span class="code-highlight">mblock</span> dan <span class="code-highlight">mblock_reserve</span> mengungkapkan layout memori fisik dan blok yang dicadangkan untuk <code>tee</code>, <code>log_store</code>, <code>kernel_addr_mb</code>, dan partisi penting lain.</li>
+            <li><strong>TrustZone / ATF</strong> - <span class="code-highlight">[TZ_INIT]</span> dan <span class="code-highlight">jump to ATF</span> mengonfirmasi bahwa platform memasuki mode aman sebelum Android di-boot.</li>
+          </ol>
+          <p>
+            Kesimpulannya: log boot MediaTek ini adalah contoh yang sangat baik
+            untuk memahami bagaimana SOC modern membentuk pipa eksekusi dari
+            power-on hingga kernel. Bila log berhenti di tahap <em>mblock</em>
+            atau <em>TEE</em>, biasanya masalahnya terkait RAM/PMIC atau
+            proteksi keamanan TrustZone, bukan hanya kesalahan partisi Android.
+          </p>
         </div>
       </div>
       <div class="fb-share-section">
