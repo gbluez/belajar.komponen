@@ -1196,6 +1196,106 @@
           </p>
         </div>
       </div>
+      <!-- Studi Komparasi: HiSilicon Hi3520 -->
+      <div class="conversation-block">
+        <div class="speaker">
+          <div class="avatar tech">T</div>
+          <div>
+            <div class="name">Teknisi (Kita)</div>
+            <div class="role">Studi Kasus Embedded (Smart Camera)</div>
+          </div>
+        </div>
+        <div class="text">
+          <p>
+            Menarik sekali! Berbicara soal log UART, saya pernah membaca log dari perangkat pintar lain seperti IP Camera yang menggunakan chipset <strong>HiSilicon Hi3520</strong>. Di sana saya melihat bootloader-nya bernama <strong>U-Boot</strong>. Apakah urutan <em>booting</em>-nya sama dengan Android? Kenapa seringkali log-nya berhenti di tulisan <span class="code-highlight">"Starting kernel..."</span>?
+          </p>
+        </div>
+      </div>
+
+      <div class="conversation-block android-color">
+        <div class="speaker">
+          <div class="avatar system">S</div>
+          <div>
+            <div class="name">Sistem Embedded</div>
+            <div class="role">U-Boot & Linux Kernel</div>
+          </div>
+        </div>
+        <div class="text">
+          <p>
+            Ya, secara prinsip sangat mirip! Perangkat IoT seperti Smart Camera (Hi3520) menggunakan sistem operasi berbasis Linux yang lebih ramping. Proses boot-nya terbagi menjadi 3 tahap utama:
+          </p>
+          <ul style="margin-left: 20px; margin-bottom: 15px; color: #e2e8f0;">
+            <li><strong>1. U-Boot Stage:</strong> Ini mirip dengan PBL/XBL di Android. U-Boot (contohnya versi 2010.06) menginisialisasi hardware dasar seperti CPU, DRAM, dan SPI Flash. Pada tahap ini, U-Boot sering memberikan <em>countdown</em> (misal 1 detik) di mana kamu bisa menekan tombol (Autoboot interrupt) untuk masuk ke <em>command line</em> U-Boot.</li>
+            <li><strong>2. Kernel Loading Stage:</strong> U-Boot membaca <em>Linux Kernel Image</em> (misalnya Linux-3.0.8) dari SPI Flash dan memuatnya ke dalam RAM (contoh di alamat <code>0x82000000</code>). U-Boot kemudian melakukan verifikasi <em>checksum</em>.</li>
+            <li><strong>3. Kernel Launch:</strong> U-Boot menyerahkan kontrol sepenuhnya ke Kernel dengan mencetak pesan <strong>"Starting kernel ..."</strong>. Mulai dari titik ini, Kernel Linux mengambil alih dan menjalankan proses <code>init</code>.</li>
+          </ul>
+          <p>
+            <strong>Mengapa log terhenti di "Starting kernel..."?</strong><br/>
+            Ini adalah jebakan klasik bagi teknisi! Jika log UART hilang setelah tulisan itu, <u>bukan berarti HP atau kamera mati/bootloop</u>. Kemungkinan besar, parameter <span class="code-highlight">bootargs</span> dari kernel mengarahkan output <em>console</em> ke <em>port</em> UART yang berbeda (misalnya dari <code>ttyS0</code> dialihkan ke <code>ttyS1</code>), atau <em>baud rate</em>-nya diubah. 
+          </p>
+          <p>
+            <strong>Solusi Debugging:</strong> Hentikan proses <em>boot</em> saat <em>countdown</em> U-Boot berjalan untuk masuk ke mode <em>shell</em>. Ketik perintah <code>printenv</code> untuk melihat ke mana parameter <span class="code-path">console=tty...</span> diarahkan.
+          </p>
+          <div class="tech-box">
+            > U-Boot 2010.06 (Fastboot 3.3.0)<br/>
+            > DRAM:  256 MiB<br/>
+            > SPI Flash: 8 MiB<br/>
+            > Hit any key to stop autoboot:  0 <br/>
+            > Loading Kernel Image ... OK<br/>
+            > <span class="code-highlight">Starting kernel ...</span><br/>
+            <span style="color: #64748b;">(Terminal blank / pindah jalur UART)</span>
+          </div>
+        </div>
+      </div>
+      <!-- Studi Komparasi: HiSilicon Kirin 960 (HiKey960 AOSP) -->
+      <div class="conversation-block">
+        <div class="speaker">
+          <div class="avatar tech">T</div>
+          <div>
+            <div class="name">Teknisi (Kita)</div>
+            <div class="role">Studi Kasus Board Android</div>
+          </div>
+        </div>
+        <div class="text">
+          <p>
+            Wah, pantas saja banyak teknisi terkecoh dan mengira IC-nya mati. Omong-omong soal SoC, bagaimana dengan arsitektur <em>bootloader</em> buatan Huawei, yaitu <strong>HiSilicon Kirin</strong>? Apakah prosesnya mirip dengan Qualcomm (PBL -> XBL) atau MediaTek (BootROM -> Preloader)?
+          </p>
+        </div>
+      </div>
+
+      <div class="conversation-block android-color">
+        <div class="speaker">
+          <div class="avatar system" style="background: rgba(236, 72, 153, 0.15); color: #ec4899;">K</div>
+          <div>
+            <div class="name">Sistem Kirin</div>
+            <div class="role">Kirin 960 & AOSP Boot</div>
+          </div>
+        </div>
+        <div class="text">
+          <p>
+            Keluarga <strong>HiSilicon Kirin</strong> (contohnya Kirin 960 pada <em>board</em> HiKey960) memiliki identitas <em>booting</em> yang unik dan berbeda dari Qualcomm maupun MediaTek! Prosesnya diurutkan seperti ini:
+          </p>
+          <ul style="margin-left: 20px; margin-bottom: 15px; color: #e2e8f0;">
+            <li><strong>1. xloader:</strong> Ini adalah <em>bootloader</em> tingkat pertama. Tugasnya mendeteksi memori penyimpanan (biasanya UFS) dan menginisialisasi jalur LPDDR4 (RAM). Jika kamu melihat log <span class="code-path">xloader chipid is: 0x36600110</span>, berarti CPU dan RAM sudah saling "berjabat tangan".</li>
+            <li><strong>2. Fastboot for Kirin:</strong> Kirin menggunakan implementasinya sendiri yang disebut <em>Fastboot for Kirin</em> (berbeda dari LK MediaTek). Di tahap ini, SoC menyalakan semua jalur listrik (PMIC regulator) dan menginisialisasi <em>clock</em> (PLL).</li>
+            <li><strong>3. LPM3 & ATF (BL31):</strong> Selanjutnya, <em>Low Power MCU</em> (LPM3) dimuat. Setelah beres, SoC akan menyerahkan kendali kepada <strong>ARM Trusted Firmware (BL31)</strong> untuk menjamin keamanan level <em>hardware</em> sebelum menjalankan OS utama.</li>
+            <li><strong>4. Linux Kernel:</strong> BL31 memberikan instruksi untuk mengeksekusi <em>kernel</em> Android (<span class="code-highlight">Booting Linux on physical CPU 0x0</span>).</li>
+          </ul>
+          <p>
+            Jadi, bila kamu men-<em>debug</em> HP berbasis Kirin yang <em>brick</em>, perhatikan log UART-nya. Jika mati sebelum muncul pesan `xloader`, kemungkinan ada masalah tegangan dasar ke CPU atau RAM rusak.
+          </p>
+          <div class="tech-box" style="border-color: rgba(236, 72, 153, 0.3);">
+            > <span class="code-highlight">xloader</span> chipid is: 0x36600110, start at 331ms.<br/>
+            > storage type is UFS<br/>
+            > ddr ft:0xf20332a3,mode:1 target:4<br/>
+            > ******** <span class="code-highlight">Fastboot for Kirin</span> *****************<br/>
+            > [regulator_power_all_enable] all IP regulator is power on!<br/>
+            > load_lpm3: LPM3 load success 0x89c80000<br/>
+            > boot_from_bl31: boot to <span class="code-path">trusted firmware</span>. addr=0x00000000<br/>
+            > <span class="code-highlight">Booting Linux</span> on physical CPU 0x0
+          </div>
+        </div>
+      </div>
     </main>
   </body>
 </html>
