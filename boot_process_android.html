@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1"></script>
     <style>
       :root {
         --bg-color: #010409;
@@ -534,6 +535,30 @@
           }
         }
       }
+
+      .logo {
+        font-family: "Space Mono", monospace;
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+        background: linear-gradient(135deg, #00d4ff, #8b5cf6, #ff006e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-top: 20px;
+        display: inline-block;
+        padding: 8px 16px;
+        border: 2px solid rgba(139, 92, 246, 0.5);
+        border-radius: 20px;
+        position: relative;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .fb-share-section {
+        text-align: center;
+        margin: 40px 0;
+      }
     </style>
   </head>
   <body>
@@ -562,6 +587,7 @@
         hingga layar Homescreen menyala, dijelaskan secara mengalir untuk
         teknisi.
       </p>
+      <div class="logo">GADGET FIX</div>
     </header>
 
     <!-- Grafis Seni (Artistic Graphic) -->
@@ -1295,6 +1321,9 @@
             > <span class="code-highlight">Booting Linux</span> on physical CPU 0x0
           </div>
         </div>
+      </div>
+      <div class="fb-share-section">
+        <div class="fb-like" data-href="https://servismudah.com/boot_process_android.html" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
       </div>
     </main>
   </body>

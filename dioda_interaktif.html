@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Praktik Pengukuran Dioda</title>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 
@@ -623,6 +624,28 @@
       font-family: var(--mono);
       font-weight: 700;
     }
+
+    .logo {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #00d4ff, #8b5cf6, #ff006e);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 10px 0;
+      display: inline-block;
+      padding: 6px 12px;
+      border: 2px solid rgba(139, 92, 246, 0.5);
+      border-radius: 15px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .fb-share-section {
+      text-align: center;
+      margin: 20px 0;
+    }
   </style>
 </head>
 
@@ -658,6 +681,7 @@
         </svg>
         <div><span style="color: var(--text);">Tentang</span>Dioda</div>
       </h1>
+      <div class="logo">GADGET FIX</div>
       <div style="display: flex; align-items: center; gap: 12px;">
         <span style="width: 40px; height: 1px; background: var(--accent); opacity: 0.5; display: inline-block;"></span>
         <a href="https://www.facebook.com/gbluezs" target="_blank" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--muted); font-family: var(--mono); font-size: 14px; font-weight: 500; letter-spacing: 1px; padding: 6px 12px; border-radius: 20px; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.1); transition: all 0.3s ease;" onmouseover="this.style.color='#3b82f6'; this.style.background='rgba(59, 130, 246, 0.1)'; this.style.borderColor='rgba(59, 130, 246, 0.3)'; this.style.boxShadow='0 0 12px rgba(59, 130, 246, 0.2)';" onmouseout="this.style.color='var(--muted)'; this.style.background='rgba(59, 130, 246, 0.05)'; this.style.borderColor='rgba(59, 130, 246, 0.1)'; this.style.boxShadow='none';">
@@ -2533,6 +2557,9 @@
         requestAnimationFrame(loop);
     })();
   </script>
+  <div class="fb-share-section">
+    <div class="fb-like" data-href="https://servismudah.com/dioda_interaktif.html" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
+  </div>
 </body>
 
 </html>

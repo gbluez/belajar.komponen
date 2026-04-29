@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1"></script>
     <style>
       :root {
         --bg-color: #050510;
@@ -337,6 +338,28 @@
         .flowchart-nodes { flex-direction: column; gap: 40px; }
         .path-container { display: none; } /* Disable complex animation on mobile for now */
       }
+
+      .logo {
+        font-family: 'Space Mono', monospace;
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+        background: linear-gradient(135deg, #00d4ff, #8b5cf6, #ff006e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-top: 20px;
+        display: inline-block;
+        padding: 8px 16px;
+        border: 2px solid rgba(139, 92, 246, 0.5);
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .fb-share-section {
+        text-align: center;
+        margin: 40px 0;
+      }
     </style>
   </head>
   <body>
@@ -357,6 +380,7 @@
         <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto; font-size: 1.1rem;">
           Memahami bagaimana level keamanan Hardware (Secure Boot), Server Vendor (SLA/EDL Auth), hingga proteksi OS (FRP/MDM) bekerja untuk melindungi perangkat.
         </p>
+        <div class="logo">GADGET FIX</div>
       </div>
 
       <!-- Flowchart Animation -->
@@ -516,6 +540,10 @@
 
       <div class="alert-box">
         <strong>Peringatan Teknisi:</strong> Melakukan <em>bypass</em> pada sistem Auth, FRP, atau MDM seringkali melibatkan resiko <em>brick</em> permanen (hilangnya IMEI, baseband, atau matot) jika terjadi kesalahan penulisan partisi. Selalu pahami legalitas dan asal-usul perangkat sebelum melakukan <em>unlocking</em>.
+      </div>
+
+      <div class="fb-share-section">
+        <div class="fb-like" data-href="https://servismudah.com/flashing_auth.html" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
       </div>
 
     </div>

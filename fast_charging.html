@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/id_ID/sdk.js#xfbml=1&version=v18.0&autoLogAppEvents=1"></script>
     <style>
       :root {
         --color-bg-body: #010409;
@@ -725,6 +726,28 @@
           display: block;
         }
       }
+
+      .logo {
+        font-family: var(--font-mono);
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+        background: linear-gradient(135deg, #00d4ff, #8b5cf6, #ff006e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-top: 10px;
+        display: inline-block;
+        padding: 6px 12px;
+        border: 2px solid rgba(139, 92, 246, 0.5);
+        border-radius: 15px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+
+      .fb-share-section {
+        text-align: center;
+        margin: 20px 0;
+      }
     </style>
   </head>
   <body>
@@ -823,6 +846,7 @@
         <div class="sidebar-header">
           <h1>Servis Pintar</h1>
           <p>Modul: Fast Charging</p>
+          <div class="logo">GADGET FIX</div>
         </div>
         <nav class="nav-list">
           <div class="nav-item active" onclick="navTo('vendors')">
@@ -3096,5 +3120,8 @@
       </script>
     </div>
     <!-- end of flex wrapper -->
+    <div class="fb-share-section">
+      <div class="fb-like" data-href="https://servismudah.com/fast_charging.html" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="true"></div>
+    </div>
   </body>
 </html>
