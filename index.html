@@ -406,6 +406,25 @@
         opacity: 1;
       }
 
+      /* Card 7: Samsung Mobile Device */
+      .card-samsung {
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          inset 0 0 0 1px rgba(0, 123, 255, 0.2);
+      }
+      .card-samsung:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow:
+          0 20px 40px rgba(0, 123, 255, 0.2),
+          inset 0 0 0 1px rgba(0, 123, 255, 0.5);
+      }
+      .card-samsung::before {
+        background: linear-gradient(90deg, transparent, #007bff, transparent);
+      }
+      .card-samsung:hover::before {
+        opacity: 1;
+      }
+
       .card-icon {
         width: 64px;
         height: 64px;
@@ -415,6 +434,48 @@
         justify-content: center;
         margin-bottom: 24px;
         font-size: 2rem;
+      }
+
+      .card-fc .card-icon {
+        background: rgba(139, 92, 246, 0.15);
+        color: #a78bfa;
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+      }
+
+      .card-dioda .card-icon {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+      }
+
+      .card-boot .card-icon {
+        background: rgba(249, 115, 22, 0.15);
+        color: #fb923c;
+        box-shadow: 0 0 20px rgba(249, 115, 22, 0.3);
+      }
+
+      .card-skkni .card-icon {
+        background: rgba(236, 72, 153, 0.15);
+        color: #f472b6;
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      }
+
+      .card-auth .card-icon {
+        background: rgba(0, 212, 255, 0.15);
+        color: #00d4ff;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+      }
+
+      .card-huawei .card-icon {
+        background: rgba(139, 92, 246, 0.15);
+        color: #a78bfa;
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+      }
+
+      .card-samsung .card-icon {
+        background: rgba(0, 123, 255, 0.15);
+        color: #007bff;
+        box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
       }
 
       .card-fc .card-icon {
@@ -487,6 +548,14 @@
       }
       .card-auth .card-action {
         color: #00d4ff;
+      }
+
+      .card-huawei .card-action {
+        color: #a78bfa;
+      }
+
+      .card-samsung .card-action {
+        color: #007bff;
       }
 
       .card-action svg {
@@ -934,6 +1003,45 @@
           <div class="card-title">Huawei Security Platform</div>
           <div class="card-desc">
             Panduan lengkap platform dan produk keamanan Huawei untuk teknisi. Termasuk troubleshooting dan perbaikan teknis.
+          </div>
+          <div class="card-action">
+            Buka Modul
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </div>
+        </a>
+
+        <!-- SAMSUNG MOBILE DEVICE CARD -->
+        <a href="samsung_mobile_device.html" class="module-card card-samsung">
+          <div class="card-icon">
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12" y2="18"></line>
+            </svg>
+          </div>
+          <div class="card-title">Samsung Mobile Device</div>
+          <div class="card-desc">
+            Eksplorasi lengkap perangkat Samsung: sejarah, inovasi hardware & software, Galaxy AI, Knox Security, dan panduan perbaikan.
           </div>
           <div class="card-action">
             Buka Modul
