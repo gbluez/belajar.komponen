@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samsung Mobile Device - Servis Pintar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #010409;
+        --card-bg: rgba(10, 16, 35, 0.8);
+        --primary: #00d4ff;
+        --accent1: #ff006e;
+        --accent2: #10b981;
+        --text-main: #f0f4ff;
+        --text-muted: #8ba3d1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Outfit", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Ambient Background Glow */
+      .ambient-glow {
+        position: absolute;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 212, 255, 0.25) 0%,
+          rgba(59, 130, 246, 0.15) 30%,
+          rgba(10, 16, 35, 0) 70%
+        );
+        border-radius: 50%;
+        filter: blur(100px);
+        z-index: -1;
+      }
+
+      .container {
+        max-width: 1200px;
+        padding: 2rem;
+        z-index: 1;
+      }
+
+      h1, h2, h3 {
+        font-family: "Space Mono", monospace;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: 3rem;
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+        color: var(--accent1);
+        margin-top: 3rem;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        color: var(--accent2);
+      }
+
+      p, li {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+      }
+
+      ul {
+        list-style: none;
+        padding-left: 0;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      .icon {
+        margin-right: 0.5rem;
+      }
+
+      .section {
+        background: var(--card-bg);
+        border-radius: 10px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 212, 255, 0.2);
+      }
+
+      .roadmap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .era {
+        background: rgba(255, 0, 110, 0.1);
+        border-left: 5px solid var(--accent1);
+        padding: 1rem;
+        border-radius: 5px;
+      }
+
+      .specs-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      .specs-table th, .specs-table td {
+        border: 1px solid var(--text-muted);
+        padding: 0.5rem;
+        text-align: left;
+      }
+
+      .specs-table th {
+        background: var(--primary);
+        color: var(--bg-color);
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient-glow"></div>
+    <div class="container">
+      <h1>📱 Samsung Mobile Device</h1>
+      <p>Selamat datang di halaman khusus Samsung Mobile Device. Di sini, kami membahas segala aspek perbaikan, software, dan hardware Samsung, mulai dari sejarah evolusinya hingga inovasi terkini. Halaman ini akan terus dikembangkan dan diupdate untuk memberikan informasi terbaru.</p>
+
+      <div class="section">
+        <h2>🏗️ Sejarah dan Roadmap Evolusi Samsung Mobile (1988–2026)</h2>
+        <p>Perjalanan Samsung dari pionir GSM hingga pemimpin AI di era modern.</p>
+        <div class="roadmap">
+          <div class="era">
+            <h3>1. Era Pionir & Kelahiran GSM (1988 - 1999)</h3>
+            <p>Fokus pada ketahanan hardware dan penguasaan sinyal radio.</p>
+            <ul>
+              <li><span class="icon">🔧</span><strong>Hardware:</strong> SH-100 (1988): Handphone pertama buatan Korea. Bentuknya "batu bata" dengan antena eksternal besar. SCH-100 (1996): Memperkenalkan teknologi CDMA pertama. SGH-100 (1997): Langkah pertama Samsung masuk ke dunia GSM global.</li>
+              <li><span class="icon">💻</span><strong>Software:</strong> OS masih bersifat proprietary dengan tampilan monokrom sederhana. Fokus hanya pada SMS dan panggilan suara.</li>
+            </ul>
+          </div>
+          <div class="era">
+            <h3>2. Era Inovasi Desain & Multimedia (2000 - 2008)</h3>
+            <p>Samsung mulai dikenal karena desain clamshell dan layar warna.</p>
+            <ul>
+              <li><span class="icon">🔧</span><strong>Hardware:</strong> SGH-T100 (2002): HP pertama dengan layar TFT LCD warna. SGH-D500 (2004): Desain slider legendaris, memperkenalkan Bluetooth. SGH-i900 Omnia (2008): Upaya melawan iPhone dengan layar sentuh resistif besar.</li>
+              <li><span class="icon">💻</span><strong>Software:</strong> TouchWiz 1.0: Debut antarmuka berbasis widget. Eksperimen dengan Symbian OS dan Windows Mobile.</li>
+            </ul>
+          </div>
+          <div class="era">
+            <h3>3. Era Kebangkitan Android & Seri Galaxy (2009 - 2018)</h3>
+            <p>Titik balik Samsung menjadi penguasa pasar global.</p>
+            <ul>
+              <li><span class="icon">🔧</span><strong>Hardware:</strong> Galaxy S (2010): Layar Super AMOLED 4 inci. Galaxy Note (2011): Mempopulerkan "Phablet" dan S-Pen. Galaxy S6 Edge (2015): Layar melengkung. Galaxy S8 (2017): Infinity Display.</li>
+              <li><span class="icon">💻</span><strong>Software:</strong> TouchWiz Nature UX (2012). Samsung Experience (2017): UI lebih ringan.</li>
+            </ul>
+          </div>
+          <div class="era">
+            <h3>4. Era Lipat & Integrasi Ekosistem (2019 - 2023)</h3>
+            <p>Transisi menuju form-factor baru dan pemantapan software.</p>
+            <ul>
+              <li><span class="icon">🔧</span><strong>Hardware:</strong> Galaxy Fold (2019): Layar fleksibel. Galaxy S20 Ultra (2020): Sensor 108MP. Galaxy S23 Ultra (2023): Chipset khusus "For Galaxy".</li>
+              <li><span class="icon">💻</span><strong>Software:</strong> One UI (2018): Fokus one-handed use. Samsung Knox: Keamanan tingkat kernel.</li>
+            </ul>
+          </div>
+          <div class="era">
+            <h3>5. Era Generative AI & Masa Depan (2024 - 2026)</h3>
+            <p>Fokus bergeser ke kecerdasan sistem.</p>
+            <ul>
+              <li><span class="icon">🔧</span><strong>Hardware:</strong> Galaxy S24-S26: Material titanium, layar kecerahan ekstrem. Galaxy S26 Ultra (2026): Chipset Snapdragon 8 Elite Gen 5 dengan NPU.</li>
+              <li><span class="icon">💻</span><strong>Software:</strong> Galaxy AI: Live Translate, Circle to Search. One UI 8 (Android 16): Otomatisasi AI.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>✨ Inovasi Unggulan: Seri Galaxy S26 & S26 Ultra</h2>
+        <ul>
+          <li><span class="icon">⚡</span><strong>Performa Tanpa Batas:</strong> Chipset Snapdragon 8 Elite Gen 5, peningkatan AI hingga 36%.</li>
+          <li><span class="icon">👁️</span><strong>Privacy Display:</strong> Teknologi pertama di dunia pada S26 Ultra, hanya terlihat dari depan.</li>
+          <li><span class="icon">📸</span><strong>Nightography Pro:</strong> Sensor 200MP, menangkap cahaya 47% lebih banyak.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>🧠 Galaxy AI: Kecerdasan yang Personal</h2>
+        <ul>
+          <li><span class="icon">🔍</span><strong>Circle to Search 2.0:</strong> Cari info dengan melingkari objek, analisis multi-objek.</li>
+          <li><span class="icon">✍️</span><strong>Photo Assist:</strong> Edit foto dengan perintah teks.</li>
+          <li><span class="icon">🗣️</span><strong>Real-time Interpreter:</strong> Terjemahan suara dua arah instan.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>🛡️ Keamanan Tingkat Tinggi dengan Samsung Knox</h2>
+        <ul>
+          <li><span class="icon">🔒</span><strong>Knox Matrix:</strong> Pantau perangkat terhubung, isolasi otomatis jika bahaya.</li>
+          <li><span class="icon">📂</span><strong>Secure Folder:</strong> Ruang enkripsi untuk file sensitif.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>🌐 Ekosistem Tanpa Sekat</h2>
+        <ul>
+          <li><span class="icon">⌚</span><strong>Galaxy Watch & Health:</strong> Pantau kesehatan dengan sinkronisasi instan.</li>
+          <li><span class="icon">🎧</span><strong>Galaxy Buds Auto Switch:</strong> Pindah koneksi mulus antar perangkat.</li>
+          <li><span class="icon">💻</span><strong>Samsung DeX:</strong> Ubah ponsel jadi desktop.</li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <h2>📋 Spesifikasi Cepat (Seri Terbaru 2026)</h2>
+        <table class="specs-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Galaxy S26</th>
+              <th>Galaxy S26+</th>
+              <th>Galaxy S26 Ultra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Layar</td>
+              <td>6.3" Dynamic AMOLED</td>
+              <td>6.7" Dynamic AMOLED</td>
+              <td>6.9" Privacy Display</td>
+            </tr>
+            <tr>
+              <td>Kamera Utama</td>
+              <td>50 MP</td>
+              <td>50 MP</td>
+              <td>200 MP (Wider Aperture)</td>
+            </tr>
+            <tr>
+              <td>Baterai</td>
+              <td>4,300 mAh</td>
+              <td>4,900 mAh</td>
+              <td>5,000 mAh (75% in 30 min)</td>
+            </tr>
+            <tr>
+              <td>RAM</td>
+              <td>12 GB</td>
+              <td>12 GB</td>
+              <td>16 GB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>🔧 Perbaikan Hardware Samsung</h2>
+        <p>Kami menyediakan layanan perbaikan hardware untuk berbagai masalah umum pada perangkat Samsung.</p>
+        <ul>
+          <li><span class="icon">📱</span><strong>Layar Rusak:</strong> Penggantian layar AMOLED dengan kualitas OEM.</li>
+          <li><span class="icon">🔋</span><strong>Baterai Lemah:</strong> Penggantian baterai asli untuk performa optimal.</li>
+          <li><span class="icon">📷</span><strong>Kamera Bermasalah:</strong> Perbaikan sensor kamera dan modul lensa.</li>
+          <li><span class="icon">🔌</span><strong>Port Charging:</strong> Perbaikan atau penggantian port USB-C.</li>
+          <li><span class="icon">🎧</span><strong>Audio Bermasalah:</strong> Perbaikan speaker dan mikrofon.</li>
+        </ul>
+        <p>Untuk perbaikan, hubungi layanan servis kami atau kunjungi <a href="index.html">halaman utama</a>.</p>
+      </div>
+
+      <div class="section">
+        <h2>💻 Perbaikan dan Optimasi Software Samsung</h2>
+        <p>Optimalkan software Samsung Anda untuk performa maksimal.</p>
+        <ul>
+          <li><span class="icon">🔄</span><strong>Update Sistem:</strong> Pastikan One UI dan Android terbaru terinstall.</li>
+          <li><span class="icon">🧹</span><strong>Pembersihan Bloatware:</strong> Hapus aplikasi bawaan yang tidak diperlukan.</li>
+          <li><span class="icon">🔒</span><strong>Keamanan Knox:</strong> Aktivasi dan troubleshooting Knox untuk keamanan data.</li>
+          <li><span class="icon">⚙️</span><strong>Reset Pabrik:</strong> Solusi untuk masalah software berat.</li>
+          <li><span class="icon">📊</span><strong>Diagnosa Performa:</strong> Analisis dan optimasi RAM, storage, dan baterai.</li>
+        </ul>
+        <p>Artikel ini akan terus diupdate dengan informasi terbaru. Jika ada pertanyaan, silakan hubungi kami.</p>
+      </div>
+
+      <div class="section">
+        <h2>💡 Mengapa Memilih Samsung?</h2>
+        <p>Samsung menawarkan fleksibilitas luar biasa dengan dukungan update hingga 7 tahun dan komitmen ramah lingkungan. Investasi jangka panjang untuk gaya hidup digital Anda.</p>
+        <p>Cari tahu lebih lanjut di <a href="#">Katalog Produk</a> | <a href="#">Layanan Servis</a></p>
+      </div>
+    </div>
+  </body>
+</html>
